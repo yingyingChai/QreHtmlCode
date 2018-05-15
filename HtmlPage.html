@@ -1,0 +1,62 @@
+﻿<input id="getFile" type="file" multiple="multiple" onchange="addFile()" /><br />
+<input id="addFileButton" type="button" value="Upload" onclick="MultiUpload()" />
+
+<script>
+    var FileList = [];
+    function addFile() {
+        var element = document.getElementById("getFile");
+        FileList.push(element.files[0]);
+    }
+    function MultiUpload() {
+        for (var i = 0; i < FileList.length; i++) {
+            //CreateFile(FileList[i])
+            file = FileList[i];
+            fr = new FileReader();
+            fr.onload = receivedBinary;
+            fr.readAsDataURL(file);
+        }
+    }
+    function CreateFile(files) {
+        file = files;
+        fr = new FileReader();
+        fr.onload = receivedBinary;
+        fr.readAsDataURL(file);
+    }
+    function receivedBinary() {
+        clientContext = new SP.ClientContext.get_current();
+        oWebsite = clientContext.get_web();
+        parentList = oWebsite.get_lists().getByTitle("JSdocs");
+        fileCreateInfo = new SP.FileCreationInformation();
+        fileCreateInfo.set_url(file.name);
+        fileCreateInfo.set_overwrite(true);
+        fileCreateInfo.set_content(new SP.Base64EncodedByteArray());
+        var arr = convertDataURIToBinary(this.result);
+        for (var i = 0; i < arr.length; ++i) {
+            fileCreateInfo.get_content().append(arr[i]);
+        }
+        this.newFile = parentList.get_rootFolder().get_files().add(fileCreateInfo);
+        clientContext.load(this.newFile);
+        clientContext.executeQueryAsync(onSuccess, onFailure);
+    }
+
+    function onSuccess() {
+        console.log(file.name)
+    }
+
+    function onFailure() {
+        console.log(file.name + arguments[1].get_message())
+    }
+    function convertDataURIToBinary(dataURI) {
+        var BASE64_MARKER = ';base64,';
+        var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+        var base64 = dataURI.substring(base64Index);
+        var raw = window.atob(base64);
+        var rawLength = raw.length;
+        var array = new Uint8Array(new ArrayBuffer(rawLength));
+
+        for (i = 0; i < rawLength; i++) {
+            array[i] = raw.charCodeAt(i);
+        }
+        return array;
+    }
+</script>

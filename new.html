@@ -1,0 +1,292 @@
+﻿<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+<link href="../css/sweetalert.css" rel="stylesheet" type="text/css">
+<link href="../css/qre_common.css" rel="stylesheet" type="text/css">
+<link href="../css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="../css/examples-offline.css" rel="stylesheet">
+<link href="../css/kendo.common.min.css" rel="stylesheet">
+<link href="../css/kendo.rtl.min.css" rel="stylesheet">
+<link href="../css/kendo.default.min.css" rel="stylesheet">
+<link href="../css/kendo.dataviz.min.css" rel="stylesheet">
+<link href="../css/kendo.dataviz.default.min.css" rel="stylesheet">
+<script src="../js/jquery.min.js"></script>
+<script src="../js/jszip.min.js"></script>
+<script src="../js/angular.min.js"></script>
+<script src="../js/kendo.all.min.js"></script>
+<script src="../js/console.js"></script>
+<script src="../js/layer/layer.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="../js/inspinia.js"></script>
+<script src="../js/plugins/pace/pace.min.js"></script>
+<link href="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/css/site.css?2028" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.config.js?2028"></script>
+<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.all.js?2028"></script>
+<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/lang/zh-cn/zh-cn.js?2028"></script>
+<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/formdesign/leipi.formdesign.v4.js?2028"></script>
+<script>
+    //function refreshGrid() {
+    //    $(".k-pager-refresh.k-link").click();
+    //}
+    //var editWindow;
+    //var fields = { FullName: { type: "string" }, Email: { type: "string" }, LogCreateDate: { type: "date" } };
+    //var gridColumns =
+    //    [{
+    //        width: 90,
+    //        command: {
+    //            name: "edit",
+    //            text: "Edit",
+    //            click: function (e) {
+    //                var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+    //                editWindow = $("#edit").kendoWindow({
+    //                    title: "Edit User",
+    //                    modal: true,
+    //                    visible: false,
+    //                    resizable: false,
+    //                    width: 800,
+    //                    height: 400,
+    //                    content: 'myediturl' + dataItem.ID
+    //                });
+
+    //                editWindow.data("kendoWindow").center().open();
+    //                return false;
+    //            }
+    //        }
+    //    },
+    //    {
+    //        width: 90,
+    //        command: {
+    //            name: "delete",
+    //            text: "Delete",
+    //            click: function (e) {
+    //                //alert(this.dataItem($(e.currentTarget).closest("tr")).ID);
+    //                var id = this.dataItem($(e.currentTarget).closest("tr")).ID;
+    //                if (confirm("Are you sure you want to delete this user?")) {
+    //                    $.ajax({
+    //                        type: 'POST',
+    //                        url: '@Url.Action("deleteuser","admin",null, "http")' + "/" + this.dataItem($(e.currentTarget).closest("tr")).ID,
+    //                        success: function (param) { refreshGrid(); },
+    //                        async: false
+    //                    });
+    //                }
+    //                return false;
+    //            }
+    //        }
+    //    },
+    //    {
+    //        field: "FullName",
+    //        title: "Full Name",
+    //        type: "string"
+    //    },
+    //    {
+    //        field: "Email",
+    //        title: "Email",
+    //        type: "string"
+    //    },
+    //    {
+    //        field: "LogCreateDate",
+    //        title: "Created",
+    //        type: "date",
+    //        template: '#= kendo.toString(LogCreateDate,"MM/dd/yyyy") #'
+    //    }];
+
+    ////getSorts the columns of the grid
+    //function getColumns() {
+    //    //Parsing the set of columns into a more digestable form
+    //    var columns = "";
+    //    for (var col in gridColumns) {
+    //        if (!!gridColumns[col].field) {
+    //            if (columns.length > 0) {
+    //                columns += ";";
+    //            }
+    //            columns += gridColumns[col].field + "," + gridColumns[col].type;
+    //        }
+    //    }
+    //    return columns;
+    //}
+
+    //function getSorts(sortObject) {
+    //    if (!(sortObject)) {
+    //        return "";
+    //    }
+    //    //Getting the row sort object
+    //    var arr = sortObject;
+    //    if ((arr) && (arr.length == 0)) {
+    //        return "";
+    //    }
+    //    //Parsing the sort object into a more digestable form
+    //    var columnSet = getColumns();
+    //    var returnValue = "";
+    //    for (var index in arr) {
+    //        var type = "";
+    //        for (var col in gridColumns) {
+    //            if (gridColumns[col].field === arr[index].field) {
+    //                type = gridColumns[col].type;
+    //            }
+    //        }
+    //        returnValue += ((returnValue.length > 0) ? (";") : ("")) + arr[index].field + "," + (arr[index].dir === "asc") + "," + type;
+    //    }
+    //    return returnValue;
+    //}
+
+    //var grid;
+    //$(function () {
+    //    $("#grid").kendoGrid({
+    //        dataSource: {
+    //            transport: {
+    //                read: {
+    //                    url: "mydatasourceurl",
+    //                    type: "POST",
+    //                },
+    //                parameterMap: function (data, type) {
+    //                    data.filters = JSON.stringify(data.filter);
+    //                    data.columns = JSON.stringify(getColumns());
+    //                    data.sorts = JSON.stringify(getSorts(data.sort));
+    //                    console.log(data);
+    //                    return data;
+    //                }
+    //            },
+    //            schema: {
+    //                fields: fields,
+    //                data: "Data",
+    //                total: "Total"
+    //            },
+    //            pageSize: 10,
+    //            serverPaging: true,
+    //            serverFiltering: true,
+    //            serverSorting: true
+    //        },
+
+    //toolbar: [{
+    //    name: "Add",
+    //    text: "Add new record",
+    //    click: function (e) { console.log("foo"); return false; }
+    //}],
+    //        height: 392,
+    //        groupable: false,
+    //        sortable: true,
+    //        filterable: true,
+    //        pageable: {
+    //            refresh: true,
+    //            pageSizes: true
+    //        },
+    //        columns: gridColumns
+    //    });
+    //    grid = $("#grid").data("kendoGrid");
+    //});
+
+    //$.getJSON("http://10.0.3.52:8060/QREService.svc/GetQRECaseInfoByCaseNumber?", { caseNumber: "FA201805005" },
+    //    function (dataList) {
+    //        var grid;
+    //        $("#grid").kendoGrid({
+    //            dataSource: {
+    //                data: dataList.LotList,
+    //                model: {
+    //                    id: "ID",
+    //                    fields: {
+    //                        ID: { editable: false, nullable: true },
+    //                        Number: { type: "string", validation: { required: true } },
+    //                        LotIDOrDateCode: { type: "string", validation: { required: true } },
+    //                        Fab: { type: "string", validation: { required: true } },
+    //                        AssemblyData: { type: "string", validation: { required: true } }
+    //                    }
+    //                },
+    //                parse: function (data, options, operation) {
+    //                    if (!data.length && !data.id) {
+    //                        data.id = generateUUID()
+    //                    }
+    //                    return data;
+    //                },
+    //                pageSize: 10,
+    //                //serverPaging: true,
+    //                //serverFiltering: true,
+    //                //serverSorting: true
+    //            },
+    //            toolbar: ["create"],
+    //            height: 392,
+    //            groupable: false,
+    //            sortable: true,
+    //            filterable: true,
+    //            pageable: {
+    //                refresh: true,
+    //                pageSizes: true
+    //            },
+    //            columns: [
+    //                { field: "Number", title: "No.", width: "120px" },
+    //                { field: "LotIDOrDateCode", title: "Lot ID&Date Code", width: "120px" },
+    //                { field: "Fab", title: "Fab", values: ["11","22"], width: "120px" },
+    //                { field: "AssemblyData", title: "Assembly", values: ["11", "22"], width: "120px" },
+    //                { command: [{ name: "edit", text: "修改" }, { name: "destroy", text: "删除" }], title: "&nbsp;", width: "120px" },
+    //            ]
+    //        });
+    //        //grid = $("#grid").data("kendoGrid");
+    //    })
+
+    $(document).ready(function () {
+        var crudServiceBaseUrl = "//demos.telerik.com/kendo-ui/service",
+            dataSource = new kendo.data.DataSource({
+                transport: {
+                    read: {
+                        url: crudServiceBaseUrl + "/Products",
+                        dataType: "jsonp"
+                    },
+                    update: {
+                        url: crudServiceBaseUrl + "/Products/Update",
+                        dataType: "jsonp"
+                    },
+                    destroy: {
+                        url: crudServiceBaseUrl + "/Products/Destroy",
+                        dataType: "jsonp"
+                    },
+                    create: {
+                        url: crudServiceBaseUrl + "/Products/Create",
+                        dataType: "jsonp"
+                    },
+                    parameterMap: function (options, operation) {
+                        if (operation !== "read" && options.models) {
+                            return { models: kendo.stringify(options.models) };
+                        }
+                    }
+                },
+                batch: true,
+                pageSize: 20,
+                schema: {
+                    model: {
+                        id: "ProductID",
+                        fields: {
+                            ProductID: { editable: false, nullable: true },
+                            ProductName: { validation: { required: true } },
+                            UnitPrice: { type: "number", validation: { required: true, min: 1 } },
+                            Discontinued: { type: "boolean" },
+                            UnitsInStock: { type: "number", validation: { min: 0, required: true } }
+                        }
+                    }
+                }
+            });
+
+        $("#grid").kendoGrid({
+            dataSource: dataSource,
+            pageable: true,
+            height: 550,
+            toolbar: ["create", {
+                name: "Save",
+                text: "Save",
+                click: function (e) {
+                    console.log("foo"); return false;
+                }
+            }],
+            columns: [
+                "ProductName",
+                { field: "UnitPrice", title: "Unit Price", format: "{0:c}", width: "120px" },
+                { field: "UnitsInStock", title: "Units In Stock", width: "120px" },
+                { field: "Discontinued", width: "120px" },
+                { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+            editable: "inline"
+        });
+    });
+</script>
+<div id="grid"></div>

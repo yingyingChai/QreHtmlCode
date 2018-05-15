@@ -1,0 +1,245 @@
+﻿<title>QRE 线上需求系统</title>
+<link href="http://localhost:55525/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://localhost:55525/font-awesome/css/font-awesome.css" rel="stylesheet">
+<link href="http://localhost:55525/css/animate.css" rel="stylesheet">
+<link href="http://localhost:55525/css/style.css" rel="stylesheet">
+<link href="http://localhost:55525/css/bootstrap-datepicker.min.css" rel="stylesheet" type="text/css">
+<link href="http://localhost:55525/css/sweetalert.css" rel="stylesheet" type="text/css">
+<link href="http://localhost:55525/css/qre_common.css" rel="stylesheet" type="text/css">
+<link href="http://localhost:55525/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="http://localhost:55525/css/examples-offline.css" rel="stylesheet">
+<link href="http://localhost:55525/css/kendo.common.min.css" rel="stylesheet">
+<link href="http://localhost:55525/css/kendo.rtl.min.css" rel="stylesheet">
+<link href="http://localhost:55525/css/kendo.default.min.css" rel="stylesheet">
+<link href="http://localhost:55525/css/kendo.dataviz.min.css" rel="stylesheet">
+<link href="http://localhost:55525/css/kendo.dataviz.default.min.css" rel="stylesheet">
+<script src="http://localhost:55525/js/jquery.min.js"></script>
+<script src="http://localhost:55525/js/jszip.min.js"></script>
+<script src="http://localhost:55525/js/angular.min.js"></script>
+<script src="http://localhost:55525/js/kendo.all.min.js"></script>
+<script src="http://localhost:55525/js/console.js"></script>
+<script src="http://localhost:55525/js/layer/layer.js"></script>
+<script src="http://localhost:55525/js/QreCase.js"></script>
+<script src="http://localhost:55525/js/bootstrap.min.js"></script>
+<script src="http://localhost:55525/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="http://localhost:55525/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="http://localhost:55525/js/products.js"></script>
+<script src="http://localhost:55525/js/inspinia.js"></script>
+<script src="http://localhost:55525/js/plugins/pace/pace.min.js"></script>
+<link href="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/css/site.css?2028" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.config.js?2028"></script>
+<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.all.js?2028"></script>
+<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/lang/zh-cn/zh-cn.js?2028"></script>
+<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/formdesign/leipi.formdesign.v4.js?2028"></script>
+<script type="text/javascript" charset="utf-8" src="http://localhost:55525/js/jquery.SPServices-2014.02.min.js"></script>
+<style>
+    .k-grid-save-changes {
+        display: none
+    }
+
+    .edui-editor div {
+        line-height: 20px;
+    }
+
+    .radio, .checkbox {
+        margin-top: -25px;
+    }
+</style>
+<div id="example" ng-app="KendoDemos">
+    <div ng-controller="MyCtrl">
+        <div id="wrapper">
+            <div id="page-wrapper" class="gray-bg">
+                <div class="wrapper wrapper-content animated fadeIn">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="tabs-container">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#tab-1" id="tab-Title-1">Stage1.Creadte Case</a></li>
+                                    <li class=""><a data-toggle="tab" href="#tab-2" id="tab-Title-2">Stage2.Information Collection</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="tab-1" class="tab-pane active divForm">
+                                        <table class="form_table form_displayCss" align="center">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Case No. <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <span title="ESSENTIAL" ng-model="result.CaseNo" value="FA2018042001"></span>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Created by <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <span title="ESSENTIAL" id="LoginUser" ng-model="result.CreatedBy">{{result.CreatedBy}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Type <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <select title="ESSENTIAL" class="form_control" ng-model="Type" ng-options="x.CaseType for x in Types"></select>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Created Date <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <span title="ESSENTIAL" class="form_control" ng-model="result.CreatedDate">{{result.CreatedDate}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Priority <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <select title="ESSENTIAL" class="form_control" ng-model="result.Priority" ng-options="x for x in Prioritys"></select>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Case Status <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <select title="ESSENTIAL" class="form_control" ng-model="result.CaseStatus" ng-options="x for x in CaseStatus"></select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="form_table_submit">
+                                                        <button class="btn btn-primary" ng-click="StateLink('#tab-Title-2')" type="button">Next</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="tab-2" class="tab-pane divForm">
+                                        <table class="form_table form_displayCss" align="center">
+                                            <tbody>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">MPN <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL" class="form_control" ng-change="changeKeyValue(MPN)" ng-model="MPN" style='display:block' ng-click='hidden=!hidden' value="{{MPN}}" />
+                                                        <div ng-hide="hidden">
+                                                            <select ng-change="change(x)" ng-model="x" multiple style="width:100%">
+                                                                <option ng-repeat="MPN in MPNList">{{MPN.MPN}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">其他 </span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input ng-model="result.Other" id="Other" type="text" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Product Line<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL" class="form_control" ng-model="result.ProductLine" id="ProductLine" type="text" readonly="readonly" />
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">QRE Owmer<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL" class="form_control" ng-model="result.QreOwner" id="QreOwner" type="text" readonly="readonly" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">DPPM<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL value:1%或者13000或者NA" ng-model="result.DPPM" id="DPPM" type="text" />
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">{{customer}}<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL" ng-model="result.customer" id="customer" type="text" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Failures Found<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <select title="ESSENTIAL" class="form_control" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">{{LinkName}}<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input" ng-if="LinkName=='FAR No.'">
+                                                        <input title="ESSENTIAL UnChangeable Ep: 20180425_7763.xml" ng-model="result.LinkName" id="LinkName" type="text" />
+                                                    </td>
+                                                    <td class="form_table_input" ng-if="LinkName!='FAR No.'">
+                                                        <input title="ESSENTIAL" ng-model="result.LinkName" id="LinkName" type="text" />
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4">
+                                                        <div kendo-grid k-data-source="assignments.dataSource" k-selectable="'row'" k-on-save-changes="saveChanges(kendoEvent)"
+                                                             k-pageable="true"
+                                                             k-columns='{{assignments.columns}}' k-sortable="true" k-editable="'inline'" k-height="300" k-toolbar="['create','save','cancel']">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label" colspan="4">
+                                                        <span class="en">Problem Describtion<i class="form_table_required">*</i></span>
+                                                        <script id="ProblemDescription" type="text/plain" style="width:100%;">
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label" colspan="4" style="border-bottom:none">
+                                                        <span class="en">Analysis Request<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_area" colspan="4" style="border-top:none" title="ESSENTIAL">
+                                                        Statistic Analysis<br />
+                                                        <div>
+                                                            <span ng-repeat="Analysis in StatisticAnalysis">
+                                                                <input ng-click="StatisticAnalysisClick(Analysis)" type="checkbox" name="StatisticAnalysis" value="{{Analysis}}">
+                                                                {{Analysis}}
+                                                            </span>
+                                                        </div>
+                                                        <br /> Non-destructive Analysis
+                                                        <div>
+                                                            <span ng-repeat="Analysis in NonDestructiveAnalysis">
+                                                                <input ng-click="NonDestructiveAnalysisClick(Analysis)" type="checkbox" name="NonDestructiveAnalysis" value="{{Analysis}}">
+                                                                {{Analysis}}
+                                                            </span>
+                                                        </div>
+                                                        <br />
+                                                        <br /> Destructive Analysis
+                                                        <div>
+                                                            <span ng-repeat="Analysis in DestructiveAnalysis">
+                                                                <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                {{Analysis}}
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="form_table_submit">
+                                                        <button class="btn btn-primary" ng-click="StateLink('#tab-Title-1')" type="button">Previous</button>
+                                                        <button class="btn btn-primary" ng-click="save()" type="button">Save</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
