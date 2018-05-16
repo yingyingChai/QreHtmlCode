@@ -1,6 +1,9 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("SaveDetailCtrl", function ($scope, $filter, $compile, $http) {
         //初始化数据
+        if (selectDepartName == "") {
+            getLogin();
+        }
         $scope.Prioritys = ['Excursion', 'Near Miss', 'Critical', 'Major', 'Minor'];
         $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion', 'Close'];
         var StatisticAnalysisList = [], NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [];

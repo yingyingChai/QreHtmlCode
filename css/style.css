@@ -2894,7 +2894,8 @@ a.forum-item-title:hover {
 .tabs-container .nav-tabs > li.active > a:focus {
     border: 1px solid #e7eaec;
     border-bottom-color: transparent;
-    background-color: #1AB394;
+    /*background-color: #1AB394;*/
+    background-color: #984294;
 }
 .tabs-container .nav-tabs > li {
   float: left;
@@ -3524,14 +3525,12 @@ video {
 }
 #page-wrapper {
   padding: 0 15px;
-  min-height: 568px;
   position: relative !important;
 }
 @media (min-width: 768px) {
   #page-wrapper {
     position: inherit;
     margin: 0 0 0 240px;
-    min-height: 2002px;
   }
 }
 .title-action {
@@ -8267,7 +8266,6 @@ body.md-skin {
     position: inherit;
     /*margin: 0 0 0 220px;*/
     margin:0 !important;
-    min-height: 1200px;
   }
   .navbar-static-side {
     z-index: 2001;

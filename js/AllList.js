@@ -64,13 +64,11 @@
                         });
                         $("#grid").kendoGrid({
                             dataSource: dataSource,
-                            height: 620,
-                            sortable: true,
                             filterable: true,
-                            columnMenu: true,
                             pageable: true,
                             columns: [{
                                 field: "CaseNumber",
+                                width:150
                             }, {
                                 field: "Complexity",
                             }, {
@@ -129,10 +127,10 @@
             var data = this.dataItem(tr);
             var Id = data.CaseNumber;
             if (caseOwner == "QRE") {
-                url = "../SitePages/EditCase.aspx?CaseNumber=" + Id + "&state=" + e.data.commandName;
+                url = "../SitePages/EditCase.aspx?CaseNumber=" + Id;
                 window.location.href = url;
             } else if (ListLoginUse == data.CreatedBy) {
-                url = "../SitePages/EditOwnerCase.aspx?CaseNumber=" + Id + "&state=" + e.data.commandName;
+                url = "../SitePages/EditOwnerCase.aspx?CaseNumber=" + Id;
                 window.location.href = url;
             } else {
                 alertMessage("您无权修改！")

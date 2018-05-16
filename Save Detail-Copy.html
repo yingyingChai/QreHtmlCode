@@ -12,13 +12,13 @@
 <link href="../css/kendo.default.min.css" rel="stylesheet">
 <link href="../css/kendo.dataviz.min.css" rel="stylesheet">
 <link href="../css/kendo.dataviz.default.min.css" rel="stylesheet">
+<script type="text/javascript" charset="utf-8" src="../js/jquery.SPServices-2014.02.min.js"></script>
 <script src="../js/products.js"></script>
 <script src="../js/jszip.min.js"></script>
 <script src="../js/angular.min.js"></script>
 <script src="../js/kendo.all.min.js"></script>
 <script src="../js/console.js"></script>
 <script src="../js/layer/layer.js"></script>
-<script src="../js/SaveDetail.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/plugins/metisMenu/jquery.metisMenu.js"></script>
 <script src="../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
@@ -29,7 +29,7 @@
 <script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.all.js?2028"></script>
 <script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/lang/zh-cn/zh-cn.js?2028"></script>
 <script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/formdesign/leipi.formdesign.v4.js?2028"></script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.SPServices-2014.02.min.js"></script>
+<script src="../js/SaveDetail.js"></script>
 <style>
     .k-grid-save-changes {
         display: none
@@ -41,6 +41,12 @@
 
     .radio, .checkbox {
         margin-top: -25px;
+    }
+    label {
+        font-weight: 100;
+    }
+    #page-wrapper {
+        min-height: auto !important
     }
 </style>
 <div id="LoginUser" style="display:none"></div>
@@ -212,23 +218,36 @@
                                                         Statistic Analysis<br />
                                                         <div>
                                                             <span ng-repeat="Analysis in StatisticAnalysis" repeat-finish＝"renderFinish()">
-                                                                <input ng-click="StatisticAnalysisClick(Analysis)" id="{{Analysis|ValueString}}11" type="checkbox" name="StatisticAnalysis"  value="{{Analysis}}">
-                                                                {{Analysis}}
+                                                                <label>
+                                                                    <input ng-click="StatisticAnalysisClick(Analysis)" id="{{Analysis|ValueString}}11" type="checkbox" name="StatisticAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
                                                             </span>
                                                         </div>
-                                                        <br /> Non-destructive Analysis
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none" title="ESSENTIAL">
+                                                        Non-destructive Analysis
                                                         <div>
                                                             <span ng-repeat="Analysis in NonDestructiveAnalysis">
-                                                                <input ng-click="NonDestructiveAnalysisClick(Analysis)" id="{{Analysis|ValueString}}12" type="checkbox" name="NonDestructiveAnalysis" value="{{Analysis}}">
-                                                                {{Analysis}}
+                                                                <label>
+                                                                    <input ng-click="NonDestructiveAnalysisClick(Analysis)" id="{{Analysis|ValueString}}12" type="checkbox" name="NonDestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
                                                             </span>
                                                         </div>
-                                                        <br />
-                                                        <br /> Destructive Analysis
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none" title="ESSENTIAL">
+                                                        Destructive Analysis
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
-                                                                <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox"  id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
-                                                                {{Analysis}}
+                                                                <label>
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
                                                             </span>
                                                         </div>
                                                     </td>
@@ -285,8 +304,10 @@
                                                     <td class="form_table_input">
                                                         <input ng-model="result.Stage3AssiggnTo" id="Stage3AssiggnTo" type="text" />
                                                     </td>
-                                                    <td colspan="2" class="form_table_label">
+                                                    <td class="form_table_label">
                                                         <span>Install attachment</span>
+                                                    </td>
+                                                    <td>
                                                         <input ng-model="file" id="stage3FileInstall" onchange="angular.element(this).scope().upload(this,'InstallAttachmentStage3','Stage3','Documents')" type="file">
                                                     </td>
                                                 </tr>
@@ -300,8 +321,10 @@
                                                         <span>
                                                             item:
                                                             <span class="ng-binding ng-scope" ng-repeat="item in StatisticAnalysis">
-                                                                <input type="checkbox" ng-click="Stage3ItemClick(item)" id="{{item|ValueString}}3" name="item" value="{{item}}">
-                                                                {{item}}
+                                                                <label>
+                                                                    <input type="checkbox" ng-click="Stage3ItemClick(item)" id="{{item|ValueString}}3" name="item" value="{{item}}">
+                                                                    {{item}}
+                                                                </label>
                                                             </span>
                                                         </span>
                                                     </td>
@@ -374,8 +397,10 @@
                                                         item<br />
                                                         <div>
                                                             <span ng-repeat="itemOne in NonDestructiveAnalysis" style="min-width:100px">
-                                                                <input type="checkbox" ng-click="itemOneClick(itemOne)" id="{{itemOne|ValueString}}41" name="stageItemOne" value="{{itemOne}}">
-                                                                {{itemOne}}
+                                                                <label>
+                                                                    <input type="checkbox" ng-click="itemOneClick(itemOne)" id="{{itemOne|ValueString}}41" name="stageItemOne" value="{{itemOne}}">
+                                                                    {{itemOne}}
+                                                                </label>
                                                             </span>
                                                         </div>
                                                     </td>
@@ -385,8 +410,10 @@
                                                         item<br />
                                                         <div>
                                                             <span ng-repeat="itemTwo in DestructiveAnalysis">
-                                                                <input type="checkbox" id="{{itemTwo|ValueString}}42" ng-click="itemTwoClick(itemTwo)" name="stageItemOne" value="{{itemTwo}}">
-                                                                {{itemTwo}}
+                                                                <label>
+                                                                    <input type="checkbox" id="{{itemTwo|ValueString}}42" ng-click="itemTwoClick(itemTwo)" name="stageItemOne" value="{{itemTwo}}">
+                                                                    {{itemTwo}}
+                                                                </label>
                                                             </span>
                                                         </div>
                                                     </td>

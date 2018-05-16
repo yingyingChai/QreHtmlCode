@@ -1,8 +1,7 @@
-/*Add By Red Qin 2016/12/02*/
-#layoutsTable{
-	background-color: #edecec;
-}
 /*Add By Red Qin 2016/12/06*/
+.ms-core-overlay {
+     background-color: #fff !important; 
+}
 #onetIDListForm{
 	width: 100%;
 }
@@ -30,7 +29,6 @@
 }
 .divForm {
     padding: 20px;
-    background-color: #f3f3f4;
     position: relative;
 }
 .form_table{
@@ -150,7 +148,7 @@
     min-height: 60px;
 }
 .form_table .form_table_input > ul li{
-	list-style-type: none;;
+	list-style-type: none;
 	line-height:19px;
 }
 .form_table .form_table_ul input[type="radio"]{
@@ -361,7 +359,7 @@ body {
     color: #5e5e5e;
     /*background-color: #edecec;*/
     margin: 0px;
-    overflow: scroll;
+    /*overflow: scroll;*/
     background-color: #fff;
     background-size: cover;
     background-repeat: no-repeat
@@ -413,8 +411,8 @@ body {
 }
 .btn-primary {
     color: #fff;
-    background-color: #1bb394 !important;
-    border-color: #1bb394 !important;
+    background-color: #984394 !important;
+    border-color: #dabeda !important;
 }
 .form_control {
     background-color: #FFFFFF;
@@ -440,6 +438,6 @@ body {
     float: none !important;
     font-size:21px !important
 }
-a:visited {
-    color: #fff;
+.nav-tabs > li > a {
+    background: #eee;
 }

@@ -57,8 +57,14 @@
                 $scope.NonDestructiveAnalysis = dataList.NonDestructiveAnalysis;
                 $scope.DestructiveAnalysis = dataList.DestructiveAnalysis;
             });
-        $scope.result.CreatedBy = loginName;
-        $scope.result.CreatorEmail = CreatorEmail;
+        if (loginName == "" || CreatorEmail == "") {
+            getLogin();
+            $scope.result.CreatedBy = loginName;
+            $scope.result.CreatorEmail = CreatorEmail;
+        } else {
+            $scope.result.CreatedBy = loginName;
+            $scope.result.CreatorEmail = CreatorEmail;
+        }
         $scope.Prioritys = ['Excursion', 'Near Miss', 'Critical', 'Major', 'Minor'];
         $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion', 'Close'];
         /**
@@ -168,6 +174,7 @@
                     $scope.result.MPN = data.MPN;
                     $scope.result.ProductLine = data.ProductLine;
                     $scope.result.QREOwner = data.QREOwner;
+                    $scope.result.QREOwnerEmail = data.Email;
                 }
             });
             $scope.hidden = true;
@@ -286,7 +293,7 @@
                         dataType: "json",
                         success: function (data) {
                             window.location.href = "../SitePages/Home.aspx";
-                            //发送邮件
+                            //发送邮件 $scope.MpnOwnerEmail
                         },
                         error: function (a, b, c) {
                             alert("保存失败")
