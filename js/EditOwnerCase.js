@@ -77,7 +77,7 @@
                                     var xmlobject = parser.parseFromString(xData.responseText, "text/xml");
                                 }
                                 Department = getUPValue(xmlobject, "Department");
-                                if (Department == "Customer Quality") {
+                                if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(loginName) >= 0) {
                                     url = "../SitePages/EditCase.aspx?CaseNumber=" + CaseNumber;
                                     window.location.href = url;
                                 } else if (loginName == dataList.CreatedBy) {

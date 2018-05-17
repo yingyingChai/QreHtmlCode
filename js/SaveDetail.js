@@ -77,7 +77,7 @@
                                     var xmlobject = parser.parseFromString(xData.responseText, "text/xml");
                                 }
                                 Department = getUPValue(xmlobject, "Department");
-                                if (Department == "Customer Quality" || loginName.indexOf("Yingying Chai") >= 0) {
+                                if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(loginName) >= 0) {
                                 } else if (loginName == dataList.CreatedBy) {
                                     url = "../SitePages/EditOwnerCase.aspx?CaseNumber=" + CaseNumber;
                                     window.location.href = url;
@@ -132,9 +132,21 @@
                             Complexity: dataList.Complexity
                         }
                         //格式化时间
+                        if (dataList.Stage3CompleteDate == "0001-01-01") {
+                            dataList.Stage3CompleteDate = $filter('date')(new Date(), 'yyyy-MM-dd')
+                        }
                         $scope.Stage3CompleteDate = new Date(dataList.Stage3CompleteDate);
+                        if (dataList.Stage3ReceiveDate == "0001-01-01") {
+                            dataList.Stage3ReceiveDate = $filter('date')(new Date(), 'yyyy-MM-dd')
+                        }
                         $scope.Stage3ReceiveDate = new Date(dataList.Stage3ReceiveDate);
+                        if (dataList.Stage4ReceiveDate == "0001-01-01") {
+                            dataList.Stage4ReceiveDate = $filter('date')(new Date(), 'yyyy-MM-dd')
+                        }
                         $scope.Stage4ReceiveDate = new Date(dataList.Stage4ReceiveDate);
+                        if (dataList.Stage4CompleteDate == "0001-01-01") {
+                            dataList.Stage4CompleteDate = $filter('date')(new Date(), 'yyyy-MM-dd')
+                        }
                         $scope.Stage4CompleteDate = new Date(dataList.Stage4CompleteDate);
                         //判断选择的Type
                         if ($scope.result.Type) {

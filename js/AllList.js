@@ -1,7 +1,7 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("ListAllCtrl", function ($scope, $filter, $http, $compile) {
 
-        var Department = '', caseOwner = '',ListLoginUse = '';
+        var Department = '', caseOwner = '', ListLoginUse = '';
         $().SPServices({
             operation: "GetUserProfileByName",
             async: false,
@@ -25,101 +25,123 @@
                  * */
                 Department = getUPValue(xmlobject, "Department");
                 ListLoginUse = loginName;
-                if (Department == "Customer Quality" || loginName.indexOf("Yingying Chai") >= 0) {
+                if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(loginName) >= 0) {
                     caseOwner = "QRE";
                 } else {
                     caseOwner = loginName;
                 }
-                /*
-                 * 根据登录人获取Case
-                 * */
-                $http.get("http://10.0.3.52:8060/QREService.svc/GetQRECaseList?", { params: { caseOwner: caseOwner } })
-                    .success(function (data) {
-                        var dataSource = new kendo.data.DataSource({
-                            type: "odata",
-                            data: JSON.parse(data),
-                            schema: {
-                                model: {
-                                    fields: {
-                                        CaseNumber: { type: "string" },
-                                        Complexity: { type: "string" },
-                                        CaseStatus: { type: "string" },
-                                        CreatedBy: { type: "string" },
-                                        CreatedDate: { type: "date" },
-                                        MPN: { type: "string" },
-                                        Priority: { type: "string" },
-                                        ProductLine: { type: "string" },
-                                        QREOwner: { type: "string" },
-                                        RootCauseLv1: { type: "string" },
-                                        RootCauseLv2: { type: "string" },
-                                        Stage3CRCT: { type: "string" },
-                                        Stage3Item: { type: "string" },
-                                        Stage4CRCT: { type: "string" },
-                                        Stage5CRCT: { type: "string" },
-                                        Type: { type: "string" },
-                                    }
-                                },
-                            },
-                            pageSize: 10,
-                        });
-                        $("#grid").kendoGrid({
-                            dataSource: dataSource,
-                            filterable: true,
-                            pageable: true,
-                            columns: [{
-                                field: "CaseNumber",
-                                width:150
-                            }, {
-                                field: "Complexity",
-                            }, {
-                                field: "CaseStatus",
-                            }, {
-                                field: "CreatedBy",
-                            }, {
-                                field: "CreatedDate",
-                                format: "{0: yyyy-MM-dd}"
-                            }, {
-                                field: "MPN",
-                            }, {
-                                field: "Priority",
-                            }, {
-                                field: "ProductLine",
-                            }, {
-                                field: "QREOwner",
-                            }, {
-                                field: "RootCauseLv1",
-                            }, {
-                                field: "RootCauseLv2",
-                            }, {
-                                field: "Stage3CRCT",
-                            }, {
-                                field: "Stage3Item",
-                            }, {
-                                field: "Stage4CRCT",
-                            }, {
-                                field: "Stage5CRCT",
-                            }, {
-                                field: "Type",
-                            }, {
-                                command: [
-                                    //{ name: "View", click: EditCase },
-                                    { name: "Edit", click: EditCase },
-                                    { name: "Delete", click: Delete }
-                                ],
-                                //width: 230
-                                width: 180
-                            }]
-                        });
-                    });
+                loadKendoUi();
             }
         });
+        function loadKendoUi() {
+            /*
+                 * 根据登录人获取Case
+                 * */
+            $http.get("http://10.0.3.52:8060/QREService.svc/GetQRECaseList?", { params: { caseOwner: caseOwner } })
+                .success(function (data) {
+                    var dataSource = new kendo.data.DataSource({
+                        data: JSON.parse(data),
+                        schema: {
+                            model: {
+                                fields: {
+                                    CaseNumber: { type: "string" },
+                                    CaseStatus: { type: "string" },
+                                    Complexity: { type: "number" },
+                                    CreatedBy: { type: "string" },
+                                    CreatedDate: { type: "date" },
+                                    MPN: { type: "string" },
+                                    Priority: { type: "string" },
+                                    ProductLine: { type: "string" },
+                                    QREOwner: { type: "string" },
+                                    RootCauseLv1: { type: "string" },
+                                    RootCauseLv2: { type: "string" },
+                                    Stage5CRCT: { type: "number" },
+                                    Type: { type: "string" },
+                                }
+                            },
+                        },
+                        pageSize: 10,
+                    });
+                    $("#grid").kendoGrid({
+                        dataSource: dataSource,
+                        filterable: true,
+                        pageable: true,
+                        sortable: true,
+                        columns: [{
+                            field: "CaseNumber",
+                            title: "CaseNumber",
+                        }, {
+                            field: "CaseStatus",
+                            title: "CaseStatus",
+                        }, {
+                            field: "Complexity",
+                            title: "Complexity",
+                        }, {
+                            field: "CreatedBy",
+                            title: "CreatedBy",
+                            width: 170
+                        }, {
+                            field: "CreatedDate",
+                            format: "{0: yyyy-MM-dd}",
+                            title: "CreatedDate",
+                        }, {
+                            field: "MPN",
+                        }, {
+                            field: "Priority",
+                        }, {
+                            field: "ProductLine",
+                        }, {
+                            field: "QREOwner",
+                            width: 150
+                        }, {
+                            field: "RootCauseLv1",
+                        }, {
+                            field: "RootCauseLv2",
+                        }, {
+                            field: "Stage5CRCT",
+                            title: "CRCT",
+                            width: 70
+                        }, {
+                            field: "Type",
+                            width: 70
+                        }, {
+                            command: [
+                                { name: "Edit", click: EditCase },
+                                { name: "Delete", click: Delete }
+                            ],
+                            width: 160
+                        }]
+                    });
+                });
+        }
         function Delete(e) {
             e.preventDefault();
             var tr = $(e.target).closest("tr"); // get the current table row (tr)
             // get the data bound to the current table row
             var data = this.dataItem(tr);
             var Id = data.CaseNumber;
+            var casedata = {
+                "CurrentUser": ListLoginUse,
+                "CaseNumber": Id
+            }
             //根据Id 删除
+            var url = "http://10.0.3.52:8060/QREService.svc/DeleteCase";
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(casedata),
+                dataType: "json",
+                success: function (data) {
+                    alertMessage(data.replace("\"", "").replace("\"", ""));
+                    if (data.replace("\"", "").replace("\"", "") == "Success") {
+                        loadKendoUi();
+                    }
+                },
+                error: function (a, b, c) {
+                    console.log(a);
+                }
+            });
         }
         function EditCase(e) {
             e.preventDefault();
