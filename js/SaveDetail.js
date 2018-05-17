@@ -367,7 +367,10 @@
             if (II != 0) {
                 leipiEditor.sync(); //同步内容
                 var html = leipiEditor.getContent();
-                html = html.split("<p><br/>").join("");
+                var str = "<p><br/></p>"
+                if (html.substring(html.length - str.length, html.length) == str) {
+                    html = html.substring(0, html.length - str.length);
+                }
                 $scope.result.ProblemDescription = html;
             } 
             if (verifyNewCase()) {
@@ -417,19 +420,28 @@
                 if (I3 != 0) {
                     leipiEditorStage3Summary.sync(); //同步内容
                     var htmlStage3 = leipiEditorStage3Summary.getContent();
-                    htmlStage3 = htmlStage3.split("<p><br/>").join("");
+                    var str = "<p><br/></p>"
+                    if (htmlStage3.substring(htmlStage3.length - str.length, htmlStage3.length) == str) {
+                        htmlStage3 = htmlStage3.substring(0, htmlStage3.length - str.length);
+                    }
                     $scope.result.Stage3Summary = htmlStage3;
                 }
                 if (I4!=0) {
                     leipiEditorStage4Summary.sync(); //同步内容
                     var htmlStage4 = leipiEditorStage4Summary.getContent();
-                    htmlStage4 = htmlStage4.split("<p><br/>").join("");
+                    var str = "<p><br/></p>"
+                    if (htmlStage4.substring(htmlStage4.length - str.length, htmlStage4.length) == str) {
+                        htmlStage4 = htmlStage4.substring(0, htmlStage4.length - str.length);
+                    }
                     $scope.result.Stage4Summary = htmlStage4;
                 }
                 if (I5 != 0) {
                     leipiEditorStage5Summary.sync();
                     var htmlStage5 = leipiEditorStage5Summary.getContent();
-                    htmlStage5 = htmlStage5.split("<p><br/>").join("");
+                    var str = "<p><br/></p>";
+                    if (htmlStage5.substring(htmlStage5.length - str.length, htmlStage5.length) == str) {
+                        htmlStage5 = htmlStage5.substring(0, htmlStage5.length - str.length);
+                    }
                     $scope.result.Stage5Summary = htmlStage5;
                 }
                 $scope.save();
@@ -663,7 +675,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 300
+            initialFrameHeight: 150
         });
         var leipiEditorStage3Summary = UE.getEditor('Stage3Summary', {
             toolleipi: true,//是否显示，设计器的 toolbars
@@ -672,7 +684,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 300
+            initialFrameHeight: 150
         });
         var leipiEditorStage4Summary = UE.getEditor('Stage4Summary', {
             toolleipi: true,//是否显示，设计器的 toolbars
@@ -681,7 +693,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 300
+            initialFrameHeight: 150
         });
         var leipiEditorStage5Summary = UE.getEditor('Stag5Summary', {
             toolleipi: true,//是否显示，设计器的 toolbars
@@ -690,7 +702,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 300
+            initialFrameHeight: 150
         });
         //Upload File
         var StageType = '', DocumentLibraryName = '', fileName = '';

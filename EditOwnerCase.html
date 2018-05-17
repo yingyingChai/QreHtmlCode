@@ -125,7 +125,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
-                                                        <span class="en">MPN <i class="form_table_required">*</i></span>
+                                                        <span class="en">Product <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
                                                         <input title="ESSENTIAL" class="form_control" ng-change="changeKeyValue(MPN)" ng-model="MPN" style='display:block' ng-click='hidden=!hidden' value="{{MPN}}" />
@@ -191,18 +191,18 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <td class="form_table_label" colspan="4">
+                                                        <span class="en">Problem Description<i class="form_table_required">*</i></span>
+                                                        <script id="ProblemDescription" type="text/plain" style="width:100%;">
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <td colspan="4">
                                                         <div kendo-grid k-data-source="assignments.dataSource" k-selectable="'row'" k-on-save-changes="saveChanges(kendoEvent)"
                                                              k-pageable="true"
                                                              k-columns='{{assignments.columns}}' k-sortable="true" k-editable="'popup'" k-height="300" k-toolbar="['create','save']">
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="form_table_label" colspan="4">
-                                                        <span class="en">Problem Description<i class="form_table_required">*</i></span>
-                                                        <script id="ProblemDescription" type="text/plain" style="width:100%;">
-                                                        </script>
                                                     </td>
                                                 </tr>
                                                 <tr>

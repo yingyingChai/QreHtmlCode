@@ -304,12 +304,12 @@
         }
         // Stage2 ProblemDescription
         var leipiEditor = UE.getEditor('ProblemDescription', {
-            toolleipi: true,//是否显示，设计器的 toolbars
+            toolleipi: false,//是否显示，设计器的 toolbars
             textarea: 'design_content',
             toolbars: [[
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 300
+            initialFrameHeight: 150
         });
     })

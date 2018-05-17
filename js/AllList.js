@@ -67,32 +67,23 @@
                         filterable: true,
                         pageable: true,
                         sortable: true,
-                        columns: [{
+                        columnMenu: true,                        columns: [{
                             field: "CaseNumber",
                             title: "CaseNumber",
                         }, {
                             field: "CaseStatus",
                             title: "CaseStatus",
+                            hidden: true
                         }, {
                             field: "Complexity",
                             title: "Complexity",
                         }, {
-                            field: "CreatedBy",
-                            title: "CreatedBy",
-                            width: 170
-                        }, {
-                            field: "CreatedDate",
-                            format: "{0: yyyy-MM-dd}",
-                            title: "CreatedDate",
-                        }, {
                             field: "MPN",
+                            title: "Product",
                         }, {
                             field: "Priority",
                         }, {
                             field: "ProductLine",
-                        }, {
-                            field: "QREOwner",
-                            width: 150
                         }, {
                             field: "RootCauseLv1",
                         }, {
@@ -104,6 +95,17 @@
                         }, {
                             field: "Type",
                             width: 70
+                        }, {
+                            field: "CreatedBy",
+                            title: "CreatedBy",
+                            width: 170
+                        }, {
+                            field: "CreatedDate",
+                            format: "{0: yyyy-MM-dd}",
+                            title: "CreatedDate",
+                        }, {
+                            field: "QREOwner",
+                            width: 150
                         }, {
                             command: [
                                 { name: "Edit", click: EditCase },

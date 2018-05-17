@@ -24,11 +24,8 @@
 <script src="../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 <script src="../js/inspinia.js"></script>
 <script src="../js/plugins/pace/pace.min.js"></script>
-<link href="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/css/site.css?2028" rel="stylesheet" type="text/css" />
-<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.config.js?2028"></script>
-<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.all.js?2028"></script>
-<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/lang/zh-cn/zh-cn.js?2028"></script>
-<script type="text/javascript" charset="utf-8" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/formdesign/leipi.formdesign.v4.js?2028"></script>
+<script src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.config.js"></script>
+<script src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.all.js"></script>
 <script src="../js/SaveDetail.js"></script>
 <style>
     .k-grid-save-changes {
@@ -42,9 +39,11 @@
     .radio, .checkbox {
         margin-top: -25px;
     }
+
     label {
         font-weight: 100;
     }
+
     #page-wrapper {
         min-height: auto !important
     }
@@ -128,7 +127,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
-                                                        <span class="en">MPN <i class="form_table_required">*</i></span>
+                                                        <span class="en">Product <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
                                                         <input title="ESSENTIAL" class="form_control" ng-change="changeKeyValue(MPN)" ng-model="MPN" style='display:block' ng-click='hidden=!hidden' value="{{MPN}}" />
@@ -194,18 +193,18 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <td class="form_table_label" colspan="4">
+                                                        <span class="en">Problem Description<i class="form_table_required">*</i></span>
+                                                        <script id="ProblemDescription" type="text/plain" style="width:100%;">
+                                                        </script>
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <td colspan="4">
                                                         <div kendo-grid k-data-source="assignments.dataSource" k-selectable="'row'" k-on-save-changes="saveChanges(kendoEvent)"
                                                              k-pageable="true" k-pageable-refresh="true"
                                                              k-columns='{{assignments.columns}}' k-sortable="true" k-editable="'popup'" k-height="300" k-toolbar="['create','save']">
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="form_table_label" colspan="4">
-                                                        <span class="en">Problem Description<i class="form_table_required">*</i></span>
-                                                        <script id="ProblemDescription" type="text/plain" style="width:100%;">
-                                                        </script>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -290,7 +289,7 @@
                                                         <span class="en">Complete Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" class="form_control" id="Stage3CompleteDate" ng-change="changeDate('Stage3CompleteDate')" ng-model="Stage3CompleteDate"/>
+                                                        <input type="date" name="date" class="form_control" id="Stage3CompleteDate" ng-change="changeDate('Stage3CompleteDate')" ng-model="Stage3CompleteDate" />
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -379,13 +378,13 @@
                                                         <span class="en">Receive Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" id="Stage4ReceiveDate" ng-change="changeDate('Stage4ReceiveDate')" ng-model="Stage4ReceiveDate"/>
+                                                        <input type="date" name="date" id="Stage4ReceiveDate" ng-change="changeDate('Stage4ReceiveDate')" ng-model="Stage4ReceiveDate" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Complete Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" id="Stage4CompleteDate" ng-change="changeDate('Stage4CompleteDate')" ng-model="Stage4CompleteDate"/>
+                                                        <input type="date" name="date" id="Stage4CompleteDate" ng-change="changeDate('Stage4CompleteDate')" ng-model="Stage4CompleteDate" />
                                                     </td>
                                                 </tr>
                                             </tbody>

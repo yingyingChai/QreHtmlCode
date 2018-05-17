@@ -441,3 +441,6 @@ body {
 .nav-tabs > li > a {
     background: #eee;
 }
+/*.edui-default .edui-editor-iframeholder {
+    height: 150px !important;
+}*/

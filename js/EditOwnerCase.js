@@ -310,7 +310,10 @@
             if (II != 0) {
                 leipiEditor.sync(); //同步内容
                 var html = leipiEditor.getContent();
-                html = html.split("<p><br/>").join("");
+                var str = "<p><br/></p>"
+                if (html.substring(html.length - str.length, html.length) == str) {
+                    html = html.substring(0, html.length - str.length);
+                }
                 $scope.result.ProblemDescription = html;
             }
             if (verifyNewCase()) {
@@ -518,7 +521,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 300
+            initialFrameHeight: 150
         });
         //初始化更新Ueditor中内容
         var II = 0;
