@@ -22,15 +22,27 @@
                         Number: { type: "string", validation: { required: true } },
                         LotIDOrDateCode: { type: "string", validation: { required: true } },
                         Fab: { type: "string", validation: { required: true } },
-                        AssemblyData: { type: "string", validation: { required: true } }
+                        AssemblyData: { type: "string", validation: { required: true } },
+                        createTime: { editable: false, nullable: true },
                     }
                 },
                 parse: function (data, options, operation) {
                     if (!data.length && !data.id) {
                         data.ID = generateUUID()
+                        data.createTime = new Date();
+                    } else {
+                        for (var i = 0; i < data.length; i++) {
+                            if (data.createTime== undefined) {
+                                data.createTime = new Date();
+                            }
+                        }
                     }
                     return data;
                 }
+            },
+             sort: {
+                field: "createTime",
+                dir: "asc"
             },
             pageSize: 5,
         });
@@ -284,12 +296,14 @@
          **/
         $scope.$watch('RootCauseLv1Select', function (value, oldValue) {
             if (value != oldValue) {
-                $scope.result.RootCauseLv1 = value.Level1;
-                $scope.RootCauseLv2 = value.Level2
-            } else {
-                if ($scope.result)
-                $scope.result.RootCauseLv1 = '';
-                $scope.RootCauseLv2 = ['Level2'];
+                if (value) {
+                    $scope.result.RootCauseLv1 = value.Level1;
+                    $scope.RootCauseLv2 = value.Level2
+                } else {
+                    $scope.result.RootCauseLv1 = null;
+                    $scope.result.RootCauseLv2 = null;
+                    $scope.RootCauseLv2 = null;
+                }
             }
         });
         $scope.$watch('result.RootCauseLv1', function (value, oldValue) {

@@ -65,7 +65,7 @@
             $scope.result.CreatedBy = loginName;
             $scope.result.CreatorEmail = CreatorEmail;
         }
-        $scope.Prioritys = ['Excursion', 'Near Miss', 'Critical', 'Major', 'Minor'];
+        $scope.Prioritys = ['High', 'Middle', 'Low'];
         $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion', 'Close'];
         /**
          *监控数据变化 针对不同表单
@@ -102,20 +102,24 @@
                     id: "id",
                     fields: {
                         id: { editable: false, nullable: true },
-                        createTime: { editable: false, nullable: true},
                         Number: { type: "string", validation: { required: true } },
                         LotIDOrDateCode: { type: "string", validation: { required: true } },
                         Fab: { type: "string", validation: { required: true } },
-                        Assembly: { type: "string", validation: { required: true } }
+                        Assembly: { type: "string", validation: { required: true } },
+                        createTime: { editable: false, nullable: true },
                     }
                 },
                 parse: function (data, options, operation) {
                     if (!data.length && !data.id) {
                         data.id = generateUUID()
+                        data.createTime = new Date();
                     }
-                    data.createTime = new Date();
                     return data;
                 }
+            },
+            sort: {
+                field: "createTime",
+                dir: "asc"
             },
             pageSize: 5,
         });
