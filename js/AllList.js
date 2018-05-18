@@ -116,6 +116,10 @@
                     });
                 });
         }
+        function saveChanges(event) {
+            var st = event;
+            $scope.LotList = event.sender.options.dataSource.view();
+        }
         function Delete(e) {
             e.preventDefault();
             var tr = $(e.target).closest("tr"); // get the current table row (tr)

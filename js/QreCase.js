@@ -102,6 +102,7 @@
                     id: "id",
                     fields: {
                         id: { editable: false, nullable: true },
+                        createTime: { editable: false, nullable: true},
                         Number: { type: "string", validation: { required: true } },
                         LotIDOrDateCode: { type: "string", validation: { required: true } },
                         Fab: { type: "string", validation: { required: true } },
@@ -112,13 +113,17 @@
                     if (!data.length && !data.id) {
                         data.id = generateUUID()
                     }
+                    data.createTime = new Date();
                     return data;
                 }
             },
             pageSize: 5,
         });
         $scope.assignments.columns = [
-            { field: "Number", title: "No.", width: "120px" },
+            {
+                field: "Number", title: "No.", width: "120px", sortable: {
+                    initialDirection: "desc"
+                }, },
             { field: "LotIDOrDateCode", title: "Lot ID&Date Code", width: "120px" },
             { field: "Fab", title: "Fab", values: FabCode, width: "120px" },
             { field: "Assembly", title: "Assembly", values: AssyCode, width: "120px" },
