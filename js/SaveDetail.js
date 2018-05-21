@@ -4,7 +4,7 @@
         if (selectDepartName == "") {
             getLogin();
         }
-        $scope.Prioritys = ['Excursion', 'Near Miss', 'Critical', 'Major', 'Minor'];
+        $scope.Prioritys = ['High', 'Middle', 'Low'];
         $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion', 'Close'];
         var StatisticAnalysisList = [], NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [];
         $scope.Stage3ReceiveDate = "";
@@ -522,6 +522,7 @@
                     return false;
                 }
             } else {
+                $scope.result.Complexity = 0;
                 $scope.result.Stage5CRCT = null;
                 return true;
             }
@@ -865,11 +866,11 @@
         }
         function GetComplexityScore() {
             var Score = 0, stage1Score = 0, stage3Score = 0, stage4Score = 0, stage5Score=0;
-            if ($scope.result.Priority == "Excursion" || $scope.result.Priority == "Near Miss") {
+            if ($scope.result.Priority == "High") {
                 stage1Score = 3;
-            } else if ($scope.result.Priority == "Critical") {
+            } else if ($scope.result.Priority == "Middle") {
                 stage1Score = 2;
-            } else if ($scope.result.Priority == "Major" || $scope.result.Priority == "Minor") {
+            } else if ($scope.result.Priority == "Low") {
                 stage1Score = 1;
             }
             if ($scope.IsShowStage3 && Stage3ItemList.length > 0) {
