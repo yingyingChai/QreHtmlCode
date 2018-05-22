@@ -71,6 +71,7 @@
                         columns: [{
                             field: "CaseNumber",
                             title: "CaseNumber",
+                            width: 110
                         }, {
                             field: "CaseStatus",
                             title: "CaseStatus",
@@ -78,13 +79,19 @@
                         }, {
                             field: "Complexity",
                             title: "Complexity",
+                            width: 100
                         }, {
                             field: "MPN",
                             title: "Product",
+                            width: 90
                         }, {
                             field: "Priority",
+                            width: 80
                         }, {
                             field: "ProductLine",
+                            width: 110
+                        }, {
+                            field: "Type",
                         }, {
                             field: "RootCauseLv1",
                         }, {
@@ -92,10 +99,7 @@
                         }, {
                             field: "Stage5CRCT",
                             title: "CRCT",
-                            width: 70
-                        }, {
-                            field: "Type",
-                            width: 70
+                            width: 80
                         }, {
                             field: "CreatedBy",
                             title: "CreatedBy",
@@ -123,8 +127,7 @@
         }
         function Delete(e) {
             e.preventDefault();
-            var tr = $(e.target).closest("tr"); // get the current table row (tr)
-            // get the data bound to the current table row
+            var tr = $(e.target).closest("tr");
             var data = this.dataItem(tr);
             var Id = data.CaseNumber;
             var casedata = {

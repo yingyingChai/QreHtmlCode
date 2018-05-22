@@ -1,5 +1,8 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("MyCtrl", function ($scope, $filter, $http) {
+        /**
+         * 初始化$scope.result 对象，stage3 ，stage4 没有值默认为null
+         */
         $scope.result = {
             CaseNumber: null,
             CreatedBy: null,
@@ -57,7 +60,6 @@
         //初始化数据
         $http.get("http://10.0.3.52:8060/QREService.svc/GetQRESystemData?")
             .success(function (data) {
-                // 数据
                 var dataList = JSON.parse(data)
                 $scope.MPNList = dataList.MPNs;
                 $scope.tempdatas = $scope.MPNList;
@@ -71,6 +73,7 @@
         $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion'];
         /**
          *监控数据变化 针对不同表单
+         * Type 更改，对应字段名称修改
          */
         $scope.$watch('Type', function (value) {
             if (value) {
@@ -83,10 +86,10 @@
                     $scope.LinkName = "Yield";
                 }
             }
-
         });
         /**
          * 表中表
+         * LotList 唯一Id,若不纯在Id，修改功能失效
          */
         $scope.assignments = {};
         function generateUUID() {
@@ -126,11 +129,7 @@
             pageSize: 5,
         });
         $scope.assignments.columns = [
-            {
-                field: "Number", title: "No.", width: "120px", sortable: {
-                    initialDirection: "desc"
-                },
-            },
+            { field: "Number", title: "No.", width: "120px"},
             { field: "LotIDOrDateCode", title: "Lot ID&Date Code", width: "120px" },
             { field: "Fab", title: "Fab", values: FabCode, width: "120px" },
             { field: "Assembly", title: "Assembly", values: AssyCode, width: "120px" },
@@ -298,7 +297,7 @@
                         dIndex.AssemblyData = data.Assembly;
                         $scope.result.LotList.push(dIndex);
                     });
-                    var url = "http://localhost:63232/QREService.svc/SaveData?";
+                    var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
                     $.ajax({
                         type: "POST",
                         url: url,
@@ -307,7 +306,6 @@
                         dataType: "json",
                         success: function (data) {
                             window.location.href = "../SitePages/Home.aspx";
-                            //发送邮件 $scope.MpnOwnerEmail
                         },
                         error: function (a, b, c) {
                             alert("保存失败")
@@ -316,7 +314,6 @@
                 }
             }
         }
-        // Stage2 ProblemDescription
         var leipiEditor = UE.getEditor('ProblemDescription', {
             toolleipi: false,//是否显示，设计器的 toolbars
             textarea: 'design_content',

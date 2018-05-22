@@ -166,27 +166,27 @@
                         /*
                          * 初始化页面选择多选按钮 
                          **/
-                        if (dataList.StatisticAnalysis != "") {
+                        if (dataList.StatisticAnalysis) {
                             StatisticAnalysisList = JSON.parse(dataList.StatisticAnalysis);
                             SelectMulity(StatisticAnalysisList, 11);
                         }
-                        if (dataList.NonDestructiveAnalysis != "") {
+                        if (dataList.NonDestructiveAnalysis) {
                             NonDestructiveAnalysisList = JSON.parse(dataList.NonDestructiveAnalysis);
                             SelectMulity(NonDestructiveAnalysisList, 12);
                         }
-                        if (dataList.DestructiveAnalysis != "") {
+                        if (dataList.DestructiveAnalysis) {
                             DestructiveAnalysisList = JSON.parse(dataList.DestructiveAnalysis);
                             SelectMulity(DestructiveAnalysisList, 13);
                         }
-                        if (dataList.Stage3Item != "") {
+                        if (dataList.Stage3Item) {
                             Stage3ItemList = JSON.parse(dataList.Stage3Item);
                             SelectMulity(Stage3ItemList, 3);
                         }
-                        if (dataList.Stage4ItemOne != "") {
+                        if (dataList.Stage4ItemOne) {
                             itemOneList = JSON.parse(dataList.Stage4ItemOne);
                             SelectMulity(itemOneList, 41);
                         }
-                        if (dataList.Stage4ItemTwo != "") {
+                        if (dataList.Stage4ItemTwo) {
                             itemTwoList = JSON.parse(dataList.Stage4ItemTwo);
                             SelectMulity(itemTwoList, 42);
                         }
@@ -196,7 +196,7 @@
 
                         if (dataList.Stage3ContinueAnalysis == "Yes") {
                             $scope.IsShowStage3
-                            if (dataList.Stage3Attachment != "") {
+                            if (dataList.Stage3Attachment) {
                                 Stage3Attachment = JSON.parse(dataList.Stage3Attachment);
                                 angular.forEach(Stage3Attachment, function (data, index, array) {
                                     var id = data.split('.')[0];
@@ -216,7 +216,7 @@
                         }
                         if (dataList.Stage4ContinueAnalysis == "Yes") {
                             $scope.IsShowStage4 = true;
-                            if (dataList.Stage4Attachment != "") {
+                            if (dataList.Stage4Attachment) {
                                 Stage4Attachment = JSON.parse(dataList.Stage4Attachment);
                                 angular.forEach(Stage4Attachment, function (data, index, array) {
                                     var id = data.split('.')[0];

@@ -36,25 +36,19 @@ $.ajax({
     }
 });
 var selectDepartName = '', loginName = '', CreatorEmail = '';
-function getLogin() {
-    $.ajax({
-        url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + _spPageContextInfo.userId + ")",
-        contentType: "application/json;odata=verbose",
-        headers: { "accept": "application/json;odata=verbose" },
-        success: function (data) {
-            loginName = data.d.Title;
-            selectDepartName = data.d.LoginName;
-            CreatorEmail = data.d.Email;
-            $("#LoginUser").html(loginName);
-        },
-        error: function (data) {
-        }
-    });
-}
-getLogin();
-//$(function () {
-//    $("#LoginUser").html(loginName);
-//})
+$.ajax({
+    url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + _spPageContextInfo.userId + ")",
+    contentType: "application/json;odata=verbose",
+    headers: { "accept": "application/json;odata=verbose" },
+    success: function (data) {
+        loginName = data.d.Title;
+        selectDepartName = data.d.LoginName;
+        CreatorEmail = data.d.Email;
+        $("#LoginUser").html(loginName);
+    },
+    error: function (data) {
+    }
+});
 //ªÒ»°CaseNumber
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
