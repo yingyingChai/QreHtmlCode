@@ -1,5 +1,5 @@
-var departmentList = ["Customer Quality", "QRE","Business Solutions"];
-var authorityUserList = ["Jerry Gong (π®Ω‡)","Zhanwu Yang (—Ó’ΩŒ‰)"];
+var departmentList = ["Customer Quality", "QRE", "Business Solutions"];
+var authorityUserList = ["Jerry Gong (π®Ω‡)", "Zhanwu Yang (—Ó’ΩŒ‰)"];
 var FabCode = []; var AssyCode = [];
 $.ajax({
     url: "http://eip.unisoc.com/opsweb/QA/FAR/_api/web/lists/getByTitle('Fab%20Code')/items?$select=Title&$orderby=Created%20desc&$Top=99999999",
@@ -45,15 +45,16 @@ function getLogin() {
             loginName = data.d.Title;
             selectDepartName = data.d.LoginName;
             CreatorEmail = data.d.Email;
+            $("#LoginUser").html(loginName);
         },
         error: function (data) {
         }
     });
 }
 getLogin();
-$(function () {
-    $("#LoginUser").html(loginName);
-})
+//$(function () {
+//    $("#LoginUser").html(loginName);
+//})
 //ªÒ»°CaseNumber
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");

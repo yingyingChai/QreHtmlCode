@@ -67,7 +67,8 @@
                         filterable: true,
                         pageable: true,
                         sortable: true,
-                        columnMenu: true,                        columns: [{
+                        columnMenu: true,
+                        columns: [{
                             field: "CaseNumber",
                             title: "CaseNumber",
                         }, {

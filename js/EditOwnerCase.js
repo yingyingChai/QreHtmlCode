@@ -480,6 +480,10 @@
          * 校验数据
          */
         function verifyNewCase() {
+            if ($scope.result.CreatedBy == null || $scope.result.CreatedBy == '') {
+                alertMessage('页面加载失败或服务器端代码被修改，请刷新页面');
+                return false;
+            }
             if ($scope.result.Type == null || $scope.result.Type == '') {
                 alertMessage('请选择Type');
                 return false;

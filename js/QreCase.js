@@ -1,48 +1,58 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("MyCtrl", function ($scope, $filter, $http) {
         $scope.result = {
-            CaseNumber: '',
-            CreatedBy: '',
-            CreatorEmail: '',
-            Type: '',
+            CaseNumber: null,
+            CreatedBy: null,
+            CreatorEmail: null,
+            Type: null,
             CreatedDate: $filter('date')(new Date(), 'yyyy-MM-dd'),
-            Priority: '',
-            CaseStatus: '',
-            MPN: '',
-            ProductLine: '',
-            QREOwner: '',
-            QREOwnerEmail: '',
-            Other: '',
-            Dppm: '',
-            Customer: '',
-            FailuresFound: '',
-            LinkName: '',
-            ProblemDescription: '',
-            StatisticAnalysis: '',
-            NonDestructiveAnalysis: '',
-            DestructiveAnalysis: '',
+            Priority: null,
+            CaseStatus: null,
+            MPN: null,
+            ProductLine: null,
+            QREOwner: null,
+            QREOwnerEmail: null,
+            Other: null,
+            Dppm: null,
+            Customer: null,
+            FailuresFound: null,
+            LinkName: null,
+            ProblemDescription: null,
+            StatisticAnalysis: null,
+            NonDestructiveAnalysis: null,
+            DestructiveAnalysis: null,
             Stage3ContinueAnalysis: "NO",
-            Stage3AssiggnTo: "",
-            Stage3CompleteDate: "",
-            Stage3ReceiveDate: "",
-            Stage3Item: "",
-            Stage3Summary: "",
-            Stage3CRCT: "",
-            Stage3Attachment: "",
+            Stage3AssiggnTo: null,
+            Stage3CompleteDate: null,
+            Stage3ReceiveDate: null,
+            Stage3Item: null,
+            Stage3Summary: null,
+            Stage3CRCT: null,
+            Stage3Attachment: null,
             Stage4ContinueAnalysis: "Yes",
-            Stage4ReceiveDate: "",
-            Stage4CompleteDate: "",
-            Stage4ItemOne: "",
-            Stage4ItemTwo: "",
-            Stage4Summary: "",
-            Stage4CRCT: "",
-            Stage4Attachment: "",
+            Stage4ReceiveDate: null,
+            Stage4CompleteDate: null,
+            Stage4ItemOne: null,
+            Stage4ItemTwo: null,
+            Stage4Summary: null,
+            Stage4CRCT: null,
+            Stage4Attachment: null,
             RootCauseLv1: null,
             RootCauseLv2: null,
-            Stage5Summary: "",
-            Stage5CRCT: "",
+            Stage5Summary: null,
+            Stage5CRCT: null,
             LotList: [],
             Complexity: 0,
+        }
+        if (loginName == "") {
+            $scope.result.CreatedBy = $(".ms-core-menu-root")[0].innerHTML.split('<')[0];
+            var name = $scope.result.CreatedBy.split("(");
+            var name0 = name[0].substring(0, name[0].length - 1, );
+            var email = name0.replace(' ', '.') + "@unisoc.com";
+            $scope.result.CreatorEmail = email;
+        } else {
+            $scope.result.CreatedBy = loginName;
+            $scope.result.CreatorEmail = CreatorEmail;
         }
         //初始化数据
         $http.get("http://10.0.3.52:8060/QREService.svc/GetQRESystemData?")
@@ -57,16 +67,8 @@
                 $scope.NonDestructiveAnalysis = dataList.NonDestructiveAnalysis;
                 $scope.DestructiveAnalysis = dataList.DestructiveAnalysis;
             });
-        if (loginName == "" || CreatorEmail == "") {
-            getLogin();
-            $scope.result.CreatedBy = loginName;
-            $scope.result.CreatorEmail = CreatorEmail;
-        } else {
-            $scope.result.CreatedBy = loginName;
-            $scope.result.CreatorEmail = CreatorEmail;
-        }
         $scope.Prioritys = ['High', 'Middle', 'Low'];
-        $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion', 'Close'];
+        $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion'];
         /**
          *监控数据变化 针对不同表单
          */
@@ -127,7 +129,8 @@
             {
                 field: "Number", title: "No.", width: "120px", sortable: {
                     initialDirection: "desc"
-                }, },
+                },
+            },
             { field: "LotIDOrDateCode", title: "Lot ID&Date Code", width: "120px" },
             { field: "Fab", title: "Fab", values: FabCode, width: "120px" },
             { field: "Assembly", title: "Assembly", values: AssyCode, width: "120px" },
@@ -153,7 +156,6 @@
                 NonDestructiveAnalysisList.push(z);
             }
             $scope.result.NonDestructiveAnalysis = JSON.stringify(NonDestructiveAnalysisList);
-
         }
         var DestructiveAnalysisList = [];
         $scope.DestructiveAnalysisClick = function (z) {
@@ -163,7 +165,6 @@
                 DestructiveAnalysisList.push(z);
             }
             $scope.result.DestructiveAnalysis = JSON.stringify(DestructiveAnalysisList);
-
         }
         /**
          * 
@@ -202,6 +203,10 @@
          * 校验数据
          */
         function verifyNewCase() {
+            if ($scope.result.CreatedBy == null || $scope.result.CreatedBy == '') {
+                alertMessage('页面加载失败或服务器端代码被修改，请刷新页面');
+                return false;
+            }
             if ($scope.result.Type == null || $scope.result.Type == '') {
                 alertMessage('请选择Type');
                 return false;
@@ -293,7 +298,7 @@
                         dIndex.AssemblyData = data.Assembly;
                         $scope.result.LotList.push(dIndex);
                     });
-                    var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
+                    var url = "http://localhost:63232/QREService.svc/SaveData?";
                     $.ajax({
                         type: "POST",
                         url: url,

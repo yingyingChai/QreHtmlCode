@@ -1,9 +1,9 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("SaveDetailCtrl", function ($scope, $filter, $compile, $http) {
         //初始化数据
-        if (selectDepartName == "") {
-            getLogin();
-        }
+        //if (selectDepartName == "") {
+        //    getLogin().d.title;
+        //}
         $scope.Prioritys = ['High', 'Middle', 'Low'];
         $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion', 'Close'];
         var StatisticAnalysisList = [], NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [];
@@ -32,7 +32,7 @@
                         data.createTime = new Date();
                     } else {
                         for (var i = 0; i < data.length; i++) {
-                            if (data.createTime== undefined) {
+                            if (data.createTime == undefined) {
                                 data.createTime = new Date();
                             }
                         }
@@ -40,7 +40,7 @@
                     return data;
                 }
             },
-             sort: {
+            sort: {
                 field: "createTime",
                 dir: "asc"
             },
@@ -102,7 +102,7 @@
                         $scope.result = {
                             CaseNumber: dataList.CaseNumber,
                             CreatedBy: dataList.CreatedBy,
-                            CreatorEmail: dataList.CreatorEmail?dataList.CreatorEmail:"",
+                            CreatorEmail: dataList.CreatorEmail ? dataList.CreatorEmail : "",
                             Type: dataList.Type,
                             CreatedDate: dataList.CreatedDate,
                             Priority: dataList.Priority,
@@ -110,7 +110,7 @@
                             MPN: dataList.MPN,
                             ProductLine: dataList.ProductLine,
                             QREOwner: dataList.QREOwner,
-                            QREOwnerEmail: dataList.QREOwnerEmail ? dataList.QREOwnerEmail:"",
+                            QREOwnerEmail: dataList.QREOwnerEmail ? dataList.QREOwnerEmail : "",
                             Other: dataList.Other,
                             Dppm: dataList.Dppm,
                             Customer: dataList.Customer,
@@ -179,33 +179,33 @@
                          **/
                         if (dataList.StatisticAnalysis != "") {
                             StatisticAnalysisList = JSON.parse(dataList.StatisticAnalysis);
-                            SelectMulity(StatisticAnalysisList,11);
+                            SelectMulity(StatisticAnalysisList, 11);
                         }
                         if (dataList.NonDestructiveAnalysis != "") {
                             NonDestructiveAnalysisList = JSON.parse(dataList.NonDestructiveAnalysis);
-                            SelectMulity(NonDestructiveAnalysisList,12);
+                            SelectMulity(NonDestructiveAnalysisList, 12);
                         }
                         if (dataList.DestructiveAnalysis != "") {
                             DestructiveAnalysisList = JSON.parse(dataList.DestructiveAnalysis);
-                            SelectMulity(DestructiveAnalysisList,13);
+                            SelectMulity(DestructiveAnalysisList, 13);
                         }
                         if (dataList.Stage3Item != "") {
                             Stage3ItemList = JSON.parse(dataList.Stage3Item);
-                            SelectMulity(Stage3ItemList,3);
+                            SelectMulity(Stage3ItemList, 3);
                         }
                         if (dataList.Stage4ItemOne != "") {
                             itemOneList = JSON.parse(dataList.Stage4ItemOne);
-                            SelectMulity(itemOneList,41);
+                            SelectMulity(itemOneList, 41);
                         }
                         if (dataList.Stage4ItemTwo != "") {
                             itemTwoList = JSON.parse(dataList.Stage4ItemTwo);
-                            SelectMulity(itemTwoList,42);
+                            SelectMulity(itemTwoList, 42);
                         }
                         /*
                          * 初始化页面显示附件链接
                          * **/
-                        
-                        if (dataList.Stage3ContinueAnalysis == "Yes" && dataList.Stage3Attachment!="") {
+
+                        if (dataList.Stage3ContinueAnalysis == "Yes" && dataList.Stage3Attachment != "") {
                             Stage3Attachment = JSON.parse(dataList.Stage3Attachment);
                             angular.forEach(Stage3Attachment, function (data, index, array) {
                                 var id = data.split('.')[0];
@@ -248,9 +248,9 @@
         /**
          *监控数据变化 针对不同表单
          */
-        function SelectMulity(List,index) {
+        function SelectMulity(List, index) {
             angular.forEach(List, function (data) {
-                var id = getId(data,index);
+                var id = getId(data, index);
                 $("#" + id).attr("checked", true)
             })
         }
@@ -386,7 +386,7 @@
                     html = html.substring(0, html.length - str.length);
                 }
                 $scope.result.ProblemDescription = html;
-            } 
+            }
             if (verifyNewCase()) {
                 if ($scope.result.Type == 'RMA') {
                     if ($scope.result.LinkName.indexOf("http:") < 0) {
@@ -440,7 +440,7 @@
                     }
                     $scope.result.Stage3Summary = htmlStage3;
                 }
-                if (I4!=0) {
+                if (I4 != 0) {
                     leipiEditorStage4Summary.sync(); //同步内容
                     var htmlStage4 = leipiEditorStage4Summary.getContent();
                     var str = "<p><br/></p>"
@@ -634,6 +634,10 @@
          * 校验数据
          */
         function verifyNewCase() {
+            if ($scope.result.CreatedBy == null || $scope.result.CreatedBy == '') {
+                alertMessage('页面加载失败或服务器端代码被修改，请刷新页面');
+                return false;
+            }
             if ($scope.result.Type == null || $scope.result.Type == '') {
                 alertMessage('请选择Type');
                 return false;
@@ -826,7 +830,7 @@
             if (I3 == 0) {
                 if ($scope.IsShowStage3) {
                     leipiEditorStage3Summary.execCommand('insertHtml', $scope.result.Stage3Summary);
-                } else{
+                } else {
                     leipiEditorStage3Summary.execCommand('cleardoc');
                 }
                 I3 = 2;
@@ -838,7 +842,7 @@
             if (I4 == 0) {
                 if ($scope.IsShowStage4) {
                     leipiEditorStage4Summary.execCommand('insertHtml', $scope.result.Stage4Summary);
-                } else{
+                } else {
                     leipiEditorStage4Summary.execCommand('cleardoc');
                 }
                 I4 = 2;
@@ -862,10 +866,10 @@
                 $scope.Stage4ReceiveDate = new Date(val);
             } else if (id == "Stage4CompleteDate") {
                 $scope.Stage4CompleteDate = new Date(val);
-            } 
+            }
         }
         function GetComplexityScore() {
-            var Score = 0, stage1Score = 0, stage3Score = 0, stage4Score = 0, stage5Score=0;
+            var Score = 0, stage1Score = 0, stage3Score = 0, stage4Score = 0, stage5Score = 0;
             if ($scope.result.Priority == "High") {
                 stage1Score = 3;
             } else if ($scope.result.Priority == "Middle") {
@@ -887,9 +891,9 @@
             if (stage4Score >= 0 && stage4Score <= 2) {
                 if ($scope.result.Stage5CRCT <= 5) {
                     stage5Score = 2;
-                } else if ($scope.result.Stage5CRCT >5) {
+                } else if ($scope.result.Stage5CRCT > 5) {
                     stage5Score = 1;
-                } 
+                }
             } else {
                 if ($scope.result.Stage5CRCT <= 5) {
                     stage5Score = 3;
@@ -905,7 +909,7 @@
     })
     .filter('ValueString', function () {
         return function (value) {
-            if (value.indexOf("Others") >= 0|| value.indexOf("0thers") >= 0) {
+            if (value.indexOf("Others") >= 0 || value.indexOf("0thers") >= 0) {
                 value = "Other";
                 return value;
             }
