@@ -1,6 +1,5 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("ListAllCtrl", function ($scope, $filter, $http, $compile) {
-
         var Department = '', caseOwner = '', ListLoginUse = '';
         $().SPServices({
             operation: "GetUserProfileByName",

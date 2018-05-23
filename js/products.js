@@ -44,7 +44,6 @@ $.ajax({
         loginName = data.d.Title;
         selectDepartName = data.d.LoginName;
         CreatorEmail = data.d.Email;
-        $("#LoginUser").html(loginName);
     },
     error: function (data) {
     }
@@ -114,3 +113,10 @@ function getUPValue(x, p) {
     }).find("Values").text();
     return thisValue;
 }
+function getValue(x, p) {
+    var thisValue = $(x).SPFilterNode("PropertyData").filter(function () {
+        return $(this).find("Name").text() == p;
+    }).find("Values").text();
+    return thisValue;
+}
+
