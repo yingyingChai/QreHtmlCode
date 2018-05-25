@@ -294,46 +294,45 @@
          *提交申请记录
          * @param {any} event
          */
-        $scope.saveChanges = function (event) {
-            var st = event;
-            $scope.LotList = event.sender.options.dataSource.view();
-        }
         $scope.save = function () {
             leipiEditor.sync(); //同步内容
             var html = leipiEditor.getContent();
-            $scope.result.ProblemDescription = html;
-            if (verifyNewCase()) {
-                if (verigyRMA()) {
-                    $scope.result.LotList = [];
-                    //$(".k-button.k-button-icontext.k-grid-save-changes").click();
-                    $scope.result.LotList = [];
-                    angular.forEach(LotList, function (data, index, array) {
-                        var dIndex = {
-                            'Number': '',
-                            'LotIDOrDateCode': '',
-                            'Fab': '',
-                            'AssemblyData': '',
-                        }
-                        dIndex.Number = data.Number;
-                        dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
-                        dIndex.Fab = data.Fab;
-                        dIndex.AssemblyData = data.AssemblyData;
-                        $scope.result.LotList.push(dIndex);
-                    });
-                    var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
-                    $.ajax({
-                        type: "POST",
-                        url: url,
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify($scope.result),
-                        dataType: "json",
-                        success: function (data) {
-                            window.location.href = "../SitePages/Home.aspx";
-                        },
-                        error: function (a, b, c) {
-                            alert("保存失败")
-                        }
-                    });
+            if (html.length >= 20000) {
+                alertMessage("Problem Description 内容过长,请重新输入")
+            } else {
+                $scope.result.ProblemDescription = html;
+                if (verifyNewCase()) {
+                    if (verigyRMA()) {
+                        $scope.result.LotList = [];
+                        $scope.result.LotList = [];
+                        angular.forEach(LotList, function (data, index, array) {
+                            var dIndex = {
+                                'Number': '',
+                                'LotIDOrDateCode': '',
+                                'Fab': '',
+                                'AssemblyData': '',
+                            }
+                            dIndex.Number = data.Number;
+                            dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
+                            dIndex.Fab = data.Fab;
+                            dIndex.AssemblyData = data.AssemblyData;
+                            $scope.result.LotList.push(dIndex);
+                        });
+                        var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
+                        $.ajax({
+                            type: "POST",
+                            url: url,
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify($scope.result),
+                            dataType: "json",
+                            success: function (data) {
+                                window.location.href = "../SitePages/Home.aspx";
+                            },
+                            error: function (a, b, c) {
+                                alert("保存失败")
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -344,7 +343,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 150
+            initialFrameHeight: 80
         });
         function getValue(Dom, val) {
             if (window.ActiveXObject) {
@@ -386,6 +385,5 @@
                     $(".k-pager-refresh.k-link").click();
                 }
             })
-
         }
     })

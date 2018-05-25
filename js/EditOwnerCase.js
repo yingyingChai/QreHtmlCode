@@ -188,7 +188,7 @@
                                                 }
                                             });
                                         }
-                                        if ($scope.result.RootCauseLv1 != "" || $scope.result.RootCauseLv2 != "") {
+                                        if ($scope.result.RootCauseLv1) {
                                             $("#Type")[0].disabled = true;
                                         }
                                         $scope.MPN = $scope.result.MPN;
@@ -371,42 +371,46 @@
                 }
                 $scope.result.ProblemDescription = html;
             }
-            if (verifyNewCase()) {
-                if ($scope.result.Type == 'RMA') {
-                    if ($scope.result.LinkName.indexOf("http:") < 0) {
-                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+            if ($scope.result.ProblemDescription.length >= 20000) {
+                alertMessage("Problem Description 内容过长,请重新输入")
+            } else {
+                if (verifyNewCase()) {
+                    if ($scope.result.Type == 'RMA') {
+                        if ($scope.result.LinkName.indexOf("http:") < 0) {
+                            $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+                        }
                     }
+                    $scope.result.LotList = [];
+                    //$(".k-button.k-button-icontext.k-grid-save-changes").click();
+                    angular.forEach(LotList, function (data, index, array) {
+                        var dIndex = {
+                            'Number': '',
+                            'LotIDOrDateCode': '',
+                            'Fab': '',
+                            'AssemblyData': '',
+                        }
+                        dIndex.Number = data.Number;
+                        dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
+                        dIndex.Fab = data.Fab;
+                        dIndex.AssemblyData = data.AssemblyData;
+                        $scope.result.LotList.push(dIndex);
+                    });
+                    var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify($scope.result),
+                        dataType: "json",
+                        success: function (data) {
+                            window.location.href = "../SitePages/Home.aspx";
+                            //发送邮件
+                        },
+                        error: function (a, b, c) {
+                            alert("保存失败")
+                        }
+                    });
                 }
-                $scope.result.LotList = [];
-                //$(".k-button.k-button-icontext.k-grid-save-changes").click();
-                angular.forEach(LotList, function (data, index, array) {
-                    var dIndex = {
-                        'Number': '',
-                        'LotIDOrDateCode': '',
-                        'Fab': '',
-                        'AssemblyData': '',
-                    }
-                    dIndex.Number = data.Number;
-                    dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
-                    dIndex.Fab = data.Fab;
-                    dIndex.AssemblyData = data.AssemblyData;
-                    $scope.result.LotList.push(dIndex);
-                });
-                var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify($scope.result),
-                    dataType: "json",
-                    success: function (data) {
-                        window.location.href = "../SitePages/Home.aspx";
-                        //发送邮件
-                    },
-                    error: function (a, b, c) {
-                        alert("保存失败")
-                    }
-                });
             }
         }
         $scope.SaveDetail = function () {

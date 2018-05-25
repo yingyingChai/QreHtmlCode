@@ -326,6 +326,13 @@
                     $scope.Customer = "Customer";
                     $scope.LinkName = "FAR No.";
                 }
+                if ($scope.Types) {
+                    angular.forEach($scope.Types, function (data, index, array) {
+                        if (data.CaseType == $scope.result.Type) {
+                            $scope.RootCauseLv1 = data.Levels;
+                        }
+                    });
+                }
             }
         });
         /*
@@ -362,8 +369,10 @@
                     $scope.result.Stage3AssiggnTo = "";
                     $scope.Stage3ReceiveDate = new Date();
                     $scope.Stage3CompleteDate = new Date();
-                    leipiEditorStage3Summary.sync();
-                    leipiEditorStage3Summary.execCommand('cleardoc');
+                    if (I3 != 0) {
+                        leipiEditorStage3Summary.sync();
+                        leipiEditorStage3Summary.execCommand('cleardoc');
+                    }
                     NoSelectMulity(Stage3ItemList, 3);
                     Stage3ItemList = [];
                     $scope.result.Stage3Item = "";
@@ -424,45 +433,55 @@
                 }
                 $scope.result.ProblemDescription = html;
             }
-            if (verifyNewCase()) {
-                if ($scope.result.Type == 'RMA') {
-                    if ($scope.result.LinkName.indexOf("http:") < 0) {
-                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+            if ($scope.result.ProblemDescription.length >= 20000) {
+                alertMessage("Problem Description 内容过长,请重新输入")
+            } else if ($scope.result.Stage3Summary.length >= 20000) {
+                alertMessage("Stage3 Summary 内容过长,请重新输入")
+            } else if ($scope.result.Stage3Summary.length >= 20000) {
+                alertMessage("Stage4 Summary 内容过长,请重新输入")
+            } else if ($scope.result.Stage3Summary.length >= 20000) {
+                alertMessage("CA&PA&Conclusion 内容过长,请重新输入")
+            } else {
+                if (verifyNewCase()) {
+                    if ($scope.result.Type == 'RMA') {
+                        if ($scope.result.LinkName.indexOf("http:") < 0) {
+                            $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+                        }
                     }
+                    $scope.result.LotList = [];
+                    angular.forEach(LotList, function (data, index, array) {
+                        var dIndex = {
+                            'Number': '',
+                            'LotIDOrDateCode': '',
+                            'Fab': '',
+                            'AssemblyData': '',
+                        }
+                        dIndex.Number = data.Number;
+                        dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
+                        dIndex.Fab = data.Fab;
+                        dIndex.AssemblyData = data.AssemblyData;
+                        $scope.result.LotList.push(dIndex);
+                    });
+                    $scope.result.Stage3CompleteDate = $filter('date')($scope.Stage3CompleteDate, 'yyyy-MM-dd');
+                    $scope.result.Stage3ReceiveDate = $filter('date')($scope.Stage3ReceiveDate, 'yyyy-MM-dd');
+                    $scope.result.Stage4ReceiveDate = $filter('date')($scope.Stage4ReceiveDate, 'yyyy-MM-dd');
+                    $scope.result.Stage4CompleteDate = $filter('date')($scope.Stage4CompleteDate, 'yyyy-MM-dd');
+                    var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify($scope.result),
+                        dataType: "json",
+                        success: function (data) {
+                            window.location.href = "../SitePages/Home.aspx";
+                            //发送邮件
+                        },
+                        error: function (a, b, c) {
+                            alert("保存失败")
+                        }
+                    });
                 }
-                $scope.result.LotList = [];
-                angular.forEach(LotList, function (data, index, array) {
-                    var dIndex = {
-                        'Number': '',
-                        'LotIDOrDateCode': '',
-                        'Fab': '',
-                        'AssemblyData': '',
-                    }
-                    dIndex.Number = data.Number;
-                    dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
-                    dIndex.Fab = data.Fab;
-                    dIndex.AssemblyData = data.AssemblyData;
-                    $scope.result.LotList.push(dIndex);
-                });
-                $scope.result.Stage3CompleteDate = $filter('date')($scope.Stage3CompleteDate, 'yyyy-MM-dd');
-                $scope.result.Stage3ReceiveDate = $filter('date')($scope.Stage3ReceiveDate, 'yyyy-MM-dd');
-                $scope.result.Stage4ReceiveDate = $filter('date')($scope.Stage4ReceiveDate, 'yyyy-MM-dd');
-                $scope.result.Stage4CompleteDate = $filter('date')($scope.Stage4CompleteDate, 'yyyy-MM-dd');
-                var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify($scope.result),
-                    dataType: "json",
-                    success: function (data) {
-                        window.location.href = "../SitePages/Home.aspx";
-                        //发送邮件
-                    },
-                    error: function (a, b, c) {
-                        alert("保存失败")
-                    }
-                });
             }
         }
         $scope.SaveDetail = function () {
@@ -548,7 +567,8 @@
         function GetC5Date() {
             if ($scope.result.CaseStatus == "Close") {
                 GetComplexityScore();
-                if ($scope.result.RootCauseLv1 && $scope.result.RootCauseLv2) {
+                //if ($scope.result.RootCauseLv1 && $scope.result.RootCauseLv2) {
+                if ($scope.result.RootCauseLv1) {
                     var days = "";
                     if (typeof $scope.result.CreatedDate == "string") {
                         days = new Date().getTime() - new Date($scope.result.CreatedDate).getTime();
@@ -560,7 +580,8 @@
 
                     return true
                 } else {
-                    alertMessage("若要关闭case,请选择level1 和 level2");
+                    //alertMessage("若要关闭case,请选择level1 和 level2");
+                    alertMessage("若要关闭case,请选择level1");
                     return false;
                 }
             } else {
@@ -736,7 +757,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 150
+            initialFrameHeight: 80
         });
         var leipiEditorStage3Summary = UE.getEditor('Stage3Summary', {
             toolleipi: true,//是否显示，设计器的 toolbars
@@ -745,7 +766,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 150
+            initialFrameHeight: 80
         });
         var leipiEditorStage4Summary = UE.getEditor('Stage4Summary', {
             toolleipi: true,//是否显示，设计器的 toolbars
@@ -754,7 +775,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 150
+            initialFrameHeight: 80
         });
         var leipiEditorStage5Summary = UE.getEditor('Stag5Summary', {
             toolleipi: true,//是否显示，设计器的 toolbars
@@ -763,7 +784,7 @@
                 'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
             wordCount: false,
             elementPathEnabled: false,
-            initialFrameHeight: 150
+            initialFrameHeight: 80
         });
         //Upload File
         var StageType = '', DocumentLibraryName = '', fileName = '';

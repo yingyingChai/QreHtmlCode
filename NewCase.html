@@ -216,11 +216,23 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none" title="ESSENTIAL">
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:4px 22px 0px" title="ESSENTIAL">
                                                         Destructive Analysis
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
-                                                                <label>
+                                                                <label ng-if="Analysis=='成本分析'||Analysis=='结构分析'">
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:0 22px" title="ESSENTIAL">
+                                                        <div>
+                                                            <span ng-repeat="Analysis in DestructiveAnalysis">
+                                                                <label ng-if="Analysis!='成本分析'&&Analysis!='结构分析'">
                                                                     <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
