@@ -1,10 +1,11 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("ListAllCtrl", function ($scope, $filter, $http, $compile) {
+        var user = getUser();
         var Department = '', caseOwner = '', ListLoginUse = '';
         $().SPServices({
             operation: "GetUserProfileByName",
             async: false,
-            AccountName: selectDepartName,
+            AccountName: user.selectDepartName,
             completefunc: function (xData, Status) {
                 /**
                  * xml 解析
@@ -23,11 +24,11 @@
                  * 非QRE部门传名字
                  * */
                 Department = getUPValue(xmlobject, "Department");
-                ListLoginUse = loginName;
-                if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(loginName) >= 0) {
+                ListLoginUse = user.loginName;
+                if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(user.loginName) >= 0) {
                     caseOwner = "QRE";
                 } else {
-                    caseOwner = loginName;
+                    caseOwner = user.loginName;
                 }
                 loadKendoUi();
             }
@@ -70,7 +71,7 @@
                         columns: [{
                             field: "CaseNumber",
                             title: "CaseNumber",
-                            width: 110
+                            width: 120
                         }, {
                             field: "CaseStatus",
                             title: "CaseStatus",
@@ -78,17 +79,17 @@
                         }, {
                             field: "Complexity",
                             title: "Complexity",
-                            width: 100
+                            width: 110
                         }, {
                             field: "MPN",
                             title: "Product",
                             width: 90
                         }, {
                             field: "Priority",
-                            width: 80
+                            width: 90
                         }, {
                             field: "ProductLine",
-                            width: 110
+                            width: 120
                         }, {
                             field: "Type",
                         }, {
@@ -98,18 +99,18 @@
                         }, {
                             field: "Stage5CRCT",
                             title: "CRCT",
-                            width: 80
+                            width: 85
                         }, {
                             field: "CreatedBy",
                             title: "CreatedBy",
-                            width: 170
+                            width: 180
                         }, {
                             field: "CreatedDate",
                             format: "{0: yyyy-MM-dd}",
                             title: "CreatedDate",
                         }, {
                             field: "QREOwner",
-                            width: 150
+                            width: 160
                         }, {
                             command: [
                                 { name: "Edit", click: EditCase },
@@ -119,10 +120,6 @@
                         }]
                     });
                 });
-        }
-        function saveChanges(event) {
-            var st = event;
-            $scope.LotList = event.sender.options.dataSource.view();
         }
         function Delete(e) {
             e.preventDefault();

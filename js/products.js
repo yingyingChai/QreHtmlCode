@@ -1,4 +1,4 @@
-var departmentList = ["Customer Quality", "QRE", "Business Solutions"];
+var departmentList = ["Quality & Reliability", "Business Solutions"];
 var authorityUserList = ["Jerry Gong (π®Ω‡)", "Zhanwu Yang (—Ó’ΩŒ‰)"];
 var FabCode = []; var AssyCode = [];
 $.ajax({
@@ -35,19 +35,37 @@ $.ajax({
     error: function (data) {
     }
 });
-var selectDepartName = '', loginName = '', CreatorEmail = '';
-$.ajax({
-    url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + _spPageContextInfo.userId + ")",
-    contentType: "application/json;odata=verbose",
-    headers: { "accept": "application/json;odata=verbose" },
-    success: function (data) {
-        loginName = data.d.Title;
-        selectDepartName = data.d.LoginName;
-        CreatorEmail = data.d.Email;
-    },
-    error: function (data) {
-    }
-});
+//var selectDepartName = '', loginName = '', CreatorEmail = '';
+//$.ajax({
+//    url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + _spPageContextInfo.userId + ")",
+//    contentType: "application/json;odata=verbose",
+//    headers: { "accept": "application/json;odata=verbose" },
+//    success: function (data) {
+//        loginName = data.d.Title;
+//        selectDepartName = data.d.LoginName;
+//        CreatorEmail = data.d.Email;
+//    },
+//    error: function (data) {
+//    }
+//});
+function getUser() {
+    var User = {}
+    $.ajax({
+        url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + _spPageContextInfo.userId + ")",
+        contentType: "application/json;odata=verbose",
+        headers: { "accept": "application/json;odata=verbose" },
+        async: false,
+        success: function (data) {
+            User.loginName = data.d.Title;
+            User.selectDepartName = data.d.LoginName;
+            User.CreatorEmail = data.d.Email;
+
+        },
+        error: function (data) {
+        }
+    });
+    return User;
+}
 //ªÒ»°CaseNumber
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");

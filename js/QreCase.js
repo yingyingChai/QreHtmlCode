@@ -3,14 +3,15 @@
         /**
          * 初始化$scope.result 对象，stage3 ，stage4 没有值默认为null
          */
+        var user = getUser();
         $scope.result = {
             CaseNumber: null,
-            CreatedBy: null,
-            CreatorEmail: null,
+            CreatedBy: user.loginName,
+            CreatorEmail: user.CreatorEmail,
             Type: null,
             CreatedDate: $filter('date')(new Date(), 'yyyy-MM-dd'),
             Priority: null,
-            CaseStatus: null,
+            CaseStatus: 'Receive',
             MPN: null,
             ProductLine: null,
             QREOwner: null,
@@ -46,16 +47,7 @@
             Stage5CRCT: null,
             LotList: [],
             Complexity: 0,
-        }
-        if (loginName == "") {
-            $scope.result.CreatedBy = $(".ms-core-menu-root")[0].innerHTML.split('<')[0];
-            var name = $scope.result.CreatedBy.split("(");
-            var name0 = name[0].substring(0, name[0].length - 1, );
-            var email = name0.replace(' ', '.') + "@unisoc.com";
-            $scope.result.CreatorEmail = email;
-        } else {
-            $scope.result.CreatedBy = loginName;
-            $scope.result.CreatorEmail = CreatorEmail;
+            CurrentUser: user.loginName
         }
         //初始化数据
         $http.get("http://10.0.3.52:8060/QREService.svc/GetQRESystemData?")
@@ -70,7 +62,7 @@
                 $scope.DestructiveAnalysis = dataList.DestructiveAnalysis;
             });
         $scope.Prioritys = ['High', 'Middle', 'Low'];
-        $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion'];
+        $scope.CaseStatus = ['Receive'];
         /**
          *监控数据变化 针对不同表单
          * Type 更改，对应字段名称修改

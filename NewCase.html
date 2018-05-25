@@ -97,6 +97,7 @@
                                                 <tr>
                                                     <td colspan="4" class="form_table_submit">
                                                         <button class="btn btn-primary" ng-click="StateLink('#tab-Title-2')" type="button">Next</button>
+                                                        <button class="btn btn-primary" onclick="window.location='../SitePages/Home.aspx'" type="button">Cancel</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -132,7 +133,7 @@
                                                         <input title="ESSENTIAL" class="form_control" ng-model="result.ProductLine" id="ProductLine" type="text" readonly="readonly" />
                                                     </td>
                                                     <td class="form_table_label">
-                                                        <span class="en">QRE Owmer<i class="form_table_required">*</i></span>
+                                                        <span class="en">QRE Owner<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
                                                         <input title="ESSENTIAL" class="form_control" ng-model="result.QREOwner" id="QREOwner" type="text" readonly="readonly" />
@@ -143,7 +144,7 @@
                                                         <span class="en">DPPM<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input title="ESSENTIAL value:1%或者13000或者NA" ng-model="result.Dppm" id="Dppm" type="text" />
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA " ng-model="result.Dppm" id="Dppm" type="text" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">{{Customer}}<i class="form_table_required">*</i></span>
@@ -154,10 +155,10 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="form_table_label">
-                                                        <span class="en">Failures Found<i class="form_table_required">*</i></span>
+                                                        <span class="en">Issue From<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <select title="ESSENTIAL" class="form_control" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
+                                                        <select title="ESSENTIAL Competition Analysis请选Other" class="form_control" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">{{LinkName}}<i class="form_table_required">*</i></span>
@@ -166,7 +167,7 @@
                                                         <input title="ESSENTIAL Ep: 20180425_7763.xml" ng-model="result.LinkName" id="LinkName" type="text" />
                                                     </td>
                                                     <td class="form_table_input" ng-if="LinkName!='FAR No.'">
-                                                        <input title="ESSENTIAL" ng-model="result.LinkName" id="LinkName" type="text" />
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA" ng-model="result.LinkName" id="LinkName" type="text" />
                                                     </td>
 
                                                 </tr>
@@ -234,6 +235,7 @@
                                                     <td colspan="4" class="form_table_submit">
                                                         <button class="btn btn-primary" ng-click="StateLink('#tab-Title-1')" type="button">Previous</button>
                                                         <button class="btn btn-primary" ng-click="save()" type="button">Save</button>
+                                                        <button class="btn btn-primary" onclick="window.location='../SitePages/Home.aspx'" type="button">Cancel</button>
                                                     </td>
                                                 </tr>
                                             </tbody>

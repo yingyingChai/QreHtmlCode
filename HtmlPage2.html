@@ -1,0 +1,143 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Basic usage</title>
+    <meta charset="utf-8">
+    <link href="../css/qre_common.css" rel="stylesheet" type="text/css">
+    <link href="../css/kendo.common.min.css" rel="stylesheet">
+    <link href="../css/kendo.rtl.min.css" rel="stylesheet">
+    <link href="../css/kendo.default.min.css" rel="stylesheet">
+    <link href="../css/kendo.dataviz.min.css" rel="stylesheet">
+    <link href="../css/kendo.dataviz.default.min.css" rel="stylesheet">
+    <script src="../js/angular.min.js"></script>
+    <script src="../js/jquery-2.1.1.js"></script>
+    <script src="../js/kendo.all.min.js" type="text/javascript"></script>
+    <script src="../js/layer.js"></script>
+
+
+</head>
+<body>
+    <div ng-app="myApp" ng-controller="myCtrl">
+        <div id="example">
+            <div id="grid"></div>
+        </div>
+    </div>
+    <script>
+        var app = angular.module('myApp', ["kendo.directives"]);
+        app.controller('myCtrl', function ($http, $scope) {
+            $http.get("http://10.0.3.52:8060/QREService.svc/GetQRECaseList?", { params: { caseOwner: 'QRE' } })
+                .success(function (data) {
+                    var dataSource = new kendo.data.DataSource({
+                        data: JSON.parse(data),
+                        schema: {
+                            model: {
+                                fields: {
+                                    CaseNumber: { type: "string" },
+                                    CaseStatus: { type: "string" },
+                                    Complexity: { type: "number" },
+                                    CreatedBy: { type: "string" },
+                                    CreatedDate: { type: "date" },
+                                    MPN: { type: "string" },
+                                    Priority: { type: "string" },
+                                    ProductLine: { type: "string" },
+                                    QREOwner: { type: "string" },
+                                    RootCauseLv1: { type: "string" },
+                                    RootCauseLv2: { type: "string" },
+                                    Stage5CRCT: { type: "number" },
+                                    Type: { type: "string" },
+                                }
+                            },
+                        },
+                        pageSize: 10,
+                    });
+                    $("#grid").kendoGrid({
+                        dataSource: dataSource,
+                        height: 550,
+                        groupable: true,
+                        sortable: true,
+                        pageable: {
+                            refresh: true,
+                            pageSizes: true,
+                            buttonCount: 5
+                        },
+                        columns: [{
+                            field: "CaseNumber",
+                            title: "CaseNumber",
+                            width: 120
+                        }, {
+                            field: "CaseStatus",
+                            title: "CaseStatus",
+                            hidden: true
+                        }, {
+                            field: "Complexity",
+                            title: "Complexity",
+                            width: 110
+                        }, {
+                            field: "MPN",
+                            title: "Product",
+                            width: 90
+                        }, {
+                            field: "Priority",
+                            width: 90
+                        }, {
+                            field: "ProductLine",
+                            width: 120
+                        }, {
+                            field: "Type",
+                        }, {
+                            field: "RootCauseLv1",
+                        }, {
+                            field: "RootCauseLv2",
+                        }, {
+                            field: "Stage5CRCT",
+                            title: "CRCT",
+                            width: 85
+                        }, {
+                            field: "CreatedBy",
+                            title: "CreatedBy",
+                            width: 180
+                        }, {
+                            field: "CreatedDate",
+                            format: "{0: yyyy-MM-dd}",
+                            title: "CreatedDate",
+                        }, {
+                            field: "QREOwner",
+                            width: 160
+                        }, {
+                            command: [
+                                { name: "Edit", click: EditCase },
+                                { name: "Delete", click: Delete }
+                            ],
+                            width: 160
+                        }]
+                    });
+                });
+        })
+    </script>
+    <style type="text/css">
+        .customer-photo {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-size: 32px 35px;
+            background-position: center center;
+            vertical-align: middle;
+            line-height: 32px;
+            box-shadow: inset 0 0 1px #999, inset 0 0 10px rgba(0,0,0,.2);
+            margin-left: 5px;
+        }
+
+        .customer-name {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 32px;
+            padding-left: 3px;
+        }
+    </style>
+
+
+
+</body>
+</html>

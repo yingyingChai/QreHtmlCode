@@ -1,11 +1,9 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("SaveDetailCtrl", function ($scope, $filter, $compile, $http) {
         //初始化数据
-        if (selectDepartName == "") {
-            getLogin();
-        }
+        var user = getUser();
         $scope.Prioritys = ['High', 'Middle', 'Low'];
-        $scope.CaseStatus = ['Receive', 'Statistic Analysis', 'Nondestructive Analysis', 'Descructive Analysis', 'Conclusion', 'Close'];
+        $scope.CaseStatus = ['Receive', 'Statistics Analysis', 'Failure Analysis', 'Close'];
         var StatisticAnalysisList = [], NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [];
         $scope.Stage3ReceiveDate = "";
         $scope.assignments = {}; $scope.RootCauseLv1 = [];
@@ -27,13 +25,13 @@
                     }
                 },
                 parse: function (data, options, operation) {
-                    if (!data.length && !data.id) {
+                    if (!data.length && !data.ID) {
                         data.ID = generateUUID()
                         data.createTime = new Date();
                     } else {
                         for (var i = 0; i < data.length; i++) {
-                            if (data.createTime == undefined) {
-                                data.createTime = new Date();
+                            if (data[i].createTime == undefined) {
+                                data[i].createTime = new Date();
                             }
                         }
                     }
@@ -77,7 +75,7 @@
                         $().SPServices({
                             operation: "GetUserProfileByName",
                             async: false,
-                            AccountName: selectDepartName,
+                            AccountName: user.selectDepartName,
                             completefunc: function (xData, Status) {
                                 if (window.ActiveXObject) {
                                     var xmlobject = new ActiveXObject("Microsoft.XMLDOM");
@@ -89,14 +87,14 @@
                                     var xmlobject = parser.parseFromString(xData.responseText, "text/xml");
                                 }
                                 Department = getUPValue(xmlobject, "Department");
-                                if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(loginName) >= 0) {
-                                    url = "../SitePages/EditCase.aspx?CaseNumber=" + CaseNumber;
-                                    window.location.href = url;
-                                } else if (loginName == dataList.CreatedBy) {
-                                } else {
-                                    $("#example")[0].style.display = "none";
-                                    alertMessage("您无权修改！")
-                                }
+                                //if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(user.loginName) >= 0) {
+                                //    url = "../SitePages/EditCase.aspx?CaseNumber=" + CaseNumber;
+                                //    window.location.href = url;
+                                //} else if (user.loginName == dataList.CreatedBy) {
+                                //} else {
+                                //    $("#example")[0].style.display = "none";
+                                //    alertMessage("您无权修改！")
+                                //}
                             }
                         });
                         $scope.result = {
@@ -141,7 +139,8 @@
                             RootCauseLv2: dataList.RootCauseLv2,
                             Stage5Summary: dataList.Stage5Summary,
                             Stage5CRCT: dataList.Stage5CRCT,
-                            Complexity: dataList.Complexity
+                            Complexity: dataList.Complexity,
+                            CurrentUser: user.loginName
                         }
                         $("#Stage3Summary").html($scope.result.Stage3Summary);
                         $("#Stage4Summary").html($scope.result.Stage4Summary);
@@ -195,7 +194,7 @@
                          * **/
 
                         if (dataList.Stage3ContinueAnalysis == "Yes") {
-                            $scope.IsShowStage3
+                            $scope.IsShowStage3 = true;
                             if (dataList.Stage3Attachment) {
                                 Stage3Attachment = JSON.parse(dataList.Stage3Attachment);
                                 angular.forEach(Stage3Attachment, function (data, index, array) {
@@ -213,6 +212,9 @@
                                     $("#InstallAttachmentStage3").append($htmlButton)
                                 });
                             }
+                        } else {
+                            $("#stage3Detail")[0].style.display = "none";
+                            $scope.IsShowStage3 = false;
                         }
                         if (dataList.Stage4ContinueAnalysis == "Yes") {
                             $scope.IsShowStage4 = true;
@@ -233,6 +235,9 @@
                                     $("#InstallAttachmentStage4").append($htmlButton)
                                 });
                             }
+                        } else {
+                            $scope.IsShowStage4 = false;
+                            $("#stage4ShowSummary")[0].style.display = "none";
                         }
                     });
             });

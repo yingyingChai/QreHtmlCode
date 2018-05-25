@@ -31,7 +31,73 @@
     .radio, .checkbox {
         margin-top: -25px;
     }
+
+    .over {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #f5f5f5;
+        opacity: 0.5;
+        z-index: 1000;
+    }
+
+    .layout {
+        display: none;
+        position: absolute;
+        top: 30%;
+        left: 40%;
+        width: 20%;
+        height: 20%;
+        z-index: 1001;
+        text-align: center;
+    }
 </style>
+<script>
+    var bar = 0;
+    (function () {
+        var ie = !!(window.attachEvent && !window.opera);
+        var wk = /webkit\/(\d+)/i.test(navigator.userAgent) && (RegExp.$1 < 525);
+        var fn = [];
+        var run = function () { for (var i = 0; i < fn.length; i++) fn[i](); };
+        var d = document;
+        d.ready = function (f) {
+            if (!ie && !wk && d.addEventListener)
+                return d.addEventListener('DOMContentLoaded', f, false);
+            if (fn.push(f) > 1) return;
+            if (ie)
+                (function () {
+                    try { d.documentElement.doScroll('left'); run(); }
+                    catch (err) { setTimeout(arguments.callee, 0); }
+                })();
+            else if (wk)
+                var t = setInterval(function () {
+                    if (/^(loaded|complete)$/.test(d.readyState))
+                        clearInterval(t), run();
+                }, 0);
+        };
+    })();
+    document.ready(function () {
+        progress();
+    });
+    function progress() {
+        bar = bar + 10;
+        document.getElementById("over").style.display = "block";
+        document.getElementById("layout").style.display = "block";
+        if (bar <= 98) {
+            setTimeout("progress()", 100);
+        } else {
+            document.getElementById("over").style.display = "none";
+            document.getElementById("layout").style.display = "none";
+            document.getElementById("example").style.display = "";
+            $("#example").removeClass("example");
+        }
+    }
+</script>
+<div id="over" class="over"></div>
+<div id="layout" class="layout"><img src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-ui-1.12.1/img/loading.gif" alt="" /></div>
 <div id="example" ng-app="KendoDemos">
     <div ng-controller="SaveDetailCtrl">
         <div id="wrapper">
@@ -43,13 +109,13 @@
                                 <ul class="nav nav-tabs">
                                     <li class="active"><a data-toggle="tab" href="#tab-1" id="tab-Title-1">Stage1.Creadte Case</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-2" id="tab1">Stage2.Information Collection</a></li>
-                                    <li><a id="tab-Title-2">Stage2.Information Collection</a></li>
+                                    <li><a href="" id="tab-Title-2" ng-click="InserLeipiEditor()">Stage2.Information Collection</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-3" id="tab2">Stage3.Statistic Analysis</a></li>
-                                    <li><a id="tab-Title-3">Stage3.Statistic Analysis</a></li>
+                                    <li><a href="" id="tab-Title-3" ng-click="Inser3LeipiEditor()">Stage3.Statistic Analysis</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-4" id="tab3">Stage4.Failure Analysis</a></li>
-                                    <li><a id="tab-Title-4">Stage4.Failure Analysis</a></li>
+                                    <li><a href="" id="tab-Title-4" ng-click="Inser4LeipiEditor()">Stage4.Failure Analysis</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-5" id="tab4">Stage2.Information Collection</a></li>
-                                    <li><a id="tab-Title-5">Stage5.Solution</a></li>
+                                    <li><a href="" id="tab-Title-5" ng-click="Inser5LeipiEditor()">Stage5.Solution</a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <div id="tab-1" class="tab-pane active divForm">
@@ -100,6 +166,7 @@
                                                 <tr>
                                                     <td colspan="4" class="form_table_submit">
                                                         <button class="btn btn-primary" ng-click="InserLeipiEditor()" type="button">Next</button>
+                                                        <button class="btn btn-primary" onclick="window.location='../SitePages/Home.aspx'" type="button">Cancel</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -135,7 +202,7 @@
                                                         <input title="ESSENTIAL" class="form_control" ng-model="result.ProductLine" id="ProductLine" type="text" readonly="readonly" />
                                                     </td>
                                                     <td class="form_table_label">
-                                                        <span class="en">QRE Owmer<i class="form_table_required">*</i></span>
+                                                        <span class="en">QRE Owner<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
                                                         <input title="ESSENTIAL" class="form_control" ng-model="result.QREOwner" id="QreOwner" type="text" readonly="readonly" />
@@ -157,11 +224,10 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="form_table_label">
-                                                        <span class="en">Failures Found<i class="form_table_required">*</i></span>
+                                                        <span class="en">Issue From<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <select title="ESSENTIAL" class="form_control" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
-                                                    </td>
+                                                        <select title="ESSENTIAL Competition Analysis请选Other" class="form_control" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
                                                     <td class="form_table_label">
                                                         <span class="en">{{LinkName}}<i class="form_table_required">*</i></span>
                                                     </td>
@@ -225,6 +291,8 @@
                                                     <td colspan="4" class="form_table_submit">
                                                         <button class="btn btn-primary" ng-click="StateLink('#tab-Title-1')" type="button">Previous</button>
                                                         <button class="btn btn-primary" ng-click="Inser3LeipiEditor()" type="button">Next</button>
+                                                        <button class="btn btn-primary" type="button" ng-click="SaveDetail()">Save</button>
+                                                        <button class="btn btn-primary" onclick="window.location='../SitePages/Home.aspx'" type="button">Cancel</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -243,7 +311,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <table class="form_table form_displayCss" align="center" ng-if="IsShowStage3">
+                                        <table class="form_table form_displayCss" id="stage3Detail" align="center">
                                             <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
@@ -259,10 +327,6 @@
                                                         <input ng-model="result.Stage3CompleteDate" readonly="readonly" type="text" />
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="form_table form_displayCss" align="center" id="showStage3Summary">
-                                            <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Stage3 assign to</span>
@@ -296,10 +360,6 @@
                                                         <div id="Stage3Summary" style="width: 100%;height: auto;min-height:100px;background: #fff">{{result.Stage3Summary}}</div>
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="form_table form_displayCss" align="center" ng-if="IsShowStage3">
-                                            <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Stage3 CRCT</span>
@@ -323,13 +383,15 @@
                                                         <button class="btn btn-primary" ng-click="InserLeipiEditor()" type="button">Previous</button>
                                                         <button class="btn btn-primary" ng-click="Inser4LeipiEditor()" ng-if="IsShowStage4" type="button">Next</button>
                                                         <button class="btn btn-primary" ng-click="Inser5LeipiEditor()" ng-if="!IsShowStage4" type="button">Next</button>
+                                                        <button class="btn btn-primary" type="button" ng-click="SaveDetail()">Save</button>
+                                                        <button class="btn btn-primary" onclick="window.location='../SitePages/Home.aspx'" type="button">Cancel</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div id="tab-4" class="tab-pane divForm">
-                                        <table ng-if="IsShowStage4" class="form_table form_displayCss" align="center">
+                                        <table id="stage4ShowSummary" class="form_table form_displayCss" align="center">
                                             <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
@@ -345,10 +407,6 @@
                                                         <input ng-model="result.Stage4CompleteDate" readonly="readonly" type="text" />
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                        <table id="stage4ShowSummary" class="form_table form_displayCss" align="center">
-                                            <tbody>
                                                 <tr>
                                                     <td class="form_table_area" colspan="4" style="border-top:none">
                                                         item<br />
@@ -387,10 +445,6 @@
                                                         <div id="Stage4Summary" style="width: 100%;height: auto;min-height:100px;background: #fff">{{result.Stage4Summary}}</div>
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                        <table ng-if="IsShowStage4" class="form_table form_displayCss" align="center">
-                                            <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Stage4 CRCT</span>
@@ -403,6 +457,8 @@
                                                     <td colspan="4" class="form_table_submit">
                                                         <button class="btn btn-primary" ng-click="Inser3LeipiEditor()" type="button">Previous</button>
                                                         <button class="btn btn-primary" ng-click="Inser5LeipiEditor()" type="button">Next</button>
+                                                        <button class="btn btn-primary" type="button" ng-click="SaveDetail()">Save</button>
+                                                        <button class="btn btn-primary" onclick="window.location='../SitePages/Home.aspx'" type="button">Cancel</button>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -450,6 +506,7 @@
                                                         <button class="btn btn-primary" ng-click="Inser3LeipiEditor()" ng-if="!IsShowStage4" type="button">Previous</button>
                                                         <button class="btn btn-primary" ng-click="Inser4LeipiEditor()" ng-if="IsShowStage4" type="button">Previous</button>
                                                         <button class="btn btn-primary" type="button" ng-click="SaveDetail()">Save</button>
+                                                        <button class="btn btn-primary" onclick="window.location='../SitePages/Home.aspx'" type="button">Cancel</button>
                                                     </td>
                                                 </tr>
                                             </tbody>

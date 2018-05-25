@@ -33,11 +33,6 @@
     border-top: 1px solid #e7eaec;
 }
 
-.tabs-container .nav-tabs > li a:hover {
-    background: transparent;
-    border-color: transparent;
-}
-
 .tabs-container .tabs-below > .nav-tabs,
 .tabs-container .tabs-right > .nav-tabs,
 .tabs-container .tabs-left > .nav-tabs {
@@ -304,7 +299,8 @@
 }
 
 .form_table .form_table_submit {
-    text-align: center;
+    /*text-align: center;*/
+    text-align:right
 }
 
 .form_table .form_table_submit input {
@@ -641,9 +637,15 @@ body {
     float: none !important;
     font-size: 21px !important
 }
-.nav-tabs > li > a {
+.nav-tabs > li > a, .nav-tabs > li > a:hover {
     background: #eee;
 }
 a:visited {
     color: #0a6ebd;
 }
+/*.k-header > .k-grid-filter, .k-header > .k-header-column-menu {
+     margin: 0 !important; 
+}
+.k-grid-header th.k-header > .k-link {
+     margin: 0 !important; 
+}*/

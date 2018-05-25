@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="../css/qre_common.css" rel="stylesheet" type="text/css">
+    <link href="../css/kendo.common.min.css" rel="stylesheet">
+    <link href="../css/kendo.rtl.min.css" rel="stylesheet">
+    <link href="../css/kendo.default.min.css" rel="stylesheet">
+    <link href="../css/kendo.dataviz.min.css" rel="stylesheet">
+    <link href="../css/kendo.dataviz.default.min.css" rel="stylesheet">
+    <script src="../js/jquery.SPServices-2014.02.min.js" type="text/javascript"></script>
+    <script src="../js/angular.min.js"></script>
+    <script src="../js/kendo.all.min.js" type="text/javascript"></script>
+    <script src="../js/layer.js"></script>
+</head>
+<body>
+    <div ng-app="myApp" ng-controller="myCtrl">
+        <div id="example">
+            <div id="grid"></div>
+        </div>
+    </div>
+    <script>
+        var app = angular.module('myApp', ["kendo.directives"]);
+        app.controller('myCtrl', function ($http, $scope) {
+            var AssyCode = [], FabCode = [], LotList=[];
+            var AssyCodeXml = "", FabCodeXml = "";
+            $http.get("http://eip.unisoc.com/opsweb/QA/FAR/_api/web/lists/getByTitle('Assy%20Code')/items?$select=Title&$orderby=Created%20desc&$Top=99999999")
+                .success(function (AssyCodeXmlData) {
+                    AssyCodeXml = AssyCodeXmlData;
+                    $http.get("http://eip.unisoc.com/opsweb/QA/FAR/_api/web/lists/getByTitle('Fab%20Code')/items?$select=Title&$orderby=Created%20desc&$Top=99999999")
+                        .success(function (FabCodeXmlData) {
+                            FabCodeXml = FabCodeXmlData;
+                            AssyCode = getValue(AssyCodeXml, 'AssyCode');
+                            FabCode = getValue(FabCodeXml, 'FabCode');
+                            var length = 0;
+                            $.getJSON("http://10.0.3.52:8060/QREService.svc/GetQRECaseInfoByCaseNumber?", { caseNumber: 'FA201805001' },
+                                function (data) {
+                                    dataList = JSON.parse(data);
+                                    LotList = dataList.LotList;
+                                    length = LotList.length;
+                                    var dataSource = new kendo.data.DataSource({
+                                        data: LotList,
+                                        batch: true,
+                                        schema: {
+                                            model: {
+                                                id: "ID",
+                                                fields: {
+                                                    ID: { editable: false, nullable: true },
+                                                    Number: { type: "string", validation: { required: true } },
+                                                    LotIDOrDateCode: { type: "string", validation: { required: true } },
+                                                    Fab: { type: "string", validation: { required: true } },
+                                                    AssemblyData: { type: "string", validation: { required: true } },
+                                                    createTime: { editable: false, nullable: true },
+                                                }
+                                            },
+                                            parse: function (data, options, operation) {
+                                                if (data.models) {
+                                                    if (!data.models[0].ID) {
+                                                        length = length + 1;
+                                                        data.models[0].ID = parseInt(length);
+                                                        data.models[0].createTime = new Date();
+                                                        LotList.push(data.models[0]);
+                                                    } else {
+                                                        angular.forEach(LotList, function (LList,Index) {
+                                                            if (LList.ID == data.models[0].ID) {
+                                                                LotList[Index] = data.models[0];
+                                                            }
+                                                        })
+                                                    }
+                                                    return data.models[0];
+                                                } else {
+                                                    for (var i = 0; i < data.length; i++) {
+                                                        if (data[i].createTime == undefined) {
+                                                            data[i].createTime = new Date();
+                                                        }
+                                                    }
+                                                    return data;
+                                                }
+
+                                            }
+                                        },
+                                        sort: {
+                                            field: "createTime",
+                                            dir: "asc"
+                                        },
+                                        pageSize: 5,
+                                    });
+                                    $("#grid").kendoGrid({
+                                        dataSource: dataSource,
+                                        pageable: {
+                                            refresh: true,
+                                            pageSizes: true,
+                                            buttonCount: 5
+                                        },
+                                        toolbar: ["create"],
+                                        columns: [{ field: "Number", title: "No.", width: "120px" },
+                                        { field: "LotIDOrDateCode", title: "Lot ID&Date Code", width: "120px" },
+                                        { field: "Fab", title: "Fab", values: FabCode, width: "120px" },
+                                        { field: "AssemblyData", title: "Assembly", values: AssyCode, width: "120px" },
+                                            { command: [{ name: "edit", text: "修改" }, { name: "Delete", text: "删除", click: Delete}], title: "&nbsp;", width: "120px" }],
+                                        editable: "popup"
+                                    });
+                                });
+                        });
+                });
+            function getValue(Dom, val) {
+                if (window.ActiveXObject) {
+                    var xmlobject = new ActiveXObject("Microsoft.XMLDOM");
+                    xmlobject.async = "false";
+                    xmlobject.loadXML(Dom);
+                }
+                else {
+                    var parser = new DOMParser();
+                    var xmlobject = parser.parseFromString(Dom, "text/xml");
+                }
+                var list = $(xmlobject).SPFilterNode("entry").SPFilterNode("content");
+                var List = [];
+                angular.forEach(list, function (data) {
+                    if (val == 'AssyCode') {
+                        if (data.text) {
+                            List.push(data.text);
+                        } else {
+                            List.push(data.textContent);
+                        }
+                    } else {
+                        if (data.text) {
+                            List.push(data.text);
+                        } else {
+                            List.push(data.textContent);
+                        }
+                    }
+                })
+                return List;
+            }
+            function Delete(e) {
+                e.preventDefault();
+                var tr = $(e.target).closest("tr");
+                var data = this.dataItem(tr);
+                var Id = data.ID;
+                angular.forEach(LotList, function (LList, Index) {
+                    if (LList.ID == Id) {
+                        LotList.splice(Index, 1);
+                        $(".k-pager-refresh.k-link").click();
+                    }
+                })
+
+            }
+        });
+    </script>
+</body>
+</html>
