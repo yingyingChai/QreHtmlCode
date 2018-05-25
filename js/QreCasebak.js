@@ -83,81 +83,50 @@
          * 表中表
          * LotList 唯一Id,若不纯在Id，修改功能失效
          */
-        var AssyCode = [], FabCode = [], LotList = [];
-        var AssyCodeXml = "", FabCodeXml = "",length = 0;
-        $http.get("http://eip.unisoc.com/opsweb/QA/FAR/_api/web/lists/getByTitle('Assy%20Code')/items?$select=Title&$orderby=Created%20desc&$Top=99999999")
-            .success(function (AssyCodeXmlData) {
-                AssyCodeXml = AssyCodeXmlData;
-                $http.get("http://eip.unisoc.com/opsweb/QA/FAR/_api/web/lists/getByTitle('Fab%20Code')/items?$select=Title&$orderby=Created%20desc&$Top=99999999")
-                    .success(function (FabCodeXmlData) {
-                        FabCodeXml = FabCodeXmlData;
-                        AssyCode = getValue(AssyCodeXml, 'AssyCode');
-                        FabCode = getValue(FabCodeXml, 'FabCode');
-                        var dataSource = new kendo.data.DataSource({
-                            data: LotList,
-                            batch: true,
-                            schema: {
-                                model: {
-                                    id: "ID",
-                                    fields: {
-                                        ID: { editable: false, nullable: true },
-                                        Number: { type: "string", validation: { required: true } },
-                                        LotIDOrDateCode: { type: "string", validation: { required: true } },
-                                        Fab: { type: "string", validation: { required: true } },
-                                        AssemblyData: { type: "string", validation: { required: true } },
-                                        createTime: { editable: false, nullable: true },
-                                    }
-                                },
-                                parse: function (data, options, operation) {
-                                    if (data.models) {
-                                        if (!data.models[0].ID) {
-                                            length = length + 1;
-                                            data.models[0].ID = parseInt(length);
-                                            data.models[0].createTime = new Date();
-                                            data.models[0].QRECaseNumber = CaseNumber;
-                                            LotList.push(data.models[0])
-                                        } else {
-                                            angular.forEach(LotList, function (LList, Index) {
-                                                if (LList.ID == data.models[0].ID) {
-                                                    LotList[Index] = data.models[0];
-                                                }
-                                            })
-                                        }
-                                        return data.models[0];
-                                    } else {
-                                        for (var i = 0; i < data.length; i++) {
-                                            if (data[i].createTime == undefined) {
-                                                data[i].createTime = new Date();
-                                            }
-                                        }
-                                        return data;
-                                    }
-
-                                }
-                            },
-                            sort: {
-                                field: "createTime",
-                                dir: "asc"
-                            },
-                            pageSize: 5,
-                        });
-                        $("#grid").kendoGrid({
-                            dataSource: dataSource,
-                            pageable: {
-                                refresh: true,
-                                pageSizes: true,
-                                buttonCount: 5
-                            },
-                            toolbar: ["create"],
-                            columns: [{ field: "Number", title: "No.", width: "120px" },
-                            { field: "LotIDOrDateCode", title: "Lot ID&Date Code", width: "120px" },
-                            { field: "Fab", title: "Fab", values: FabCode, width: "120px" },
-                            { field: "AssemblyData", title: "Assembly", values: AssyCode, width: "120px" },
-                            { command: [{ name: "edit", text: "修改" }, { name: "Delete", text: "删除", click: Delete }], title: "&nbsp;", width: "120px" }],
-                            editable: "popup"
-                        });
-                    });
+        $scope.assignments = {};
+        function generateUUID() {
+            var d = new Date().getTime();
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
             });
+            return uuid;
+        };
+        $scope.assignments.dataSource = new kendo.data.DataSource({
+            schema: {
+                model: {
+                    id: "id",
+                    fields: {
+                        id: { editable: false, nullable: true },
+                        Number: { type: "string", validation: { required: true } },
+                        LotIDOrDateCode: { type: "string", validation: { required: true } },
+                        Fab: { type: "string", validation: { required: true } },
+                        Assembly: { type: "string", validation: { required: true } },
+                        createTime: { editable: false, nullable: true },
+                    }
+                },
+                parse: function (data, options, operation) {
+                    if (!data.length && !data.id) {
+                        data.id = generateUUID()
+                        data.createTime = new Date();
+                    }
+                    return data;
+                }
+            },
+            sort: {
+                field: "createTime",
+                dir: "asc"
+            },
+            pageSize: 5,
+        });
+        $scope.assignments.columns = [
+            { field: "Number", title: "No.", width: "120px"},
+            { field: "LotIDOrDateCode", title: "Lot ID&Date Code", width: "120px" },
+            { field: "Fab", title: "Fab", values: FabCode, width: "120px" },
+            { field: "Assembly", title: "Assembly", values: AssyCode, width: "120px" },
+            { command: [{ name: "edit", text: "修改" }, { name: "destroy", text: "删除" }], title: "&nbsp;", width: "120px" },
+        ];
         /**
          * 控制多选json
          */
@@ -305,9 +274,9 @@
             if (verifyNewCase()) {
                 if (verigyRMA()) {
                     $scope.result.LotList = [];
-                    //$(".k-button.k-button-icontext.k-grid-save-changes").click();
+                    $(".k-button.k-button-icontext.k-grid-save-changes").click();
                     $scope.result.LotList = [];
-                    angular.forEach(LotList, function (data, index, array) {
+                    angular.forEach($scope.LotList, function (data, index, array) {
                         var dIndex = {
                             'Number': '',
                             'LotIDOrDateCode': '',
@@ -317,7 +286,7 @@
                         dIndex.Number = data.Number;
                         dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
                         dIndex.Fab = data.Fab;
-                        dIndex.AssemblyData = data.AssemblyData;
+                        dIndex.AssemblyData = data.Assembly;
                         $scope.result.LotList.push(dIndex);
                     });
                     var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
@@ -346,46 +315,4 @@
             elementPathEnabled: false,
             initialFrameHeight: 150
         });
-        function getValue(Dom, val) {
-            if (window.ActiveXObject) {
-                var xmlobject = new ActiveXObject("Microsoft.XMLDOM");
-                xmlobject.async = "false";
-                xmlobject.loadXML(Dom);
-            }
-            else {
-                var parser = new DOMParser();
-                var xmlobject = parser.parseFromString(Dom, "text/xml");
-            }
-            var list = $(xmlobject).SPFilterNode("entry").SPFilterNode("content");
-            var List = [];
-            angular.forEach(list, function (data) {
-                if (val == 'AssyCode') {
-                    if (data.text) {
-                        List.push(data.text);
-                    } else {
-                        List.push(data.textContent);
-                    }
-                } else {
-                    if (data.text) {
-                        List.push(data.text);
-                    } else {
-                        List.push(data.textContent);
-                    }
-                }
-            })
-            return List;
-        }
-        function Delete(e) {
-            e.preventDefault();
-            var tr = $(e.target).closest("tr");
-            var data = this.dataItem(tr);
-            var Id = data.ID;
-            angular.forEach(LotList, function (LList, Index) {
-                if (LList.ID == Id) {
-                    LotList.splice(Index, 1);
-                    $(".k-pager-refresh.k-link").click();
-                }
-            })
-
-        }
     })

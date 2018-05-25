@@ -1,53 +1,5 @@
 var departmentList = ["Quality & Reliability", "Business Solutions"];
 var authorityUserList = ["Jerry Gong (π®Ω‡)", "Zhanwu Yang (—Ó’ΩŒ‰)"];
-var FabCode = []; var AssyCode = [];
-$.ajax({
-    url: "http://eip.unisoc.com/opsweb/QA/FAR/_api/web/lists/getByTitle('Fab%20Code')/items?$select=Title&$orderby=Created%20desc&$Top=99999999",
-    method: "GET",
-    headers: { "Accept": "application/json; odata=verbose" },
-    success: function (data) {
-        var restData = data.d.results;
-        if (restData) {
-            for (var i = 0; i < restData.length; i++) {
-                if (restData[i]["Title"] != null) {
-                    FabCode.push(restData[i]["Title"]);
-                }
-            }
-        }
-    },
-    error: function (data) {
-    }
-});
-$.ajax({
-    url: "http://eip.unisoc.com/opsweb/QA/FAR/_api/web/lists/getByTitle('Assy%20Code')/items?$select=Title&$orderby=Created%20desc&$Top=99999999",
-    method: "GET",
-    headers: { "Accept": "application/json; odata=verbose" },
-    success: function (data) {
-        var restData = data.d.results;
-        if (restData) {
-            for (var i = 0; i < restData.length; i++) {
-                if (restData[i]["Title"] != null) {
-                    AssyCode.push(restData[i]["Title"]);
-                }
-            }
-        }
-    },
-    error: function (data) {
-    }
-});
-//var selectDepartName = '', loginName = '', CreatorEmail = '';
-//$.ajax({
-//    url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/getuserbyid(" + _spPageContextInfo.userId + ")",
-//    contentType: "application/json;odata=verbose",
-//    headers: { "accept": "application/json;odata=verbose" },
-//    success: function (data) {
-//        loginName = data.d.Title;
-//        selectDepartName = data.d.LoginName;
-//        CreatorEmail = data.d.Email;
-//    },
-//    error: function (data) {
-//    }
-//});
 function getUser() {
     var User = {}
     $.ajax({
@@ -74,18 +26,6 @@ function getQueryString(name) {
     return null;
 }
 var CaseNumber = getQueryString("CaseNumber");
-var LotList = [], CreatedBy = "", QREOwner;
-var dataList = [];
-if (CaseNumber) {
-    $.getJSON("http://10.0.3.52:8060/QREService.svc/GetQRECaseInfoByCaseNumber?", { caseNumber: CaseNumber },
-        function (data) {
-            dataList = JSON.parse(data);
-            LotList = dataList.LotList;
-            CreatedBy = dataList.CreatedBy;
-            QREOwner = dataList.QREOwner;
-
-        })
-}
 function getId(value, index) {
     var id = "";
     if (value.indexOf("Others") >= 0 || value.indexOf("0thers") >= 0) {
