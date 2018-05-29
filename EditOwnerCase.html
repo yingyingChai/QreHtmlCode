@@ -56,6 +56,17 @@
         z-index: 1001;
         text-align: center;
     }
+    .k-alt, .k-header, .k-pager-wrap {
+        background-color: #ffffff !important;
+    }
+
+    .k-grid td {
+        border-bottom: 1px solid #d5d5d5
+    }
+    .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+        background-color: #ffffff !important;
+        font-size: 14px
+    }
 </style>
 <script>
     var bar = 0;
@@ -128,13 +139,13 @@
                                                         <span class="en">Case No. <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" ng-model="result.CaseNumber">{{result.CaseNumber}}</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CaseNumber}}</span>
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Created by <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" ng-model="result.CreatedBy">{{result.CreatedBy}}</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CreatedBy}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -148,7 +159,7 @@
                                                         <span class="en">Created Date <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" class="form_control" ng-model="result.CreatedDate">{{result.CreatedDate}}</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CreatedDate}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -162,7 +173,7 @@
                                                         <span class="en">Case Status <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <select title="ESSENTIAL" class="form_control" ng-model="result.CaseStatus" ng-options="x for x in CaseStatus"></select>
+                                                        <select title="ESSENTIAL" id="CaseStatus" class="form_control" ng-model="result.CaseStatus" ng-options="x for x in CaseStatus"></select>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -251,7 +262,8 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4">
+                                                    <td class="form_table_label" colspan="4">
+                                                        <span class="en">Lot Information</span>
                                                         <div id="grid"></div>
                                                     </td>
                                                 </tr>
@@ -432,10 +444,10 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none">
+                                                    <td class="form_table_area" colspan="4">
                                                         item<br />
                                                         <div>
-                                                            <span ng-repeat="itemOne in NonDestructiveAnalysis" style="min-width:100px">
+                                                            <span ng-repeat="itemOne in NonDestructiveAnalysis">
                                                                 <input type="checkbox" disabled='disabled' id="{{itemOne|ValueString}}41" name="stageItemOne">
                                                                 {{itemOne}}
                                                             </span>
@@ -443,12 +455,25 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none">
-                                                        item<br />
+                                                    <td class="form_table_area" colspan="4" style="border-bottom:none" title="ESSENTIAL">
                                                         <div>
-                                                            <span ng-repeat="itemTwo in DestructiveAnalysis">
-                                                                <input type="checkbox" id="{{itemTwo|ValueString}}42" disabled='disabled' name="stageItemOne">
-                                                                {{itemTwo}}
+                                                            <span ng-repeat="Analysis in DestructiveAnalysis">
+                                                                <label ng-if="Analysis=='成本分析'||Analysis=='结构分析'">
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:0 22px" title="ESSENTIAL">
+                                                        <div>
+                                                            <span ng-repeat="Analysis in DestructiveAnalysis">
+                                                                <label ng-if="Analysis!='成本分析'&&Analysis!='结构分析'">
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
                                                             </span>
                                                         </div>
                                                     </td>
@@ -498,12 +523,12 @@
                                                     <td class="form_table_input">
                                                         <span>{{result.Type}}</span>
                                                     </td>
-                                                    <td class="form_table_input">
+                                                    <td class="form_table_input" colspan="2">
                                                         <input ng-model="result.RootCauseLv1" readonly="readonly" type="text" />
                                                     </td>
-                                                    <td class="form_table_input">
+                                                    <!--<td class="form_table_input">
                                                         <input ng-model="result.RootCauseLv2" readonly="readonly" type="text" />
-                                                    </td>
+                                                    </td>-->
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="form_table_label">
@@ -523,6 +548,14 @@
                                                     </td>
                                                     <td class="form_table_input">
                                                         <input ng-model="result.Complexity" id="Complexity" type="text" readonly="readonly" />
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="result.CaseStatus=='Close'">
+                                                    <td class="form_table_label">
+                                                        <span class="en">Case Status</span>
+                                                    </td>
+                                                    <td class="form_table_input" colspan="3">
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CaseStatus}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>

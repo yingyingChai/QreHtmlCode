@@ -6,6 +6,8 @@
 <link href="../css/kendo.default.min.css" rel="stylesheet">
 <link href="../css/kendo.dataviz.min.css" rel="stylesheet">
 <link href="../css/kendo.dataviz.default.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../css/jquery.datetimepicker.css" />
+
 <script src="../js/jquery.SPServices-2014.02.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../js/products.js"></script>
 <script src="../js/angular.min.js"></script>
@@ -19,6 +21,7 @@
 <script src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.config.js"></script>
 <script src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.all.js"></script>
 <script src="../js/SaveDetail.js"></script>
+<script src="../js/jquery.datetimepicker.js"></script>
 <style>
     .k-grid-save-changes {
         display: none
@@ -57,6 +60,16 @@
         height: 20%;
         z-index: 1001;
         text-align: center;
+    }
+    .k-alt, .k-header, .k-pager-wrap {
+        background-color: #ffffff !important;
+    }
+    .k-grid td {
+        border-bottom: 1px solid #d5d5d5
+    }
+    .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+        background-color: #ffffff !important;
+        font-size:14px
     }
 </style>
 <script>
@@ -100,6 +113,34 @@
         }
     }
 </script>
+<script>
+    $(function () {
+        $('#Stage3ReceiveDate').datetimepicker({
+            lang: 'ch',
+            timepicker: false,
+            format: 'Y-m-d',
+            formatDate: 'Y-m-d',
+        });
+        $('#Stage3CompleteDate').datetimepicker({
+            lang: 'ch',
+            timepicker: false,
+            format: 'Y-m-d',
+            formatDate: 'Y-m-d',
+        });
+        $('#Stage4ReceiveDate').datetimepicker({
+            lang: 'ch',
+            timepicker: false,
+            format: 'Y-m-d',
+            formatDate: 'Y-m-d',
+        });
+        $('#Stage4CompleteDate').datetimepicker({
+            lang: 'ch',
+            timepicker: false,
+            format: 'Y-m-d',
+            formatDate: 'Y-m-d',
+        });
+    })
+</script>
 <div id="over" class="over"></div>
 <div id="layout" class="layout"><img src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-ui-1.12.1/img/loading.gif" alt="" /></div>
 <div id="example" ng-app="KendoDemos">
@@ -130,13 +171,13 @@
                                                         <span class="en">Case No. <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" ng-model="result.CaseNumber">{{result.CaseNumber}}</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CaseNumber}}</span>
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Created by <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" ng-model="result.CreatedBy">{{result.CreatedBy}}</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CreatedBy}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -150,7 +191,7 @@
                                                         <span class="en">Created Date <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" class="form_control" ng-model="result.CreatedDate">{{result.CreatedDate}}</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CreatedDate}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -254,7 +295,9 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4">
+                                                    <td class="form_table_label" colspan="4">
+                                                        <!--<span class="en">Lot Information<i class="form_table_required">*</i></span>-->
+                                                        <span class="en">Lot Information</span>
                                                         <div id="grid"></div>
                                                     </td>
                                                 </tr>
@@ -341,26 +384,22 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <table class="form_table form_displayCss" align="center" ng-if="IsShowStage3">
+                                        <table class="form_table form_displayCss" align="center" id="showStage3Summary">
                                             <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Receive Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" class="form_control" id="Stage3ReceiveDate" ng-change="changeDate('Stage3ReceiveDate')" ng-model="Stage3ReceiveDate" />
+                                                        <input type="text" AUTOCOMPLETE="off"  id="Stage3ReceiveDate" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Complete Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" class="form_control" id="Stage3CompleteDate" ng-change="changeDate('Stage3CompleteDate')" ng-model="Stage3CompleteDate" />
+                                                        <input type="text" id="Stage3CompleteDate" />
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                        <table class="form_table form_displayCss" align="center" id="showStage3Summary">
-                                            <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Stage3 assiggn to</span>
@@ -438,31 +477,27 @@
                                         </table>
                                     </div>
                                     <div id="tab-4" class="tab-pane divForm">
-                                        <table ng-if="IsShowStage4" class="form_table form_displayCss" align="center">
+                                        <table id="stage4ShowSummary" class="form_table form_displayCss" align="center">
                                             <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Receive Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" class="form_control" id="Stage4ReceiveDate" ng-change="changeDate('Stage4ReceiveDate')" ng-model="Stage4ReceiveDate" />
+                                                        <input type="text" class="form_control" id="Stage4ReceiveDate" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Complete Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" class="form_control" id="Stage4CompleteDate" ng-change="changeDate('Stage4CompleteDate')" ng-model="Stage4CompleteDate" />
+                                                        <input type="text" class="form_control" id="Stage4CompleteDate" />
                                                     </td>
                                                 </tr>
-                                            </tbody>
-                                        </table>
-                                        <table id="stage4ShowSummary" class="form_table form_displayCss" align="center">
-                                            <tbody>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none">
+                                                    <td class="form_table_area" colspan="4">
                                                         item<br />
                                                         <div>
-                                                            <span ng-repeat="itemOne in NonDestructiveAnalysis" style="min-width:100px">
+                                                            <span ng-repeat="itemOne in NonDestructiveAnalysis">
                                                                 <label>
                                                                     <input type="checkbox" ng-click="itemOneClick(itemOne)" id="{{itemOne|ValueString}}41" name="stageItemOne" value="{{itemOne}}">
                                                                     {{itemOne}}
@@ -472,13 +507,24 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none">
-                                                        item<br />
+                                                    <td class="form_table_area" colspan="4" style="border-bottom:none" title="ESSENTIAL">
                                                         <div>
-                                                            <span ng-repeat="itemTwo in DestructiveAnalysis">
-                                                                <label>
-                                                                    <input type="checkbox" id="{{itemTwo|ValueString}}42" ng-click="itemTwoClick(itemTwo)" name="stageItemOne" value="{{itemTwo}}">
-                                                                    {{itemTwo}}
+                                                            <span ng-repeat="Analysis in DestructiveAnalysis">
+                                                                <label ng-if="Analysis=='成本分析'||Analysis=='结构分析'">
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:0 22px" title="ESSENTIAL">
+                                                        <div>
+                                                            <span ng-repeat="Analysis in DestructiveAnalysis">
+                                                                <label ng-if="Analysis!='成本分析'&&Analysis!='结构分析'">
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
                                                                 </label>
                                                             </span>
                                                         </div>

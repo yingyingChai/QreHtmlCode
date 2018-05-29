@@ -31,9 +31,20 @@
     .radio, .checkbox {
         margin-top: -25px;
     }
-
     label {
         font-weight: 100;
+    }
+    .k-alt, .k-header, .k-pager-wrap {
+        background-color: #ffffff !important;
+    }
+
+    .k-grid td {
+        border-bottom: 1px solid #d5d5d5
+    }
+
+    .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+        background-color: #ffffff !important;
+        font-size: 14px
     }
 </style>
 <div id="example" ng-app="KendoDemos">
@@ -57,13 +68,13 @@
                                                         <span class="en">Case No. <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" ng-model="result.CaseNo" style="color:#ababab">保存case自动生成</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="color:#ababab;border:0">保存case自动生成</span>
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Created by <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" id="LoginUser" ng-model="result.CreatedBy">{{result.CreatedBy}}</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CreatedBy}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -77,7 +88,7 @@
                                                         <span class="en">Created Date <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <span title="ESSENTIAL" class="form_control" ng-model="result.CreatedDate">{{result.CreatedDate}}</span>
+                                                        <span title="ESSENTIAL" class="form_control" style="border:0" ng-model="result.CreatedDate">{{result.CreatedDate}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -179,7 +190,8 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td colspan="4">
+                                                    <td class="form_table_label" colspan="4">
+                                                        <span class="en">Lot Information</span>
                                                         <div id="grid"></div>
                                                     </td>
                                                 </tr>

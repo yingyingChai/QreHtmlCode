@@ -6,9 +6,6 @@
 <link href="../css/kendo.default.min.css" rel="stylesheet">
 <link href="../css/kendo.dataviz.min.css" rel="stylesheet">
 <link href="../css/kendo.dataviz.default.min.css" rel="stylesheet">
-<link href="../css/htmleaf-demo.css" rel="stylesheet">
-<link href="../css/dcalendar.picker.css" rel="stylesheet" />
-
 <script src="../js/jquery.SPServices-2014.02.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../js/products.js"></script>
 <script src="../js/angular.min.js"></script>
@@ -22,7 +19,6 @@
 <script src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.config.js"></script>
 <script src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.all.js"></script>
 <script src="../js/SaveDetail.js"></script>
-<script type="text/javascript" src="js/dcalendar.picker.js"></script>
 <style>
     .k-grid-save-changes {
         display: none
@@ -104,14 +100,6 @@
         }
     }
 </script>
-<script type="text/javascript">
-    $('#mydatepicker').dcalendarpicker({
-        format: 'yyyy-mm-dd'
-    });
-    $('#mydatepicker2').dcalendarpicker({
-        format: 'yyyy-mm-dd'
-    });
-</script>
 <div id="over" class="over"></div>
 <div id="layout" class="layout"><img src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-ui-1.12.1/img/loading.gif" alt="" /></div>
 <div id="example" ng-app="KendoDemos">
@@ -176,7 +164,7 @@
                                                         <span class="en">Case Status <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <select title="ESSENTIAL" class="form_control" ng-model="result.CaseStatus" ng-options="x for x in CaseStatus"></select>
+                                                        <select title="ESSENTIAL" id="CaseStatus" class="form_control" ng-model="result.CaseStatus" ng-options="x for x in CaseStatus"></select>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -276,7 +264,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none" title="ESSENTIAL">
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none" title="ESSENTIAL">
                                                         Statistic Analysis<br />
                                                         <div>
                                                             <span ng-repeat="Analysis in StatisticAnalysis" repeat-finish＝"renderFinish()">
@@ -302,11 +290,23 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none" title="ESSENTIAL">
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:4px 22px 0px" title="ESSENTIAL">
                                                         Destructive Analysis
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
-                                                                <label>
+                                                                <label ng-if="Analysis=='成本分析'||Analysis=='结构分析'">
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:0 22px" title="ESSENTIAL">
+                                                        <div>
+                                                            <span ng-repeat="Analysis in DestructiveAnalysis">
+                                                                <label ng-if="Analysis!='成本分析'&&Analysis!='结构分析'">
                                                                     <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
@@ -357,21 +357,6 @@
                                                         <input type="date" name="date" class="form_control" id="Stage3CompleteDate" ng-change="changeDate('Stage3CompleteDate')" ng-model="Stage3CompleteDate" />
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td class="form_table_label">
-                                                        <span class="en">Receive Date</span>
-                                                    </td>
-                                                    <td class="form_table_input">
-                                                        <input id='mydatepicker' type='text' />
-                                                    </td>
-                                                    <td class="form_table_label">
-                                                        <span class="en">Complete Date</span>
-                                                    </td>
-                                                    <td class="form_table_input">
-                                                        <input id='mydatepicker2' type='text' />
-                                                    </td>
-                                                </tr>
-
                                             </tbody>
                                         </table>
                                         <table class="form_table form_displayCss" align="center" id="showStage3Summary">
@@ -460,13 +445,13 @@
                                                         <span class="en">Receive Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" id="Stage4ReceiveDate" ng-change="changeDate('Stage4ReceiveDate')" ng-model="Stage4ReceiveDate" />
+                                                        <input type="date" name="date" class="form_control" id="Stage4ReceiveDate" ng-change="changeDate('Stage4ReceiveDate')" ng-model="Stage4ReceiveDate" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Complete Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="date" name="date" id="Stage4CompleteDate" ng-change="changeDate('Stage4CompleteDate')" ng-model="Stage4CompleteDate" />
+                                                        <input type="date" name="date" class="form_control" id="Stage4CompleteDate" ng-change="changeDate('Stage4CompleteDate')" ng-model="Stage4CompleteDate" />
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -550,12 +535,12 @@
                                                     <td class="form_table_input">
                                                         <span>{{result.Type}}</span>
                                                     </td>
-                                                    <td class="form_table_input">
+                                                    <td class="form_table_input" colspan="2">
                                                         <select ng-model="RootCauseLv1Select" class="form_control" ng-options="x.Level1 for x in RootCauseLv1"><option value="">Level1</option></select>
                                                     </td>
-                                                    <td class="form_table_input">
+                                                    <!--<td class="form_table_input">
                                                         <select ng-model="result.RootCauseLv2" class="form_control" ng-options="x for x in RootCauseLv2"><option value="">Level2</option></select>
-                                                    </td>
+                                                    </td>-->
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="form_table_label">

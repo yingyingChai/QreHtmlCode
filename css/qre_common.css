@@ -200,8 +200,9 @@
     font-style: normal;
     font-family: Microsoft YaHei;
     color: black;
-    font-size: 10pt;
+    /*font-size: 10pt;*/
     font-weight: normal;
+    font-size: 14px;
 }
 
 .form_table .form_table_title_Detail {
@@ -271,9 +272,9 @@
     color: #da9694;
 }
 
-.form_table td.form_table_input {
+/*.form_table td.form_table_input {
     text-align: center;
-}
+}*/
 
 .form_table td.form_table_area {
     text-align: left;
@@ -643,9 +644,26 @@ body {
 a:visited {
     color: #0a6ebd;
 }
-/*.k-header > .k-grid-filter, .k-header > .k-header-column-menu {
-     margin: 0 !important; 
-}
-.k-grid-header th.k-header > .k-link {
-     margin: 0 !important; 
+/*.radio-inline, .checkbox-inline {
+    position: relative;
+    display: inline-block;
+    padding-left: 20px;
+    margin-bottom: 0;
+    font-weight: normal;
+    vertical-align: middle;
+    cursor: pointer;
 }*/
+input[type=button], input[type=reset], input[type=submit], button {
+    min-width: 0 !important;
+}
+.xdsoft_datetimepicker {
+    padding-top: 20px !important;
+}
+input[type=password], input[type=text],textarea{
+    font-size:14px;
+    padding:6px 12px !important;
+}
+input[type=file] {
+    margin-left: 22px;
+    font-size:14px
+}

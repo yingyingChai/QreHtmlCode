@@ -1,13 +1,11 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("SaveDetailCtrl", function ($scope, $filter, $compile, $http) {
         //初始化数据
-        //if (IEVersion() != -1) {
-        //    alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
-        //}
         var user = getUser();
         $scope.Prioritys = ['High', 'Middle', 'Low'];
         $scope.CaseStatus = ['Receive', 'Statistics Analysis', 'Failure Analysis', 'Close'];
         var StatisticAnalysisList = [], NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [];
+        $scope.Stage3ReceiveDate = "";
         $scope.assignments = {}; $scope.RootCauseLv1 = [];
         /*
          * 表中表
@@ -178,30 +176,26 @@
                                             { command: [{ name: "edit", text: "修改" }, { name: "Delete", text: "删除", click: Delete }], title: "&nbsp;", width: "120px" }],
                                             editable: "popup"
                                         });
-                                        if (dataList.CaseStatus == "Close") {
-                                            $("#CaseStatus").attr("disabled", true);
-                                        }
                                         //格式化时间
-                                        if (dataList.Stage3ReceiveDate == "0001-01-01") {
-                                            $("#Stage3ReceiveDate").val(null)
-                                        } else {
-                                            $("#Stage3ReceiveDate").val(dataList.Stage3ReceiveDate)
-                                        }
                                         if (dataList.Stage3CompleteDate == "0001-01-01") {
-                                            $("#Stage3CompleteDate").val(null)
+                                            dataList.Stage3CompleteDate = $filter('date')(new Date(), 'yyyy-MM-dd')
+                                            $("#Stage3ReceiveDate1").val($filter('date')(new Date(), 'yyyy-MM-dd'))
                                         } else {
-                                            $("#Stage3CompleteDate").val(dataList.Stage3CompleteDate)
+                                            $("#Stage3ReceiveDate1").val(dataList.Stage3CompleteDate)
                                         }
+                                        $scope.Stage3CompleteDate = new Date(dataList.Stage3CompleteDate);
+                                        if (dataList.Stage3ReceiveDate == "0001-01-01") {
+                                            dataList.Stage3ReceiveDate = $filter('date')(new Date(), 'yyyy-MM-dd')
+                                        }
+                                        $scope.Stage3ReceiveDate = new Date(dataList.Stage3ReceiveDate);
                                         if (dataList.Stage4ReceiveDate == "0001-01-01") {
-                                            $("#Stage4ReceiveDate").val(null)
-                                        } else {
-                                            $("#Stage4ReceiveDate").val(dataList.Stage4ReceiveDate)
+                                            dataList.Stage4ReceiveDate = $filter('date')(new Date(), 'yyyy-MM-dd')
                                         }
+                                        $scope.Stage4ReceiveDate = new Date(dataList.Stage4ReceiveDate);
                                         if (dataList.Stage4CompleteDate == "0001-01-01") {
-                                            $("#Stage4CompleteDate").val(null)
-                                        } else {
-                                            $("#Stage4CompleteDate").val(dataList.Stage4CompleteDate)
+                                            dataList.Stage4CompleteDate = $filter('date')(new Date(), 'yyyy-MM-dd')
                                         }
+                                        $scope.Stage4CompleteDate = new Date(dataList.Stage4CompleteDate);
                                         //判断选择的Type
                                         if ($scope.result.Type) {
                                             angular.forEach($scope.Types, function (data, index, array) {
@@ -286,10 +280,13 @@
 
                     });
             });
+
+        /*
+         * 
+         * 
+         **/
         /**
-         * 根须选择的多选Json,和Id,勾选已保存的选项
-         * @param {any} List
-         * @param {any} index
+         *监控数据变化 针对不同表单
          */
         function SelectMulity(List, index) {
             angular.forEach(List, function (data) {
@@ -297,11 +294,6 @@
                 $("#" + id).attr("checked", true)
             })
         }
-        /**
-         * Continuity 为false,清空已选择的多选
-         * @param {any} List
-         * @param {any} index
-         */
         function NoSelectMulity(List, index) {
             angular.forEach(List, function (data) {
                 var id = getId(data, index);
@@ -346,35 +338,6 @@
                 }
             }
         });
-        $scope.$watch('result.CaseStatus', function (value, oldValue) {
-            if (value != oldValue && oldValue != undefined) {
-                if (value == "Close") {
-                    if ($scope.result.RootCauseLv1) {
-                        if ($scope.IsShowStage3) {
-                            if ($("#Stage3CompleteDate").val() == '' || $("#Stage3ReceiveDate").val() == '') {
-                                $scope.result.CaseStatus = oldValue;
-                                alertMessage("若要关闭case,请选择Stage3CompleteDate，Stage3ReceiveDate")
-                            } else {
-                                $("#Stage3CompleteDate").attr("disabled", true);
-                                $("#Stage3ReceiveDate").attr("disabled", true)
-                            }
-                        }
-                        if ($scope.IsShowStage4) {
-                            if ($("#Stage4CompleteDate").val() == '' || $("#Stage4ReceiveDate").val() == '') {
-                                $scope.result.CaseStatus = oldValue;
-                                alertMessage("若要关闭case,请选择Stage4CompleteDate，Stage4ReceiveDate")
-                            } else {
-                                $("#Stage4CompleteDate").attr("disabled", true);
-                                $("#Stage4ReceiveDate").attr("disabled", true)
-                            }
-                        }
-                    } else {
-                        $scope.result.CaseStatus = oldValue;
-                        alertMessage("若要关闭case,请选择level1")
-                    }
-                }
-            }
-        });
         /*
          * 动态获取RootCauseLv1 和 RootCaseLv2
          **/
@@ -407,8 +370,10 @@
                 //清空stage3 中数据
                 if ($scope.result) {
                     $scope.result.Stage3AssiggnTo = "";
-                    $("#Stage3ReceiveDate").val(null)
-                    $("#Stage3CompleteDate").val(null)
+                    //$scope.Stage3ReceiveDate = new Date();
+                    //$scope.Stage3CompleteDate = new Date();
+                    $scope.Stage3ReceiveDate = null;
+                    $scope.Stage3CompleteDate = null;
                     if (I3 != 0) {
                         leipiEditorStage3Summary.sync();
                         leipiEditorStage3Summary.execCommand('cleardoc');
@@ -434,8 +399,8 @@
             } else {
                 //清空stage4 中数据
                 if ($scope.result) {
-                    $("#Stage4ReceiveDate").val(null)
-                    $("#Stage4CompleteDate").val(null)
+                    $scope.Stage4ReceiveDate = null;
+                    $scope.Stage4CompleteDate = null;
                     $scope.result.Stage4ItemOne = "";
                     NoSelectMulity(itemOneList, 41);
                     $scope.result.Stage4ItemTwo = "";
@@ -473,45 +438,71 @@
                 }
                 $scope.result.ProblemDescription = html;
             }
-            if (verifyNewCase()) {
-                if ($scope.result.Type == 'RMA') {
-                    if ($scope.result.LinkName.indexOf("http:") < 0) {
-                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+            if ($scope.result.ProblemDescription.length >= 20000) {
+                alertMessage("Problem Description 内容过长,请重新输入")
+            } else if ($scope.result.Stage3Summary.length >= 20000) {
+                alertMessage("Stage3 Summary 内容过长,请重新输入")
+            } else if ($scope.result.Stage3Summary.length >= 20000) {
+                alertMessage("Stage4 Summary 内容过长,请重新输入")
+            } else if ($scope.result.Stage3Summary.length >= 20000) {
+                alertMessage("CA&PA&Conclusion 内容过长,请重新输入")
+            } else {
+                if (verifyNewCase()) {
+                    if ($scope.result.Type == 'RMA') {
+                        if ($scope.result.LinkName.indexOf("http:") < 0) {
+                            $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+                        }
                     }
+                    $scope.result.LotList = [];
+                    angular.forEach(LotList, function (data, index, array) {
+                        var dIndex = {
+                            'Number': '',
+                            'LotIDOrDateCode': '',
+                            'Fab': '',
+                            'AssemblyData': '',
+                        }
+                        dIndex.Number = data.Number;
+                        dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
+                        dIndex.Fab = data.Fab;
+                        dIndex.AssemblyData = data.AssemblyData;
+                        $scope.result.LotList.push(dIndex);
+                    });
+                    if ($scope.Stage3CompleteDate) {
+                        $scope.result.Stage3CompleteDate = $filter('date')($scope.Stage3CompleteDate, 'yyyy-MM-dd');
+                    } else {
+                        $scope.result.Stage3CompleteDate = null;
+                    }
+                    if ($scope.Stage3ReceiveDate) {
+                        $scope.result.Stage3ReceiveDate = $filter('date')($scope.Stage3ReceiveDate, 'yyyy-MM-dd');
+                    } else {
+                        $scope.result.Stage3ReceiveDate = null;
+                    }
+                    if ($scope.Stage4ReceiveDate) {
+                        $scope.result.Stage4ReceiveDate = $filter('date')($scope.Stage4ReceiveDate, 'yyyy-MM-dd');
+                    } else {
+                        $scope.result.Stage4ReceiveDate = null;
+                    }
+                    if ($scope.Stage4CompleteDate) {
+                        $scope.result.Stage4CompleteDate = $filter('date')($scope.Stage4CompleteDate, 'yyyy-MM-dd');
+                    } else {
+                        $scope.result.Stage4CompleteDate = null;
+                    }
+                    var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify($scope.result),
+                        dataType: "json",
+                        success: function (data) {
+                            window.location.href = "../SitePages/Home.aspx";
+                            //发送邮件
+                        },
+                        error: function (a, b, c) {
+                            alert("保存失败")
+                        }
+                    });
                 }
-                $scope.result.LotList = [];
-                angular.forEach(LotList, function (data, index, array) {
-                    var dIndex = {
-                        'Number': '',
-                        'LotIDOrDateCode': '',
-                        'Fab': '',
-                        'AssemblyData': '',
-                    }
-                    dIndex.Number = data.Number;
-                    dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
-                    dIndex.Fab = data.Fab;
-                    dIndex.AssemblyData = data.AssemblyData;
-                    $scope.result.LotList.push(dIndex);
-                });
-                $scope.result.Stage3CompleteDate = $("#Stage3CompleteDate").val();
-                $scope.result.Stage3ReceiveDate = $("#Stage3ReceiveDate").val();
-                $scope.result.Stage4CompleteDate = $("#Stage4CompleteDate").val();
-                $scope.result.Stage4ReceiveDate = $("#Stage4ReceiveDate").val();
-                var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify($scope.result),
-                    dataType: "json",
-                    success: function (data) {
-                        window.location.href = "../SitePages/Home.aspx";
-                        //发送邮件
-                    },
-                    error: function (a, b, c) {
-                        alert("保存失败")
-                    }
-                });
             }
         }
         $scope.SaveDetail = function () {
@@ -554,10 +545,8 @@
         }
         function GetC3Date() {
             if ($scope.IsShowStage3) {
-                if ($("#Stage3CompleteDate").val() != '' && $("#Stage3ReceiveDate").val() != '') {
-                    var S3CD = new Date($("#Stage3CompleteDate").val());
-                    var S3RD = new Date($("#Stage3ReceiveDate").val());
-                    var days = S3CD.getTime() - S3RD.getTime();
+                if ($scope.Stage3CompleteDate != '' && $scope.Stage3ReceiveDate != '') {
+                    var days = $scope.Stage3CompleteDate.getTime() - $scope.Stage3ReceiveDate.getTime();
                     var time = parseInt(days / (1000 * 60 * 60 * 24));
                     if (time < 0) {
                         alertMessage("请正确填写Stage3:Complete Date 和 Receive Date")
@@ -567,20 +556,18 @@
                         return true;
                     }
                 } else {
-                    $scope.result.Stage3CRCT = null;
+                    $scope.result.Stage4CRCT = null;
                     return true;
                 }
             } else {
-                $scope.result.Stage3CRCT = null;
+                $scope.result.Stage4CRCT = null;
                 return true;
             }
         }
         function GetC4Date() {
             if ($scope.IsShowStage4) {
-                if ($("#Stage4CompleteDate").val() != '' && $("#Stage4ReceiveDate").val() != '') {
-                    var S4CD = new Date($("#Stage4CompleteDate").val());
-                    var S4RD = new Date($("#Stage4ReceiveDate").val());
-                    var days = S4CD.getTime() - S4RD.getTime();
+                if ($scope.Stage4CompleteDate != '' && $scope.Stage4ReceiveDate != '') {
+                    var days = $scope.Stage4CompleteDate.getTime() - $scope.Stage4ReceiveDate.getTime();
                     var time = parseInt(days / (1000 * 60 * 60 * 24));
                     if (time < 0) {
                         alertMessage("请正确填写Stage4:Complete Date 和 Receive Date")
@@ -601,15 +588,23 @@
         function GetC5Date() {
             if ($scope.result.CaseStatus == "Close") {
                 GetComplexityScore();
-                var days = "";
-                if (typeof $scope.result.CreatedDate == "string") {
-                    days = new Date().getTime() - new Date($scope.result.CreatedDate).getTime();
+                //if ($scope.result.RootCauseLv1 && $scope.result.RootCauseLv2) {
+                if ($scope.result.RootCauseLv1) {
+                    var days = "";
+                    if (typeof $scope.result.CreatedDate == "string") {
+                        days = new Date().getTime() - new Date($scope.result.CreatedDate).getTime();
+                    } else {
+                        days = new Date().getTime() - $scope.result.CreatedDate.getTime();
+                    }
+                    var time = parseInt(days / (1000 * 60 * 60 * 24));
+                    $scope.result.Stage5CRCT = time;
+
+                    return true
                 } else {
-                    days = new Date().getTime() - $scope.result.CreatedDate.getTime();
+                    //alertMessage("若要关闭case,请选择level1 和 level2");
+                    alertMessage("若要关闭case,请选择level1");
+                    return false;
                 }
-                var time = parseInt(days / (1000 * 60 * 60 * 24));
-                $scope.result.Stage5CRCT = time;
-                return true
             } else {
                 $scope.result.Complexity = 0;
                 $scope.result.Stage5CRCT = null;
@@ -943,6 +938,18 @@
             if (I5 == 0) {
                 leipiEditorStage5Summary.execCommand('insertHtml', $scope.result.Stage5Summary);
                 I5 = 2;
+            }
+        }
+        $scope.changeDate = function (id) {
+            var val = $("#" + id).val();
+            if (id == "Stage3ReceiveDate") {
+                $scope.Stage3ReceiveDate = new Date(val);
+            } else if (id == "Stage3CompleteDate") {
+                $scope.Stage3CompleteDate = new Date(val);
+            } else if (id == "Stage4ReceiveDate") {
+                $scope.Stage4ReceiveDate = new Date(val);
+            } else if (id == "Stage4CompleteDate") {
+                $scope.Stage4CompleteDate = new Date(val);
             }
         }
         function GetComplexityScore() {

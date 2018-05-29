@@ -1,5 +1,8 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("ListAllCtrl", function ($scope, $filter, $http, $compile) {
+        if (IEVersion() != -1) {
+            alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
+        }
         var user = getUser();
         var Department = '', caseOwner = '', ListLoginUse = '';
         $().SPServices({
@@ -94,8 +97,10 @@
                             field: "Type",
                         }, {
                             field: "RootCauseLv1",
+                            hidden: true
                         }, {
                             field: "RootCauseLv2",
+                            hidden: true
                         }, {
                             field: "Stage5CRCT",
                             title: "CRCT",

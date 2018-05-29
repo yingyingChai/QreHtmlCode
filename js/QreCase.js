@@ -3,6 +3,9 @@
         /**
          * 初始化$scope.result 对象，stage3 ，stage4 没有值默认为null
          */
+        if (IEVersion() != -1) {
+            alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
+        }
         var user = getUser();
         $scope.result = {
             CaseNumber: null,
@@ -297,42 +300,38 @@
         $scope.save = function () {
             leipiEditor.sync(); //同步内容
             var html = leipiEditor.getContent();
-            if (html.length >= 20000) {
-                alertMessage("Problem Description 内容过长,请重新输入")
-            } else {
-                $scope.result.ProblemDescription = html;
-                if (verifyNewCase()) {
-                    if (verigyRMA()) {
-                        $scope.result.LotList = [];
-                        $scope.result.LotList = [];
-                        angular.forEach(LotList, function (data, index, array) {
-                            var dIndex = {
-                                'Number': '',
-                                'LotIDOrDateCode': '',
-                                'Fab': '',
-                                'AssemblyData': '',
-                            }
-                            dIndex.Number = data.Number;
-                            dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
-                            dIndex.Fab = data.Fab;
-                            dIndex.AssemblyData = data.AssemblyData;
-                            $scope.result.LotList.push(dIndex);
-                        });
-                        var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
-                        $.ajax({
-                            type: "POST",
-                            url: url,
-                            contentType: "application/json; charset=utf-8",
-                            data: JSON.stringify($scope.result),
-                            dataType: "json",
-                            success: function (data) {
-                                window.location.href = "../SitePages/Home.aspx";
-                            },
-                            error: function (a, b, c) {
-                                alert("保存失败")
-                            }
-                        });
-                    }
+            $scope.result.ProblemDescription = html;
+            if (verifyNewCase()) {
+                if (verigyRMA()) {
+                    $scope.result.LotList = [];
+                    $scope.result.LotList = [];
+                    angular.forEach(LotList, function (data, index, array) {
+                        var dIndex = {
+                            'Number': '',
+                            'LotIDOrDateCode': '',
+                            'Fab': '',
+                            'AssemblyData': '',
+                        }
+                        dIndex.Number = data.Number;
+                        dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
+                        dIndex.Fab = data.Fab;
+                        dIndex.AssemblyData = data.AssemblyData;
+                        $scope.result.LotList.push(dIndex);
+                    });
+                    var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify($scope.result),
+                        dataType: "json",
+                        success: function (data) {
+                            window.location.href = "../SitePages/Home.aspx";
+                        },
+                        error: function (a, b, c) {
+                            alert("保存失败")
+                        }
+                    });
                 }
             }
         }
