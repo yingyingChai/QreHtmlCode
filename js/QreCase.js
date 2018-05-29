@@ -3,9 +3,9 @@
         /**
          * 初始化$scope.result 对象，stage3 ，stage4 没有值默认为null
          */
-        if (IEVersion() != -1) {
-            alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
-        }
+        //if (IEVersion() != -1) {
+        //    alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
+        //}
         var user = getUser();
         $scope.result = {
             CaseNumber: null,

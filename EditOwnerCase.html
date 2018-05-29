@@ -459,7 +459,7 @@
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis=='成本分析'||Analysis=='结构分析'">
-                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    <input type="checkbox" id="{{Analysis|ValueString}}42" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
                                                             </span>
@@ -471,7 +471,7 @@
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis!='成本分析'&&Analysis!='结构分析'">
-                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    <input type="checkbox" id="{{Analysis|ValueString}}42" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
                                                             </span>

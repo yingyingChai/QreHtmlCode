@@ -9,6 +9,7 @@
         $scope.CaseStatus = ['Receive', 'Statistics Analysis', 'Failure Analysis', 'Close'];
         var StatisticAnalysisList = [], NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [];
         $scope.assignments = {}; $scope.RootCauseLv1 = [];
+        var changeClose = true;
         /*
          * 表中表
          **/
@@ -180,7 +181,8 @@
                                         });
                                         if (dataList.CaseStatus == "Close") {
                                             $("#CaseStatus").attr("disabled", true);
-                                        }
+                                            changeClose = false;
+                                        } 
                                         //格式化时间
                                         if (dataList.Stage3ReceiveDate == "0001-01-01") {
                                             $("#Stage3ReceiveDate").val(null)
@@ -347,10 +349,10 @@
             }
         });
         $scope.$watch('result.CaseStatus', function (value, oldValue) {
-            if (value != oldValue && oldValue != undefined) {
+            if (value != oldValue) {
                 if (value == "Close") {
                     if ($scope.result.RootCauseLv1) {
-                        if ($scope.IsShowStage3) {
+                        if ($scope.IsShowStage3||$scope.result.Stage3ContinueAnalysis=='Yes') {
                             if ($("#Stage3CompleteDate").val() == '' || $("#Stage3ReceiveDate").val() == '') {
                                 $scope.result.CaseStatus = oldValue;
                                 alertMessage("若要关闭case,请选择Stage3CompleteDate，Stage3ReceiveDate")
@@ -359,7 +361,7 @@
                                 $("#Stage3ReceiveDate").attr("disabled", true)
                             }
                         }
-                        if ($scope.IsShowStage4) {
+                        if ($scope.IsShowStage4 || $scope.result.Stage4ContinueAnalysis =='Yes') {
                             if ($("#Stage4CompleteDate").val() == '' || $("#Stage4ReceiveDate").val() == '') {
                                 $scope.result.CaseStatus = oldValue;
                                 alertMessage("若要关闭case,请选择Stage4CompleteDate，Stage4ReceiveDate")
@@ -399,35 +401,39 @@
                 })
             }
         });
-        $scope.$watch('result.Stage3ContinueAnalysis', function (value) {
-            if (value == "Yes") {
-                $scope.IsShowStage3 = true;
-                $("#showStage3Summary")[0].style.display = "";
-            } else {
-                //清空stage3 中数据
-                if ($scope.result) {
-                    $scope.result.Stage3AssiggnTo = "";
-                    $("#Stage3ReceiveDate").val(null)
-                    $("#Stage3CompleteDate").val(null)
-                    if (I3 != 0) {
-                        leipiEditorStage3Summary.sync();
-                        leipiEditorStage3Summary.execCommand('cleardoc');
+        $scope.$watch('result.Stage3ContinueAnalysis', function (value, oldValue) {
+            if (value != oldValue) {
+                if (value == "Yes") {
+                    $scope.IsShowStage3 = true;
+                    $("#showStage3Summary")[0].style.display = "";
+                } else {
+                    //清空stage3 中数据
+                    if ($scope.result) {
+                        $scope.result.Stage3CRCT = null;
+                        $scope.result.Stage3AssiggnTo = "";
+                        $("#Stage3ReceiveDate").val(null)
+                        $("#Stage3CompleteDate").val(null)
+                        if (I3 != 0) {
+                            leipiEditorStage3Summary.sync();
+                            leipiEditorStage3Summary.execCommand('cleardoc');
+                        }
+                        NoSelectMulity(Stage3ItemList, 3);
+                        Stage3ItemList = [];
+                        $scope.result.Stage3Item = "";
+                        $scope.result.Stage3CRCT = "";
+                        $scope.result.Stage3Attachment = "";
+                        $scope.result.Stage3Summary = "";
+                        $("#InstallAttachmentStage3").html("");
+                        Stage3Attachment = [];
+                        $scope.result.Stage4ContinueAnalysis = "Yes";
                     }
-                    NoSelectMulity(Stage3ItemList, 3);
-                    Stage3ItemList = [];
-                    $scope.result.Stage3Item = "";
-                    $scope.result.Stage3CRCT = "";
-                    $scope.result.Stage3Attachment = "";
-                    $scope.result.Stage3Summary = "";
-                    $("#InstallAttachmentStage3").html("");
-                    Stage3Attachment = [];
-                    $scope.result.Stage4ContinueAnalysis = "Yes";
+                    $scope.IsShowStage3 = false;
+                    $("#showStage3Summary")[0].style.display = "none";
                 }
-                $scope.IsShowStage3 = false;
-                $("#showStage3Summary")[0].style.display = "none";
             }
+            
         });
-        $scope.$watch('result.Stage4ContinueAnalysis', function (value) {
+        $scope.$watch('result.Stage4ContinueAnalysis', function (value, oldValue) {
             if (value == "Yes") {
                 $scope.IsShowStage4 = true;
                 $("#stage4ShowSummary")[0].style.display = "";
@@ -457,10 +463,10 @@
          *提交申请记录
          * @param {any} event
          */
-        $scope.saveChanges = function (event) {
-            var st = event;
-            $scope.LotList = event.sender.options.dataSource.view();
-        }
+        //$scope.saveChanges = function (event) {
+        //    var st = event;
+        //    $scope.LotList = event.sender.options.dataSource.view();
+        //}
         $scope.save = function () {
             //更新不需要发送邮件
             //保存信息
@@ -543,19 +549,26 @@
                     }
                     $scope.result.Stage5Summary = htmlStage5;
                 }
-                if ($scope.IsShowStage3 || !$scope.IsShowStage4) {
-                    $scope.result.CaseStatus = 'Statistic Analysis'
-                }
-                if ($scope.result.Stage4ItemOne != null || $scope.result.Stage4ItemTwo != null || $scope.result.Stage4Summary != null || $scope.result.Stage4Attachment != null) {
-                    $scope.result.CaseStatus = 'Failure Analysis'
+                if ($scope.result.CaseStatus != "Close") {
+                    if ($scope.IsShowStage3) {
+                        $scope.result.CaseStatus = 'Statistic Analysis'
+                    }
+                    if (($scope.result.Stage4CompleteDate && $scope.result.Stage4CompleteDate != "") || ($scope.result.Stage4ReceiveDate && $scope.result.Stage4ReceiveDate != "") || $scope.result.Stage4ItemOne != null || $scope.result.Stage4ItemTwo != null || ($scope.result.Stage4Summary != null && $scope.result.Stage4Summary != null != "") || $scope.result.Stage4Attachment) {
+                        $scope.result.CaseStatus = 'Failure Analysis'
+                    }
                 }
                 $scope.save();
             }
         }
         function GetC3Date() {
-            if ($scope.IsShowStage3) {
-                if ($("#Stage3CompleteDate").val() != '' && $("#Stage3ReceiveDate").val() != '') {
-                    var S3CD = new Date($("#Stage3CompleteDate").val());
+            if (($scope.IsShowStage3 && $scope.result.CaseStatus != "Close") || changeClose) {
+                if ($("#Stage3ReceiveDate").val() != '') {
+                    var S3CD = ''; 
+                    if ($("#Stage3CompleteDate").val() == '') {
+                        S3CD = new Date();
+                    } else {
+                        S3CD = new Date($("#Stage3CompleteDate").val());
+                    }
                     var S3RD = new Date($("#Stage3ReceiveDate").val());
                     var days = S3CD.getTime() - S3RD.getTime();
                     var time = parseInt(days / (1000 * 60 * 60 * 24));
@@ -567,18 +580,21 @@
                         return true;
                     }
                 } else {
-                    $scope.result.Stage3CRCT = null;
                     return true;
                 }
             } else {
-                $scope.result.Stage3CRCT = null;
                 return true;
             }
         }
         function GetC4Date() {
-            if ($scope.IsShowStage4) {
-                if ($("#Stage4CompleteDate").val() != '' && $("#Stage4ReceiveDate").val() != '') {
-                    var S4CD = new Date($("#Stage4CompleteDate").val());
+            if (($scope.IsShowStage4 && $scope.result.CaseStatus != "Close") || changeClose) {
+                if ($("#Stage4ReceiveDate").val() != '') {
+                    var S4CD = '';
+                    if ($("#Stage4CompleteDate").val() == '') {
+                        S4CD = new Date();
+                    } else {
+                        S4CD = new Date($("#Stage4CompleteDate").val());
+                    }
                     var S4RD = new Date($("#Stage4ReceiveDate").val());
                     var days = S4CD.getTime() - S4RD.getTime();
                     var time = parseInt(days / (1000 * 60 * 60 * 24));
@@ -590,29 +606,29 @@
                         return true;
                     }
                 } else {
-                    $scope.result.Stage4CRCT = null;
                     return true;
                 }
             } else {
-                $scope.result.Stage4CRCT = null;
                 return true;
             }
         }
+        function C5Date() {
+            var days = "";
+            if (typeof $scope.result.CreatedDate == "string") {
+                days = new Date().getTime() - new Date($scope.result.CreatedDate).getTime();
+            } else {
+                days = new Date().getTime() - $scope.result.CreatedDate.getTime();
+            }
+            var time = parseInt(days / (1000 * 60 * 60 * 24));
+            $scope.result.Stage5CRCT = time;
+        }
         function GetC5Date() {
-            if ($scope.result.CaseStatus == "Close") {
-                GetComplexityScore();
-                var days = "";
-                if (typeof $scope.result.CreatedDate == "string") {
-                    days = new Date().getTime() - new Date($scope.result.CreatedDate).getTime();
-                } else {
-                    days = new Date().getTime() - $scope.result.CreatedDate.getTime();
-                }
-                var time = parseInt(days / (1000 * 60 * 60 * 24));
-                $scope.result.Stage5CRCT = time;
+            if ($scope.result.CaseStatus != "Close" || changeClose) {
+                $scope.result.Complexity = 0;
+                C5Date();
                 return true
             } else {
-                $scope.result.Complexity = 0;
-                $scope.result.Stage5CRCT = null;
+                GetComplexityScore();
                 return true;
             }
         }

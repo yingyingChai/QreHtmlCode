@@ -1,9 +1,9 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("EditOwnerCaseCtrl", function ($scope, $filter, $compile, $http) {
         //初始化数据
-        if (IEVersion() != -1) {
-            alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
-        }
+        //if (IEVersion() != -1) {
+        //    alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
+        //}
         var user = getUser();
         $scope.Prioritys = ['High', 'Middle', 'Low'];
         $scope.CaseStatus = ['Receive', 'Statistics Analysis', 'Failure Analysis', 'Close'];
@@ -337,7 +337,7 @@
             }
         });
         $scope.$watch('result.CaseStatus', function (value, oldValue) {
-            if (value != oldValue&&oldValue!=undefined) {
+            if (value != oldValue) {
                 if (value == "Close") {
                     if ($scope.result.RootCauseLv1) {
                         if ($scope.IsShowStage3) {
@@ -442,13 +442,69 @@
             }
         }
         $scope.SaveDetail = function () {
-            if (GetC5Date()) {
+            if (GetC3Date() && GetC4Date() && GetC5Date()) {
                 $scope.save();
             }
         }
+        function GetC3Date() {
+            if ($scope.IsShowStage3 && $scope.result.CaseStatus != "Close") {
+                if ($("#Stage3ReceiveDate").val() != '') {
+                    var S3CD = '';
+                    if ($("#Stage3CompleteDate").val() == '') {
+                        S3CD = new Date();
+                    } else {
+                        S3CD = new Date($("#Stage3CompleteDate").val());
+                    }
+                    var S3RD = new Date($("#Stage3ReceiveDate").val());
+                    var days = S3CD.getTime() - S3RD.getTime();
+                    var time = parseInt(days / (1000 * 60 * 60 * 24));
+                    if (time < 0) {
+                        alertMessage("请正确填写Stage3:Complete Date 和 Receive Date")
+                        return false;
+                    } else {
+                        $scope.result.Stage3CRCT = time;
+                        return true;
+                    }
+                } else {
+                    $scope.result.Stage3CRCT = null;
+                    return true;
+                }
+            } else {
+                $scope.result.Stage3CRCT = null;
+                return true;
+            }
+        }
+        function GetC4Date() {
+            if ($scope.IsShowStage4 && $scope.result.CaseStatus != "Close") {
+                if ($("#Stage4ReceiveDate").val() != '') {
+                    var S4CD = '';
+                    if ($("#Stage4CompleteDate").val() == '') {
+                        S4CD = new Date();
+                    } else {
+                        S4CD = new Date($("#Stage4CompleteDate").val());
+                    }
+                    var S4RD = new Date($("#Stage4ReceiveDate").val());
+                    var days = S4CD.getTime() - S4RD.getTime();
+                    var time = parseInt(days / (1000 * 60 * 60 * 24));
+                    if (time < 0) {
+                        alertMessage("请正确填写Stage4:Complete Date 和 Receive Date")
+                        return false;
+                    } else {
+                        $scope.result.Stage4CRCT = time;
+                        return true;
+                    }
+                } else {
+                    $scope.result.Stage4CRCT = null;
+                    return true;
+                }
+            } else {
+                $scope.result.Stage4CRCT = null;
+                return true;
+            }
+        }
         function GetC5Date() {
-            if ($scope.result.CaseStatus == "Close") {
-                GetComplexityScore();
+            if ($scope.result.CaseStatus != "Close") {
+                $scope.result.Complexity = 0;
                 if ($scope.result.RootCauseLv1 && $scope.result.RootCauseLv2) {
                     var days = "";
                     if (typeof $scope.result.CreatedDate == "string") {
@@ -465,7 +521,7 @@
                     return false;
                 }
             } else {
-                $scope.result.Complexity = 0;
+                GetComplexityScore();
                 $scope.result.Stage5CRCT = null;
                 return true;
             }

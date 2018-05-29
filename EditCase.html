@@ -120,24 +120,36 @@
             timepicker: false,
             format: 'Y-m-d',
             formatDate: 'Y-m-d',
+            scrollMonth: false,
+            scrollTime: false,
+            scrollInput: false,
         });
         $('#Stage3CompleteDate').datetimepicker({
             lang: 'ch',
             timepicker: false,
             format: 'Y-m-d',
             formatDate: 'Y-m-d',
+            scrollMonth: false,
+            scrollTime: false,
+            scrollInput: false,
         });
         $('#Stage4ReceiveDate').datetimepicker({
             lang: 'ch',
             timepicker: false,
             format: 'Y-m-d',
             formatDate: 'Y-m-d',
+            scrollMonth: false,
+            scrollTime: false,
+            scrollInput: false,
         });
         $('#Stage4CompleteDate').datetimepicker({
             lang: 'ch',
             timepicker: false,
             format: 'Y-m-d',
             formatDate: 'Y-m-d',
+            scrollMonth: false,
+            scrollTime: false,
+            scrollInput: false,
         });
     })
 </script>
@@ -397,7 +409,7 @@
                                                         <span class="en">Complete Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="text" id="Stage3CompleteDate" />
+                                                        <input type="text" id="Stage3CompleteDate"/>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -511,7 +523,7 @@
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis=='成本分析'||Analysis=='结构分析'">
-                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    <input ng-click="itemTwoClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}42" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
                                                             </span>
@@ -523,7 +535,7 @@
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis!='成本分析'&&Analysis!='结构分析'">
-                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    <input ng-click="itemTwoClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}42" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
                                                             </span>

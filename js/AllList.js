@@ -1,8 +1,8 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("ListAllCtrl", function ($scope, $filter, $http, $compile) {
-        if (IEVersion() != -1) {
-            alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
-        }
+        //if (IEVersion() != -1) {
+        //    alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
+        //}
         var user = getUser();
         var Department = '', caseOwner = '', ListLoginUse = '';
         $().SPServices({
@@ -43,6 +43,7 @@
             $http.get("http://10.0.3.52:8060/QREService.svc/GetQRECaseList?", { params: { caseOwner: caseOwner } })
                 .success(function (data) {
                     var dataSource = new kendo.data.DataSource({
+                        //data: JSON.parse(data).reverse(),
                         data: JSON.parse(data),
                         schema: {
                             model: {
