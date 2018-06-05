@@ -1,8 +1,8 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("ListAllCtrl", function ($scope, $filter, $http, $compile) {
-        //if (IEVersion() != -1) {
-        //    alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
-        //}
+        if (IEVersion() != -1) {
+            alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
+        }
         var user = getUser();
         var Department = '', caseOwner = '', ListLoginUse = '';
         $().SPServices({
@@ -38,17 +38,17 @@
         });
         function loadKendoUi() {
             /*
-                 * 根据登录人获取Case
-                 * */
+            * 根据登录人获取Case
+            * */
             $http.get("http://10.0.3.52:8060/QREService.svc/GetQRECaseList?", { params: { caseOwner: caseOwner } })
                 .success(function (data) {
                     var dataSource = new kendo.data.DataSource({
-                        //data: JSON.parse(data).reverse(),
                         data: JSON.parse(data),
                         schema: {
                             model: {
                                 fields: {
                                     CaseNumber: { type: "string" },
+                                    CaseTitle: { type: "string" },
                                     CaseStatus: { type: "string" },
                                     Complexity: { type: "number" },
                                     CreatedBy: { type: "string" },
@@ -64,6 +64,10 @@
                                 }
                             },
                         },
+                        sort: {
+                            field: "CaseNumber",
+                            dir: "desc"
+                        },
                         pageSize: 10,
                     });
                     $("#grid").kendoGrid({
@@ -75,54 +79,41 @@
                         columns: [{
                             field: "CaseNumber",
                             title: "CaseNumber",
-                            width: 120
                         }, {
-                            field: "CaseStatus",
-                            title: "CaseStatus",
-                            hidden: true
-                        }, {
-                            field: "Complexity",
-                            title: "Complexity",
-                            width: 110
+                            field: "CaseTitle",
+                            title: "Title",
                         }, {
                             field: "MPN",
                             title: "Product",
-                            width: 90
-                        }, {
-                            field: "Priority",
-                            width: 90
+                            width: 77
                         }, {
                             field: "ProductLine",
-                            width: 120
-                        }, {
-                            field: "Type",
-                        }, {
-                            field: "RootCauseLv1",
-                            hidden: true
-                        }, {
-                            field: "RootCauseLv2",
-                            hidden: true
-                        }, {
-                            field: "Stage5CRCT",
-                            title: "CRCT",
-                            width: 85
-                        }, {
-                            field: "CreatedBy",
-                            title: "CreatedBy",
-                            width: 180
                         }, {
                             field: "CreatedDate",
                             format: "{0: yyyy-MM-dd}",
                             title: "CreatedDate",
                         }, {
-                            field: "QREOwner",
-                            width: 160
+                            field: "Stage5CRCT",
+                            title: "CRCT",
+                            width: 65
                         }, {
+                            field: "Priority",
+                            width: 77
+                        }, {
+                            field: "QREOwner",
+                            title: "Owner",
+                        }, {
+                            field: "Type",
+                            width: 90,
+                        }, {
+                            field: "CaseStatus",
+                            title: "CaseStatus",
+                        },
+                        {
                             command: [
-                                { name: "Edit", click: EditCase },
-                                { name: "Delete", click: Delete }
+                                { name: "Edit", text: "Edit", click: EditCase },
+                                { name: "Delete", text: "Delete", click: Delete }
                             ],
-                            width: 160
                         }]
                     });
                 });

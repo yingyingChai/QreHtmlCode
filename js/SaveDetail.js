@@ -1,13 +1,13 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("SaveDetailCtrl", function ($scope, $filter, $compile, $http) {
         //初始化数据
-        //if (IEVersion() != -1) {
-        //    alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
-        //}
+        if (IEVersion() != -1) {
+            alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
+        }
         var user = getUser();
-        $scope.Prioritys = ['High', 'Middle', 'Low'];
-        $scope.CaseStatus = ['Receive', 'Statistics Analysis', 'Failure Analysis', 'Close'];
-        var StatisticAnalysisList = [], NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [];
+        $scope.Prioritys = Prioritys;
+        $scope.CaseStatus = CaseStatus;
+        var NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [], LabLists = [];
         $scope.assignments = {}; $scope.RootCauseLv1 = [];
         var changeClose = true;
         /*
@@ -33,6 +33,7 @@
                                 $scope.StatisticAnalysis = data.StatisticAnalysis;
                                 $scope.NonDestructiveAnalysis = data.NonDestructiveAnalysis;
                                 $scope.DestructiveAnalysis = data.DestructiveAnalysis;
+                                $scope.LabList = Lab;
                                 $scope.MPNList = data.MPNs;
                                 $scope.tempdatas = $scope.MPNList;
                                 $scope.FailuresFounds = data.FailuresFound;
@@ -71,6 +72,7 @@
                                         });
                                         $scope.result = {
                                             CaseNumber: dataList.CaseNumber,
+                                            CaseTitle: dataList.CaseTitle,
                                             CreatedBy: dataList.CreatedBy,
                                             CreatorEmail: dataList.CreatorEmail ? dataList.CreatorEmail : "",
                                             Type: dataList.Type,
@@ -104,6 +106,7 @@
                                             Stage4CompleteDate: dataList.Stage4CompleteDate,
                                             Stage4ItemOne: dataList.Stage4ItemOne,
                                             Stage4ItemTwo: dataList.Stage4ItemTwo,
+                                            Lab:dataList.Lab,
                                             Stage4Summary: dataList.Stage4Summary,
                                             Stage4CRCT: dataList.Stage4CRCT,
                                             Stage4Attachment: dataList.Stage4Attachment,
@@ -185,21 +188,25 @@
                                         } 
                                         //格式化时间
                                         if (dataList.Stage3ReceiveDate == "0001-01-01") {
+                                            $scope.result.Stage3ReceiveDate = null;
                                             $("#Stage3ReceiveDate").val(null)
                                         } else {
                                             $("#Stage3ReceiveDate").val(dataList.Stage3ReceiveDate)
                                         }
                                         if (dataList.Stage3CompleteDate == "0001-01-01") {
+                                            $scope.result.Stage3CompleteDate = null;
                                             $("#Stage3CompleteDate").val(null)
                                         } else {
                                             $("#Stage3CompleteDate").val(dataList.Stage3CompleteDate)
                                         }
                                         if (dataList.Stage4ReceiveDate == "0001-01-01") {
+                                            $scope.result.Stage4ReceiveDate = null;
                                             $("#Stage4ReceiveDate").val(null)
                                         } else {
                                             $("#Stage4ReceiveDate").val(dataList.Stage4ReceiveDate)
                                         }
                                         if (dataList.Stage4CompleteDate == "0001-01-01") {
+                                            $scope.result.Stage4CompleteDate = null;
                                             $("#Stage4CompleteDate").val(null)
                                         } else {
                                             $("#Stage4CompleteDate").val(dataList.Stage4CompleteDate)
@@ -221,10 +228,6 @@
                                         /*
                                          * 初始化页面选择多选按钮 
                                          **/
-                                        if (dataList.StatisticAnalysis) {
-                                            StatisticAnalysisList = JSON.parse(dataList.StatisticAnalysis);
-                                            SelectMulity(StatisticAnalysisList, 11);
-                                        }
                                         if (dataList.NonDestructiveAnalysis) {
                                             NonDestructiveAnalysisList = JSON.parse(dataList.NonDestructiveAnalysis);
                                             SelectMulity(NonDestructiveAnalysisList, 12);
@@ -244,6 +247,10 @@
                                         if (dataList.Stage4ItemTwo) {
                                             itemTwoList = JSON.parse(dataList.Stage4ItemTwo);
                                             SelectMulity(itemTwoList, 42);
+                                        }
+                                        if (dataList.Lab) {
+                                            LabLists = JSON.parse(dataList.Lab);
+                                            SelectMulity(LabLists, 'Lab');
                                         }
                                         /*
                                          * 初始化页面显示附件链接
@@ -355,7 +362,8 @@
                         if ($scope.IsShowStage3||$scope.result.Stage3ContinueAnalysis=='Yes') {
                             if ($("#Stage3CompleteDate").val() == '' || $("#Stage3ReceiveDate").val() == '') {
                                 $scope.result.CaseStatus = oldValue;
-                                alertMessage("若要关闭case,请选择Stage3CompleteDate，Stage3ReceiveDate")
+                                alertMessage("若要关闭case,请选择Step3CompleteDate，Step3ReceiveDate");
+                                return false;
                             } else {
                                 $("#Stage3CompleteDate").attr("disabled", true);
                                 $("#Stage3ReceiveDate").attr("disabled", true)
@@ -364,10 +372,13 @@
                         if ($scope.IsShowStage4 || $scope.result.Stage4ContinueAnalysis =='Yes') {
                             if ($("#Stage4CompleteDate").val() == '' || $("#Stage4ReceiveDate").val() == '') {
                                 $scope.result.CaseStatus = oldValue;
-                                alertMessage("若要关闭case,请选择Stage4CompleteDate，Stage4ReceiveDate")
+                                alertMessage("若要关闭case,请选择Step4CompleteDate，Step4ReceiveDate");
+                                $("#Stage3CompleteDate").attr("disabled", false);
+                                $("#Stage3ReceiveDate").attr("disabled", false)
+                                return false;
                             } else {
                                 $("#Stage4CompleteDate").attr("disabled", true);
-                                $("#Stage4ReceiveDate").attr("disabled", true)
+                                $("#Stage4ReceiveDate").attr("disabled", true);
                             }
                         }
                     } else {
@@ -384,11 +395,11 @@
             if (value != oldValue) {
                 if (value) {
                     $scope.result.RootCauseLv1 = value.Level1;
-                    $scope.RootCauseLv2 = value.Level2
+                    //$scope.RootCauseLv2 = value.Level2
                 } else {
                     $scope.result.RootCauseLv1 = null;
-                    $scope.result.RootCauseLv2 = null;
-                    $scope.RootCauseLv2 = null;
+                    //$scope.result.RootCauseLv2 = null;
+                    //$scope.RootCauseLv2 = null;
                 }
             }
         });
@@ -463,10 +474,6 @@
          *提交申请记录
          * @param {any} event
          */
-        //$scope.saveChanges = function (event) {
-        //    var st = event;
-        //    $scope.LotList = event.sender.options.dataSource.view();
-        //}
         $scope.save = function () {
             //更新不需要发送邮件
             //保存信息
@@ -551,9 +558,9 @@
                 }
                 if ($scope.result.CaseStatus != "Close") {
                     if ($scope.IsShowStage3) {
-                        $scope.result.CaseStatus = 'Statistic Analysis'
+                        $scope.result.CaseStatus = 'Statistics Analysis'
                     }
-                    if (($scope.result.Stage4CompleteDate && $scope.result.Stage4CompleteDate != "") || ($scope.result.Stage4ReceiveDate && $scope.result.Stage4ReceiveDate != "") || $scope.result.Stage4ItemOne != null || $scope.result.Stage4ItemTwo != null || ($scope.result.Stage4Summary != null && $scope.result.Stage4Summary != null != "") || $scope.result.Stage4Attachment) {
+                    if (($scope.result.Stage4CompleteDate && $scope.result.Stage4CompleteDate != "") || ($scope.result.Stage4ReceiveDate && $scope.result.Stage4ReceiveDate != "") || $scope.result.Stage4ItemOne != null || $scope.result.Stage4ItemTwo != null || ($scope.result.Stage4Summary != null && $scope.result.Stage4Summary != "") || $scope.result.Stage4Attachment) {
                         $scope.result.CaseStatus = 'Failure Analysis'
                     }
                 }
@@ -561,7 +568,7 @@
             }
         }
         function GetC3Date() {
-            if (($scope.IsShowStage3 && $scope.result.CaseStatus != "Close") || changeClose) {
+            if (($scope.IsShowStage3 && $scope.result.CaseStatus != "Close") || ($scope.IsShowStage3 && changeClose)) {
                 if ($("#Stage3ReceiveDate").val() != '') {
                     var S3CD = ''; 
                     if ($("#Stage3CompleteDate").val() == '') {
@@ -573,7 +580,7 @@
                     var days = S3CD.getTime() - S3RD.getTime();
                     var time = parseInt(days / (1000 * 60 * 60 * 24));
                     if (time < 0) {
-                        alertMessage("请正确填写Stage3:Complete Date 和 Receive Date")
+                        alertMessage("请正确填写Step3:Complete Date 和 Receive Date")
                         return false;
                     } else {
                         $scope.result.Stage3CRCT = time;
@@ -587,7 +594,7 @@
             }
         }
         function GetC4Date() {
-            if (($scope.IsShowStage4 && $scope.result.CaseStatus != "Close") || changeClose) {
+            if (($scope.IsShowStage4 && $scope.result.CaseStatus != "Close") || ($scope.IsShowStage4 && changeClose)) {
                 if ($("#Stage4ReceiveDate").val() != '') {
                     var S4CD = '';
                     if ($("#Stage4CompleteDate").val() == '') {
@@ -599,7 +606,7 @@
                     var days = S4CD.getTime() - S4RD.getTime();
                     var time = parseInt(days / (1000 * 60 * 60 * 24));
                     if (time < 0) {
-                        alertMessage("请正确填写Stage4:Complete Date 和 Receive Date")
+                        alertMessage("请正确填写Step4:Complete Date 和 Receive Date")
                         return false;
                     } else {
                         $scope.result.Stage4CRCT = time;
@@ -624,11 +631,17 @@
         }
         function GetC5Date() {
             if ($scope.result.CaseStatus != "Close" || changeClose) {
-                $scope.result.Complexity = 0;
+                if ($scope.result.CaseStatus != "Close") {
+                    $scope.result.Complexity = 0;
+                } else {
+                    GetComplexityScore();
+                }
                 C5Date();
                 return true
             } else {
-                GetComplexityScore();
+                if ($scope.result.CaseStatus == "Close") {
+                    GetComplexityScore();
+                }
                 return true;
             }
         }
@@ -654,14 +667,6 @@
         /**
          * 控制多选json
          */
-        $scope.StatisticAnalysisClick = function (z) {
-            if (StatisticAnalysisList.indexOf(z) >= 0) {
-                StatisticAnalysisList.splice(StatisticAnalysisList.indexOf(z), 1);
-            } else {
-                StatisticAnalysisList.push(z);
-            }
-            $scope.result.StatisticAnalysis = JSON.stringify(StatisticAnalysisList);
-        }
         $scope.NonDestructiveAnalysisClick = function (z) {
             if (NonDestructiveAnalysisList.indexOf(z) >= 0) {
                 NonDestructiveAnalysisList.splice(NonDestructiveAnalysisList.indexOf(z), 1);
@@ -702,6 +707,14 @@
                 itemTwoList.push(z);
             }
             $scope.result.Stage4ItemTwo = JSON.stringify(itemTwoList);
+        }
+        $scope.LabClick = function (z) {
+            if (LabLists.indexOf(z) >= 0) {
+                LabLists.splice(LabLists.indexOf(z), 1);
+            } else {
+                LabLists.push(z);
+            }
+            $scope.result.Lab = JSON.stringify(LabLists);
         }
         /**
          * 
@@ -779,7 +792,7 @@
                 alertMessage("请输入ProblemDescription");
                 return false;
             }
-            if (StatisticAnalysisList.length == 0 && NonDestructiveAnalysisList.length == 0 && DestructiveAnalysisList.length == 0) {
+            if (NonDestructiveAnalysisList.length == 0 && DestructiveAnalysisList.length == 0) {
                 alertMessage("请选择Analysis Request");
                 return false;
             }
@@ -837,12 +850,12 @@
              *判断是否是IE 
              **/
             if (IEVersion() <= 9 && IEVersion() != -1 && IEVersion() != 'edge') {
-                el.select();
-                el.blur();
-                var path = document.selection.createRange().text;
-                var fos = new ActiveXObject("Scripting.FileSystemObject");
-                file = fos.GetFile(path);
-                alertMessage("您的IE浏览器版本不支持上传功能，请使用IE高级版本或Chrome浏览器");
+                //el.select();
+                //el.blur();
+                //var path = document.selection.createRange().text;
+                //var fos = new ActiveXObject("Scripting.FileSystemObject");
+                //file = fos.GetFile(path);
+                alertMessage("您的IE浏览器版本不支持上传功能，请使用IE 10或以上版本或Chrome浏览器");
             } else {
                 file = el.files[0];
                 fr = new FileReader();
@@ -913,7 +926,6 @@
             var raw = window.atob(base64);
             var rawLength = raw.length;
             var array = new Uint8Array(new ArrayBuffer(rawLength));
-
             for (i = 0; i < rawLength; i++) {
                 array[i] = raw.charCodeAt(i);
             }
@@ -1046,6 +1058,9 @@
         return function (value) {
             if (value.indexOf("Others") >= 0 || value.indexOf("0thers") >= 0) {
                 value = "Other";
+                return value;
+            } else if (value.indexOf("成本/结构分析") >= 0) {
+                value = "costStructure";
                 return value;
             }
             value = value.split(" ").join("");

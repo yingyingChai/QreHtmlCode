@@ -3,14 +3,16 @@
         /**
          * 初始化$scope.result 对象，stage3 ，stage4 没有值默认为null
          */
-        //if (IEVersion() != -1) {
-        //    alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
-        //}
+        if (IEVersion() != -1) {
+            alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
+        }
         var user = getUser();
         $scope.result = {
             CaseNumber: null,
+            CaseTitle: null,
             CreatedBy: user.loginName,
             CreatorEmail: user.CreatorEmail,
+            CaseTitle:"",
             Type: null,
             CreatedDate: $filter('date')(new Date(), 'yyyy-MM-dd'),
             Priority: null,
@@ -41,6 +43,7 @@
             Stage4CompleteDate: null,
             Stage4ItemOne: null,
             Stage4ItemTwo: null,
+            Lab:null,
             Stage4Summary: null,
             Stage4CRCT: null,
             Stage4Attachment: null,
@@ -64,8 +67,7 @@
                 $scope.NonDestructiveAnalysis = dataList.NonDestructiveAnalysis;
                 $scope.DestructiveAnalysis = dataList.DestructiveAnalysis;
             });
-        $scope.Prioritys = ['High', 'Middle', 'Low'];
-        $scope.CaseStatus = ['Receive'];
+        $scope.Prioritys = Prioritys;
         /**
          *监控数据变化 针对不同表单
          * Type 更改，对应字段名称修改
@@ -164,15 +166,6 @@
         /**
          * 控制多选json
          */
-        var StatisticAnalysisList = []
-        $scope.StatisticAnalysisClick = function (z) {
-            if (StatisticAnalysisList.indexOf(z) >= 0) {
-                StatisticAnalysisList.splice(StatisticAnalysisList.indexOf(z), 1);
-            } else {
-                StatisticAnalysisList.push(z);
-            }
-            $scope.result.StatisticAnalysis = JSON.stringify(StatisticAnalysisList);
-        }
         var NonDestructiveAnalysisList = [];
         $scope.NonDestructiveAnalysisClick = function (z) {
             if (NonDestructiveAnalysisList.indexOf(z) >= 0) {
@@ -232,16 +225,16 @@
                 alertMessage('页面加载失败或服务器端代码被修改，请刷新页面');
                 return false;
             }
+            if ($scope.result.CaseTitle == null || $scope.result.CaseTitle == '') {
+                alertMessage('请输入Title');
+                return false;
+            }
             if ($scope.result.Type == null || $scope.result.Type == '') {
                 alertMessage('请选择Type');
                 return false;
             }
             if ($scope.result.Priority == null || $scope.result.Priority == '') {
                 alertMessage("请选择Priority");
-                return false;
-            }
-            if ($scope.result.CaseStatus == null || $scope.result.CaseStatus == '') {
-                alertMessage("请选择CaseStatus");
                 return false;
             }
             if ($scope.result.MPN == null || $scope.result.MPN == '') {
@@ -268,7 +261,7 @@
                 alertMessage("请输入ProblemDescription");
                 return false;
             }
-            if (StatisticAnalysisList.length == 0 && NonDestructiveAnalysisList.length == 0 && DestructiveAnalysisList.length == 0) {
+            if (NonDestructiveAnalysisList.length == 0 && DestructiveAnalysisList.length == 0) {
                 alertMessage("请选择Analysis Request");
                 return false;
             }
@@ -303,7 +296,6 @@
             $scope.result.ProblemDescription = html;
             if (verifyNewCase()) {
                 if (verigyRMA()) {
-                    $scope.result.LotList = [];
                     $scope.result.LotList = [];
                     angular.forEach(LotList, function (data, index, array) {
                         var dIndex = {

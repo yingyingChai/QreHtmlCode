@@ -1,5 +1,8 @@
 var departmentList = ["Quality & Reliability", "Business Solutions"];
 var authorityUserList = ["Jerry Gong (龚洁)", "Zhanwu Yang (杨战武)"];
+var Prioritys = ['High', 'Middle', 'Low'];
+var CaseStatus = ['Receive', 'Statistics Analysis', 'Failure Analysis', 'Close'];
+var Lab = ["IST(SH)", "IST(TW)", "IST(BJ)", "MAT(SH)", "MAT(TW)"];
 function getUser() {
     var User = {}
     $.ajax({
@@ -30,6 +33,9 @@ function getId(value, index) {
     var id = "";
     if (value.indexOf("Others") >= 0 || value.indexOf("0thers") >= 0) {
         id = "Other";
+        return id + index;
+    } else if (value.indexOf("成本/结构分析") >= 0) {
+        id = "costStructure";
         return id + index;
     }
     id = value.split(" ").join("");
@@ -71,10 +77,10 @@ function getUPValue(x, p) {
     }).find("Values").text();
     return thisValue;
 }
-function getValue(x, p) {
-    var thisValue = $(x).SPFilterNode("PropertyData").filter(function () {
-        return $(this).find("Name").text() == p;
-    }).find("Values").text();
-    return thisValue;
-}
+//function getValue(x, p) {
+//    var thisValue = $(x).SPFilterNode("PropertyData").filter(function () {
+//        return $(this).find("Name").text() == p;
+//    }).find("Values").text();
+//    return thisValue;
+//}
 

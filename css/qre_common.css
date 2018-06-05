@@ -281,8 +281,8 @@
 }
 
 .form_table td.form_table_area span {
-    /*min-width: 120px;*/
-    min-width: 180px;
+    min-width: 120px;
+    margin-right:20px;
     display: block;
     float: left;
 }
@@ -644,15 +644,9 @@ body {
 a:visited {
     color: #0a6ebd;
 }
-/*.radio-inline, .checkbox-inline {
-    position: relative;
-    display: inline-block;
-    padding-left: 20px;
-    margin-bottom: 0;
-    font-weight: normal;
-    vertical-align: middle;
-    cursor: pointer;
-}*/
+.k-grid-header th.k-with-icon .k-link {
+    margin-right: 0 !important;
+}
 input[type=button], input[type=reset], input[type=submit], button {
     min-width: 0 !important;
 }
@@ -661,9 +655,28 @@ input[type=button], input[type=reset], input[type=submit], button {
 }
 input[type=password], input[type=text],textarea{
     font-size:14px;
-    padding:6px 12px !important;
+    padding:6px 15px !important;
 }
 input[type=file] {
-    margin-left: 22px;
     font-size:14px
+}
+.k-grid tbody .k-button {
+    min-width: auto !important;
+}
+.borderButtomNone {
+    border-bottom: none !important;
+}
+.borderTopNone {
+    border-top: none !important;
+}
+a.ms-listlink, a.ms-listlink:hover, a.ms-listlink:active {
+    color: #0a6ebd;
+}
+.spanPadding{
+    padding:6px 15px !important
+}
+.border-bottom-Select-Span {
+    border:0;
+    border-bottom:1px solid #bbbbbb;
+    
 }
