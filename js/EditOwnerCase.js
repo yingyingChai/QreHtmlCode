@@ -1,6 +1,9 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
     .controller("EditOwnerCaseCtrl", function ($scope, $filter, $compile, $http) {
         //初始化数据
+        var loadingIndex = layer.load(2, {
+            shade: [0.1, '#fff'] //0.1透明度的白色背景
+        });
         if (IEVersion() != -1) {
             alertMessage("IE 浏览器存在兼容性问题，请用chrome 浏览器打开！")
         }
@@ -42,6 +45,7 @@
                                 /*
                                  *根据CaseNumber 获取Case详情 
                                  **/
+                                var CaseNumber = getQueryString("CaseNumber");
                                 $http.get("http://10.0.3.52:8060/QREService.svc/GetQRECaseInfoByCaseNumber?", { params: { caseNumber: CaseNumber } })
                                     .success(function (data) {
                                         // 数据
@@ -60,7 +64,7 @@
                                                     var parser = new DOMParser();
                                                     var xmlobject = parser.parseFromString(xData.responseText, "text/xml");
                                                 }
-                                                Department = getUPValue(xmlobject, "Department");
+                                                //Department = getUPValue(xmlobject, "Department");
                                                 //if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(user.loginName) >= 0) {
                                                 //    url = "../SitePages/EditCase.aspx?CaseNumber=" + CaseNumber;
                                                 //    window.location.href = url;
@@ -184,8 +188,6 @@
                                             dataSource: dataSource,
                                             pageable: {
                                                 refresh: true,
-                                                pageSizes: true,
-                                                buttonCount: 5
                                             },
                                             toolbar: ["create"],
                                             columns: [{ field: "Number", title: "No.", width: "120px" },
@@ -203,13 +205,8 @@
                                             angular.forEach($scope.Types, function (data, index, array) {
                                                 if (data.CaseType == $scope.result.Type) {
                                                     $scope.Type = data;
-                                                    $scope.RootCauseLv1 = data.Levels;
                                                 }
                                             });
-                                        }
-                                        if (dataList.CaseStatus == "Close") {
-                                            $("#CaseStatus").attr("disabled", true);
-                                            changeClose = false;
                                         }
                                         $scope.MPN = $scope.result.MPN;
                                         //第一次进入页面如果为FAR,显示链接
@@ -293,12 +290,14 @@
                                             $scope.IsShowStage4 = false;
                                             $("#stage4ShowSummary")[0].style.display = "none";
                                         }
-                                        if ($scope.result.CaseStatus == "Close") {
+                                        if (dataList.CaseStatus == "Close") {
                                             $("#CaseStatus").attr("disabled", true);
+                                            changeClose = false;
                                         }
                                         if ($scope.result.RootCauseLv1) {
                                             $("#Type").attr("disabled", true);
                                         }
+                                        layer.close(loadingIndex);
                                     });
                             });
                     });
@@ -353,60 +352,33 @@
                 }
             }
         });
-        $scope.$watch('result.CaseStatus', function (value, oldValue) {
-            if (value != oldValue) {
-                if (value == "Close") {
-                    if ($scope.result.RootCauseLv1) {
-                        if ($scope.IsShowStage3 || $scope.result.Stage3ContinueAnalysis == 'Yes') {
-                            if (!$scope.result.Stage3ReceiveDate || !$scope.result.Stage3CompleteDate) {
-                                $scope.result.CaseStatus = oldValue;
-                                alertMessage("若要关闭case,请选择Step3CompleteDate，Stage3ReceiveDate")
-                            }
-                        }
-                        if ($scope.IsShowStage4 || $scope.result.Stage4ContinueAnalysis == 'Yes') {
-                            if (!$scope.result.Stage4ReceiveDate || !$scope.result.Stage4CompleteDate) {
-                                $scope.result.CaseStatus = oldValue;
-                                alertMessage("若要关闭case,请选择Step4CompleteDate，Stage4ReceiveDate")
-                            }
-                        }
-                    } else {
-                        $scope.result.CaseStatus = oldValue;
-                        alertMessage("若要关闭case,请选择level1")
-                    }
-                }
-            }
-        });
-        /*
-         * 动态获取RootCauseLv1 和 RootCaseLv2
-         **/
-        $scope.$watch('RootCauseLv1Select', function (value, oldValue) {
-            if (value != oldValue) {
-                if (value) {
-                    $scope.result.RootCauseLv1 = value.Level1;
-                    //$scope.RootCauseLv2 = value.Level2
-                } else {
-                    $scope.result.RootCauseLv1 = null;
-                    //$scope.result.RootCauseLv2 = null;
-                    //$scope.RootCauseLv2 = null;
-                }
-            }
-        });
-        $scope.$watch('result.RootCauseLv1', function (value, oldValue) {
-            if (value != oldValue) {
-                angular.forEach($scope.RootCauseLv1, function (data) {
-                    if ($scope.result.RootCauseLv1 == data.Level1) {
-                        $scope.RootCauseLv1Select = data;
-                    }
-                })
-            }
-        });
         /**
          *提交申请记录
          * @param {any} event
          */
+        var index = 0;
+        $scope.SaveDetail = function () {
+            index = layer.load(1, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+            if (verifyNewCase()) {
+                if (verifyRMA()) {
+                    if ($scope.result.CaseStatus == "Close") {
+                        GetComplexityScore()
+                    } else {
+                        var days = new Date().getTime() - new Date($scope.result.CreatedDate).getTime();
+                        var time = parseInt(days / (1000 * 60 * 60 * 24));
+                        $scope.result.Stage5CRCT = time;
+                    }
+                    $scope.save();
+                } else {
+                    layer.close(index);
+                }
+            } else {
+                layer.close(index);
+            }
+        }
         $scope.save = function () {
-            //更新不需要发送邮件
-            //保存信息
             if (II != 0) {
                 leipiEditor.sync(); //同步内容
                 var html = leipiEditor.getContent();
@@ -416,49 +388,37 @@
                 }
                 $scope.result.ProblemDescription = html;
             }
-            if (verifyNewCase()) {
-                if ($scope.result.Type == 'RMA') {
-                    if ($scope.result.LinkName.indexOf("http:") < 0) {
-                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
-                    }
+            $scope.result.LotList = [];
+            angular.forEach(LotList, function (data, index, array) {
+                var dIndex = {
+                    'Number': '',
+                    'LotIDOrDateCode': '',
+                    'Fab': '',
+                    'AssemblyData': '',
                 }
-                $scope.result.LotList = [];
-                //$(".k-button.k-button-icontext.k-grid-save-changes").click();
-                angular.forEach(LotList, function (data, index, array) {
-                    var dIndex = {
-                        'Number': '',
-                        'LotIDOrDateCode': '',
-                        'Fab': '',
-                        'AssemblyData': '',
-                    }
-                    dIndex.Number = data.Number;
-                    dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
-                    dIndex.Fab = data.Fab;
-                    dIndex.AssemblyData = data.AssemblyData;
-                    $scope.result.LotList.push(dIndex);
-                });
-                var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify($scope.result),
-                    dataType: "json",
-                    success: function (data) {
-                        window.location.href = "../SitePages/Home.aspx";
-                        //发送邮件
-                    },
-                    error: function (a, b, c) {
-                        alert("保存失败")
-                    }
-                });
-            }
-        }
-        $scope.SaveDetail = function () {
-            if ($scope.result.CaseStatus == "Close") {
-                GetComplexityScore()
-            }
-            $scope.save();
+                dIndex.Number = data.Number;
+                dIndex.LotIDOrDateCode = data.LotIDOrDateCode;
+                dIndex.Fab = data.Fab;
+                dIndex.AssemblyData = data.AssemblyData;
+                $scope.result.LotList.push(dIndex);
+            });
+            var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify($scope.result),
+                dataType: "json",
+                success: function (data) {
+                    layer.close(index);
+                    window.location.href = "../SitePages/Home.aspx";
+                    //发送邮件
+                },
+                error: function (a, b, c) {
+                    layer.close(index);
+                    alertMessage("保存失败")
+                }
+            });
         }
         /**
          * 表中表
@@ -539,6 +499,10 @@
                 alertMessage('页面加载失败或服务器端代码被修改，请刷新页面');
                 return false;
             }
+            if ($scope.result.CaseTitle == null || $scope.result.CaseTitle == '') {
+                alertMessage('请输入Title');
+                return false;
+            }
             if ($scope.result.Type == null || $scope.result.Type == '') {
                 alertMessage('请选择Type');
                 return false;
@@ -586,6 +550,21 @@
                 icon: 7,
                 skin: 'layer-ext-moon'
             })
+        }
+        function verifyRMA() {
+            if (!$scope.isSaveFAR) {
+                if ($scope.result.Type == 'RMA') {
+                    if ($scope.result.LinkName.indexOf("http:") < 0 && $scope.result.LinkName.indexOf("xml") > 0) {
+                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+                        return true
+                    } else {
+                        alertMessage("请输入正确的FAR No.");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return true;
         }
         // Stage2 ProblemDescription
         var leipiEditor = UE.getEditor('ProblemDescription', {

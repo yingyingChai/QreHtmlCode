@@ -28,7 +28,7 @@ function getQueryString(name) {
     if (r != null) return unescape(r[2]);
     return null;
 }
-var CaseNumber = getQueryString("CaseNumber");
+//var CaseNumber = getQueryString("CaseNumber");
 function getId(value, index) {
     var id = "";
     if (value.indexOf("Others") >= 0 || value.indexOf("0thers") >= 0) {
@@ -77,10 +77,4 @@ function getUPValue(x, p) {
     }).find("Values").text();
     return thisValue;
 }
-//function getValue(x, p) {
-//    var thisValue = $(x).SPFilterNode("PropertyData").filter(function () {
-//        return $(this).find("Name").text() == p;
-//    }).find("Values").text();
-//    return thisValue;
-//}
 

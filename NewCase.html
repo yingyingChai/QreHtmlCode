@@ -28,9 +28,11 @@
     .radio, .checkbox {
         margin-top: -25px;
     }
+
     label {
         font-weight: 100;
     }
+
     .k-alt, .k-header, .k-pager-wrap {
         background-color: #ffffff !important;
     }
@@ -53,7 +55,7 @@
                         <div class="col-lg-12">
                             <div class="tabs-container">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#tab-1" id="tab-Title-1">Step1.Creadted Case</a></li>
+                                    <li class="active"><a data-toggle="tab" href="#tab-1" id="tab-Title-1">Step1.created Case</a></li>
                                     <li class=""><a data-toggle="tab" href="#tab-2" id="tab-Title-2">Step2.Information Collection</a></li>
                                 </ul>
                                 <div class="tab-content">
@@ -79,8 +81,8 @@
                                                         <span class="en">Title <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input" colspan="3">
-                                                        <input title="ESSENTIAL 客户/工厂+产品+发生站别+现象+颗数" 
-                                                               ng-model="result.CaseTitle"type="text" />
+                                                        <input title="ESSENTIAL 客户/工厂+产品+发生站别+现象+颗数"
+                                                               ng-model="result.CaseTitle" type="text" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -130,7 +132,7 @@
                                                     <td class="form_table_input">
                                                         <input title="ESSENTIAL" class="form_control border-bottom-Select-Span" ng-change="changeKeyValue(MPN)" ng-model="MPN" style='display:block' ng-click='hidden=!hidden' value="{{MPN}}" />
                                                         <div ng-hide="hidden">
-                                                            <select ng-change="change(x)" ng-model="x" multiple style="width:100%">
+                                                            <select ng-change="change(x)" class="form_control border-bottom-Select-Span" ng-model="x" multiple style="width:100%">
                                                                 <option ng-repeat="MPN in MPNList">{{MPN.MPN}}</option>
                                                             </select>
                                                         </div>
@@ -220,16 +222,16 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none" title="ESSENTIAL">
-                                                        <u>Non-destructive Analysis</u> 
-                                                            <div>
-                                                                <span ng-repeat="Analysis in NonDestructiveAnalysis">
-                                                                    <label>
-                                                                        <input ng-click="NonDestructiveAnalysisClick(Analysis)" type="checkbox" name="NonDestructiveAnalysis" value="{{Analysis}}">
-                                                                        {{Analysis}}
-                                                                    </label>
-                                                                </span>
-                                                            </div>
-</td>
+                                                        <u>Non-destructive Analysis</u>
+                                                        <div>
+                                                            <span ng-repeat="Analysis in NonDestructiveAnalysis">
+                                                                <label>
+                                                                    <input ng-click="NonDestructiveAnalysisClick(Analysis)" type="checkbox" name="NonDestructiveAnalysis" value="{{Analysis}}">
+                                                                    {{Analysis}}
+                                                                </label>
+                                                            </span>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:4px 22px 0px" title="ESSENTIAL">

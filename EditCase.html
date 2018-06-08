@@ -67,47 +67,6 @@
     }
 </style>
 <script>
-    var bar = 0;
-    (function () {
-        var ie = !!(window.attachEvent && !window.opera);
-        var wk = /webkit\/(\d+)/i.test(navigator.userAgent) && (RegExp.$1 < 525);
-        var fn = [];
-        var run = function () { for (var i = 0; i < fn.length; i++) fn[i](); };
-        var d = document;
-        d.ready = function (f) {
-            if (!ie && !wk && d.addEventListener)
-                return d.addEventListener('DOMContentLoaded', f, false);
-            if (fn.push(f) > 1) return;
-            if (ie)
-                (function () {
-                    try { d.documentElement.doScroll('left'); run(); }
-                    catch (err) { setTimeout(arguments.callee, 0); }
-                })();
-            else if (wk)
-                var t = setInterval(function () {
-                    if (/^(loaded|complete)$/.test(d.readyState))
-                        clearInterval(t), run();
-                }, 0);
-        };
-    })();
-    document.ready(function () {
-        progress();
-    });
-    function progress() {
-        bar = bar + 10;
-        document.getElementById("over").style.display = "block";
-        document.getElementById("layout").style.display = "block";
-        if (bar <= 98) {
-            setTimeout("progress()", 100);
-        } else {
-            document.getElementById("over").style.display = "none";
-            document.getElementById("layout").style.display = "none";
-            document.getElementById("example").style.display = "";
-            $("#example").removeClass("example");
-        }
-    }
-</script>
-<script>
     $(function () {
         $('#Stage3ReceiveDate').datetimepicker({
             lang: 'ch',
@@ -147,8 +106,6 @@
         });
     })
 </script>
-<div id="over" class="over"></div>
-<div id="layout" class="layout"><img src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-ui-1.12.1/img/loading.gif" alt="" /></div>
 <div id="example" ng-app="KendoDemos">
     <div ng-controller="SaveDetailCtrl">
         <div id="wrapper">
@@ -158,7 +115,7 @@
                         <div class="col-lg-12">
                             <div class="tabs-container">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#tab-1" id="tab-Title-1">Step1.Creadted Case</a></li>
+                                    <li class="active"><a data-toggle="tab" href="#tab-1" id="tab-Title-1">Step1.created Case</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-2" id="tab1">Step2.Information Collection</a></li>
                                     <li><a href="" id="tab-Title-2" ng-click="InserLeipiEditor()">Step2.Information Collection</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-3" id="tab2">Step3.Statistic Analysis</a></li>

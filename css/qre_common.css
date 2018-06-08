@@ -603,9 +603,9 @@ body {
     overflow-x: hidden;
     top: 50px !important
 }
-.layui-layer-content {
+/*.layui-layer-content {
     height: auto !important
-}
+}*/
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     color: #fff !important;
 }
@@ -678,5 +678,8 @@ a.ms-listlink, a.ms-listlink:hover, a.ms-listlink:active {
 .border-bottom-Select-Span {
     border:0;
     border-bottom:1px solid #bbbbbb;
-    
+}
+.k-grid-header th.k-header > .k-link {
+    margin: 0 !important;
+    padding: 0 !important;
 }

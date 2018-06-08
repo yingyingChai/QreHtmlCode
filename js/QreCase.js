@@ -50,7 +50,7 @@
             RootCauseLv1: null,
             RootCauseLv2: null,
             Stage5Summary: null,
-            Stage5CRCT: null,
+            Stage5CRCT: 0,
             LotList: [],
             Complexity: 0,
             CurrentUser: user.loginName
@@ -119,7 +119,6 @@
                                             length = length + 1;
                                             data.models[0].ID = parseInt(length);
                                             data.models[0].createTime = new Date();
-                                            data.models[0].QRECaseNumber = CaseNumber;
                                             LotList.push(data.models[0])
                                         } else {
                                             angular.forEach(LotList, function (LList, Index) {
@@ -150,8 +149,8 @@
                             dataSource: dataSource,
                             pageable: {
                                 refresh: true,
-                                pageSizes: true,
-                                buttonCount: 5
+                                //pageSizes: true,
+                                //buttonCount: 5
                             },
                             toolbar: ["create"],
                             columns: [{ field: "Number", title: "No.", width: "120px" },
@@ -267,7 +266,7 @@
             }
             return true;
         }
-        function verigyRMA() {
+        function verifyRMA() {
             if ($scope.result.Type == 'RMA') {
                 if ($scope.result.LinkName.indexOf("http:") < 0 && $scope.result.LinkName.indexOf("xml") > 0) {
                     $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
@@ -291,11 +290,14 @@
          * @param {any} event
          */
         $scope.save = function () {
+            var index = layer.load(1, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
             leipiEditor.sync(); //同步内容
             var html = leipiEditor.getContent();
             $scope.result.ProblemDescription = html;
             if (verifyNewCase()) {
-                if (verigyRMA()) {
+                if (verifyRMA()) {
                     $scope.result.LotList = [];
                     angular.forEach(LotList, function (data, index, array) {
                         var dIndex = {
@@ -318,13 +320,19 @@
                         data: JSON.stringify($scope.result),
                         dataType: "json",
                         success: function (data) {
+                            layer.close(index);
                             window.location.href = "../SitePages/Home.aspx";
                         },
                         error: function (a, b, c) {
-                            alert("保存失败")
+                            layer.close(index);
+                            alertMessage("保存失败")
                         }
                     });
+                } else {
+                    layer.close(index);
                 }
+            } else {
+                layer.close(index);
             }
         }
         var leipiEditor = UE.getEditor('ProblemDescription', {

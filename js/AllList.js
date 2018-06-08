@@ -53,6 +53,7 @@
                                     Complexity: { type: "number" },
                                     CreatedBy: { type: "string" },
                                     CreatedDate: { type: "date" },
+                                    CreatedYearMonth: { type: "string"},
                                     MPN: { type: "string" },
                                     Priority: { type: "string" },
                                     ProductLine: { type: "string" },
@@ -75,7 +76,7 @@
                         filterable: true,
                         pageable: true,
                         sortable: true,
-                        columnMenu: true,
+                        //columnMenu: true,
                         columns: [{
                             field: "CaseNumber",
                             title: "CaseNumber",
@@ -85,7 +86,7 @@
                         }, {
                             field: "MPN",
                             title: "Product",
-                            width: 77
+                            width: 90
                         }, {
                             field: "ProductLine",
                         }, {
@@ -114,6 +115,7 @@
                                 { name: "Edit", text: "Edit", click: EditCase },
                                 { name: "Delete", text: "Delete", click: Delete }
                             ],
+                            width: 115,
                         }]
                     });
                 });
