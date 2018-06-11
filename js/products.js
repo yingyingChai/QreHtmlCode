@@ -37,6 +37,9 @@ function getId(value, index) {
     } else if (value.indexOf("成本/结构分析") >= 0) {
         id = "costStructure";
         return id + index;
+    } else if (value.indexOf("/") >= 0) {
+        id = value.split("/").join("");
+        return id + index;
     }
     id = value.split(" ").join("");
     id = id.split("(").join("");

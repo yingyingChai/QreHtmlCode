@@ -687,6 +687,9 @@
             } else if (value.indexOf("成本/结构分析") >= 0) {
                 value = "costStructure";
                 return value;
+            } else if (value.indexOf("/") >= 0) {
+                value = value.split("/").join("");
+                return value;
             }
             value = value.split(" ").join("");
             value = value.split("(").join("");
