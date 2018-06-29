@@ -1,5 +1,6 @@
-var departmentList = ["Quality & Reliability", "Business Solutions"];
-var authorityUserList = ["Jerry Gong (龚洁)", "Zhanwu Yang (杨战武)"];
+//var departmentList = ["Quality & Reliability", "Business Solutions"];
+var departmentList = ["Quality & Reliability"];
+var authorityUserList = ["Jerry Gong (龚洁)", "Zhanwu Yang (杨战武)", "Sherry Li (李帅)","Yingying Chai (柴莹莹)"];
 var Prioritys = ['High', 'Middle', 'Low'];
 var CaseStatus = ['Receive', 'Statistics Analysis', 'Failure Analysis', 'Close'];
 var Lab = ["IST(SH)", "IST(TW)", "IST(BJ)", "MAT(SH)", "MAT(TW)"];
@@ -21,14 +22,39 @@ function getUser() {
     });
     return User;
 }
-//获取CaseNumber
+function getDepartment(loginName) {
+    var Department = "";
+    $().SPServices({
+        operation: "GetUserProfileByName",
+        async: false,
+        AccountName: loginName,
+        completefunc: function (xData, Status) {
+            if (window.ActiveXObject) {
+                var xmlobject = new ActiveXObject("Microsoft.XMLDOM");
+                xmlobject.async = "false";
+                xmlobject.loadXML(xData.responseText);
+            }
+            else {
+                var parser = new DOMParser();
+                var xmlobject = parser.parseFromString(xData.responseText, "text/xml");
+            }
+            Department = getUPValue(xmlobject, "Department");
+        }
+    });
+    return Department
+}
+//获取参数
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]);
     return null;
 }
-//var CaseNumber = getQueryString("CaseNumber");
+/**
+ * 多选生成Id
+ * @param {any} value
+ * @param {any} index
+ */
 function getId(value, index) {
     var id = "";
     if (value.indexOf("Others") >= 0 || value.indexOf("0thers") >= 0) {
@@ -46,6 +72,9 @@ function getId(value, index) {
     id = id.split(")").join("");
     return id + index;
 }
+/**
+ * 判断是否为IE,及IE版本
+ */
 function IEVersion() {
     var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串  
     var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; //判断是否IE<11浏览器  
@@ -74,6 +103,11 @@ function IEVersion() {
         return -1;//不是ie浏览器
     }
 }
+/**
+ * 解析xml 参数
+ * @param {any} x xmlobject
+ * @param {any} p 参数名称
+ */
 function getUPValue(x, p) {
     var thisValue = $(x).SPFilterNode("PropertyData").filter(function () {
         return $(this).find("Name").text() == p;

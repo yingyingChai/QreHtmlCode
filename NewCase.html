@@ -107,6 +107,14 @@
                                                         <select title="ESSENTIAL" class="form_control border-bottom-Select-Span" ng-model="result.Priority" ng-options="x for x in Prioritys"></select>
                                                     </td>
                                                     <td class="form_table_label">
+                                                        <span class="en">Department <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <span title="ESSENTIAL" class="form_control border-bottom-Select-Span">{{result.Department}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
                                                         <span class="en">Case Status <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
@@ -158,7 +166,32 @@
                                                         <input class="form_control" ng-model="result.QREOwner" type="text" readonly="readonly" />
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr ng-if="result.Type!='RMA'">
+                                                    <td class="form_table_label">
+                                                        <span class="en">DPPM<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA " ng-model="result.Dppm" type="text" />
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Issue From<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <select title="ESSENTIAL Competition Analysis请选Other" class="form_control border-bottom-Select-Span" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="result.Type!='RMA'">
+                                                    <td class="form_table_label">
+                                                        <span class="en">{{LinkName}}<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input" ng-if="LinkName=='FAR No.'">
+                                                        <input title="ESSENTIAL Ep: 20180425_7763.xml" ng-model="result.LinkName" type="text" />
+                                                    </td>
+                                                    <td class="form_table_input" ng-if="LinkName!='FAR No.'">
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA" ng-model="result.LinkName" type="text" />
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="result.Type=='RMA'">
                                                     <td class="form_table_label">
                                                         <span class="en">DPPM<i class="form_table_required">*</i></span>
                                                     </td>
@@ -172,7 +205,7 @@
                                                         <input title="ESSENTIAL" ng-model="result.Customer" type="text" />
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr  ng-if="result.Type=='RMA'">
                                                     <td class="form_table_label">
                                                         <span class="en">Issue From<i class="form_table_required">*</i></span>
                                                     </td>

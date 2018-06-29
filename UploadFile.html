@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script>
+        function FileUp(f) {
+            var file = f.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.readAsText(file, 'UTF-8');//读取文件内容， 注意编码格式： 如果乱码则换成UTF-8  
+                reader.onload = receivedBinary;
+            }
+        }
+        function receivedBinary() {
+            var text = this.result; //e.target.result 
+            var sDataXHR = {
+                requestURL: '/api/upload',
+                requestMethod: 'POST',
+                requestData: text,
+                succeedHtml: 'Success',
+                failedHtml: 'Failed'
+            };
+            XMLHttpRequestFn(sDataXHR); //向后台发送 
+        }
+        function XMLHttpRequestFn(sData) {
+            var requestMethod = sData.requestMethod, //POST、GET.. 
+                requestURL = sData.requestURL, //请求的地址 
+                requestData = sData.requestData, //待发送的数据 
+                succeedHtml = sData.succeedHtml, //成功提示信息 
+                failedHtml = sData.failedHtml; //失败提示信息 
+            var xhr = new XMLHttpRequest();
+            xhr.open(requestMethod, requestURL, true);
+            xhr.overrideMimeType("application/octet-stream"); //数据以流的形式上传（非必须） 
+            xhr.send(requestData);
+            xhr.onreadystatechange = stateChangeFn;
+            function stateChangeFn() {
+                if (xhr.readyState == 4) { //0->1->2->3->4的过程 
+                    if (xhr.status == 200) { //不管是GET还是POST都返回200 
+                        if (succeedHtml)
+                            AjaxDialogTips(succeedHtml, 0, 3);
+                    } else {
+                        if (failedHtml)
+                            AjaxDialogTips(failedHtml, 3, 3);
+                    }
+                }
+            }
+        } 
+    </script>
+</head>
+<body>
+    <!--<input type="file" multiple="multiple" onchange="FileUp(this)">-->
+    <input type="file"  onchange="FileUp(this)">
+
+</body>
+</html>

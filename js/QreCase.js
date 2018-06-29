@@ -12,6 +12,7 @@
             CaseTitle: null,
             CreatedBy: user.loginName,
             CreatorEmail: user.CreatorEmail,
+            Department: getDepartment(user.selectDepartName),
             CaseTitle:"",
             Type: null,
             CreatedDate: $filter('date')(new Date(), 'yyyy-MM-dd'),
@@ -50,7 +51,7 @@
             RootCauseLv1: null,
             RootCauseLv2: null,
             Stage5Summary: null,
-            Stage5CRCT: 0,
+            Stage5CRCT: 1,
             LotList: [],
             Complexity: 0,
             CurrentUser: user.loginName
@@ -237,19 +238,21 @@
                 return false;
             }
             if ($scope.result.MPN == null || $scope.result.MPN == '') {
-                alertMessage("请选择MPN");
+                alertMessage("请选择Product");
                 return false;
             }
             if ($scope.result.Dppm == null || $scope.result.Dppm == '') {
                 alertMessage("请输入Dppm");
                 return false;
             }
-            if ($scope.result.Customer == null || $scope.result.Customer == '') {
-                alertMessage("请输入" + $scope.Customer);
-                return false;
+            if ($scope.result.Type == "RMA") {
+                if ($scope.result.Customer == null || $scope.result.Customer == '') {
+                    alertMessage("请输入" + $scope.Customer);
+                    return false;
+                }
             }
             if ($scope.result.FailuresFound == null || $scope.result.FailuresFound == '') {
-                alertMessage("请输入FailuresFound");
+                alertMessage("请输入Issue From");
                 return false;
             }
             if ($scope.result.LinkName == null || $scope.result.LinkName == '') {
@@ -268,12 +271,17 @@
         }
         function verifyRMA() {
             if ($scope.result.Type == 'RMA') {
-                if ($scope.result.LinkName.indexOf("http:") < 0 && $scope.result.LinkName.indexOf("xml") > 0) {
-                    $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
-                    return true
-                } else {
+                if ($scope.result.LinkName.indexOf("http:") >= 0) {
                     alertMessage("请输入正确的FAR No.");
                     return false;
+                } else {
+                    if ($scope.result.LinkName.indexOf("xml") > 0) {
+                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+                        return true
+                    } else {
+                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '.xml">' + $scope.result.LinkName + '</a>';
+                        return true
+                    }
                 }
             }
             return true;

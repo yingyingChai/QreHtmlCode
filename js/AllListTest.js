@@ -42,14 +42,19 @@
             * */
             $http.get("http://10.0.3.52:8060/QREService.svc/GetQRECaseList?", { params: { caseOwner: caseOwner } })
                 .success(function (data) {
+                    var AllList = JSON.parse(data);
+                    $scope.CaseInOneMonth = AllList.CaseInOneMonth;
+                    $scope.CaseInOneWeek = AllList.CaseInOneWeek;
+                    $scope.OpenCase = AllList.OpenCase;
+                    $scope.TotalCase = AllList.TotalCase;
                     var dataSource = new kendo.data.DataSource({
-                        data: JSON.parse(data),
-                        group: {
-                            field: "CreatedDate",
-                            aggregates: [
-                                { field: "CreatedDate", aggregate: "count" },
-                            ]
-                        },
+                        data: AllList.CaseList,
+                        //group: {
+                        //    field: "CreatedDate",
+                        //    aggregates: [
+                        //        { field: "CreatedDate", aggregate: "count" },
+                        //    ]
+                        //},
                         schema: {
                             model: {
                                 fields: {

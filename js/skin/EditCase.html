@@ -6,6 +6,8 @@
 <link href="../css/kendo.default.min.css" rel="stylesheet">
 <link href="../css/kendo.dataviz.min.css" rel="stylesheet">
 <link href="../css/kendo.dataviz.default.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../css/jquery.datetimepicker.css" />
+
 <script src="../js/jquery.SPServices-2014.02.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="../js/products.js"></script>
 <script src="../js/angular.min.js"></script>
@@ -18,12 +20,9 @@
 <script src="../js/products.js"></script>
 <script src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.config.js"></script>
 <script src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/FormDesigner/js/ueditor/ueditor.all.js"></script>
-<script src="../js/EditOwnerCase.js"></script>
+<script src="../js/SaveDetail.js"></script>
+<script src="../js/jquery.datetimepicker.js"></script>
 <style>
-    .k-grid-save-changes {
-        display: none
-    }
-
     .edui-editor div {
         line-height: 20px;
     }
@@ -35,7 +34,6 @@
     label {
         font-weight: 100;
     }
-
     .over {
         display: none;
         position: absolute;
@@ -47,7 +45,6 @@
         opacity: 0.5;
         z-index: 1000;
     }
-
     .layout {
         display: none;
         position: absolute;
@@ -58,22 +55,59 @@
         z-index: 1001;
         text-align: center;
     }
-
     .k-alt, .k-header, .k-pager-wrap {
         background-color: #ffffff !important;
     }
-
     .k-grid td {
         border-bottom: 1px solid #d5d5d5
     }
-
     .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
         background-color: #ffffff !important;
-        font-size: 14px
+        font-size:14px
     }
 </style>
+<script>
+    $(function () {
+        $('#Stage3ReceiveDate').datetimepicker({
+            lang: 'ch',
+            timepicker: false,
+            format: 'Y-m-d',
+            formatDate: 'Y-m-d',
+            scrollMonth: false,
+            scrollTime: false,
+            scrollInput: false,
+        });
+        $('#Stage3CompleteDate').datetimepicker({
+            lang: 'ch',
+            timepicker: false,
+            format: 'Y-m-d',
+            formatDate: 'Y-m-d',
+            scrollMonth: false,
+            scrollTime: false,
+            scrollInput: false,
+        });
+        $('#Stage4ReceiveDate').datetimepicker({
+            lang: 'ch',
+            timepicker: false,
+            format: 'Y-m-d',
+            formatDate: 'Y-m-d',
+            scrollMonth: false,
+            scrollTime: false,
+            scrollInput: false,
+        });
+        $('#Stage4CompleteDate').datetimepicker({
+            lang: 'ch',
+            timepicker: false,
+            format: 'Y-m-d',
+            formatDate: 'Y-m-d',
+            scrollMonth: false,
+            scrollTime: false,
+            scrollInput: false,
+        });
+    })
+</script>
 <div id="example" ng-app="KendoDemos">
-    <div ng-controller="EditOwnerCaseCtrl">
+    <div ng-controller="SaveDetailCtrl">
         <div id="wrapper">
             <div id="page-wrapper" class="gray-bg">
                 <div class="wrapper wrapper-content animated fadeIn">
@@ -81,14 +115,14 @@
                         <div class="col-lg-12">
                             <div class="tabs-container">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#tab-1" id="tab-Title-1">Step1.Created Case</a></li>
+                                    <li class="active"><a data-toggle="tab" href="#tab-1" id="tab-Title-1">Step1.created Case</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-2" id="tab1">Step2.Information Collection</a></li>
                                     <li><a href="" id="tab-Title-2" ng-click="InserLeipiEditor()">Step2.Information Collection</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-3" id="tab2">Step3.Statistic Analysis</a></li>
                                     <li><a href="" id="tab-Title-3" ng-click="Inser3LeipiEditor()">Step3.Statistic Analysis</a></li>
                                     <li style="display:none"><a data-toggle="tab" href="#tab-4" id="tab3">Step4.Failure Analysis</a></li>
                                     <li><a href="" id="tab-Title-4" ng-click="Inser4LeipiEditor()">Step4.Failure Analysis</a></li>
-                                    <li style="display:none"><a data-toggle="tab" href="#tab-5" id="tab4">Step2.Conclusion</a></li>
+                                    <li style="display:none"><a data-toggle="tab" href="#tab-5" id="tab4">Step5.Conclusion</a></li>
                                     <li><a href="" id="tab-Title-5" ng-click="Inser5LeipiEditor()">Step5.Conclusion</a></li>
                                 </ul>
                                 <div class="tab-content">
@@ -114,7 +148,7 @@
                                                         <span class="en">Title <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input" colspan="3">
-                                                        <input title="ESSENTIAL 客户/工厂 +产品 +发生站别+现象+颗数" ng-model="result.CaseTitle" type="text" />
+                                                        <input title="ESSENTIAL 客户/工厂+产品+发生站别+现象+颗数" ng-model="result.CaseTitle" type="text" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -122,7 +156,7 @@
                                                         <span class="en">Type <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <select title="ESSENTIAL" class="form_control border-bottom-Select-Span" id="Type" ng-model="Type" ng-options="x.CaseType for x in Types"></select>
+                                                        <select title="ESSENTIAL" class="form_control border-bottom-Select-Span" ng-model="Type" ng-options="x.CaseType for x in Types"></select>
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Created Date <i class="form_table_required">*</i></span>
@@ -133,16 +167,16 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="form_table_label">
-                                                        <span class="en">Priority <i class="form_table_required">*</i></span>
-                                                    </td>
-                                                    <td class="form_table_input">
-                                                        <select title="ESSENTIAL" class="form_control border-bottom-Select-Span" ng-model="result.Priority" ng-options="x for x in Prioritys"></select>
-                                                    </td>
-                                                    <td class="form_table_label">
                                                         <span class="en">Department <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
                                                         <span title="ESSENTIAL" class="form_control border-bottom-Select-Span">{{result.Department}}</span>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Priority <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <select title="ESSENTIAL" class="form_control border-bottom-Select-Span" ng-model="result.Priority" ng-options="x for x in Prioritys"></select>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -195,20 +229,21 @@
                                                         <span class="en">DPPM<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input title="ESSENTIAL value:1%或者13000或者NA" ng-model="result.Dppm" type="text" />
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA " ng-model="result.Dppm" type="text" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Issue From<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
                                                         <select title="ESSENTIAL Competition Analysis请选Other" class="form_control border-bottom-Select-Span" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
+                                                    </td>
                                                 </tr>
                                                 <tr ng-if="result.Type!='RMA'">
                                                     <td class="form_table_label">
                                                         <span class="en">{{LinkName}}<i class="form_table_required">*</i></span>
                                                     </td>
-                                                    <td class="form_table_input" ng-if="LinkName!='FAR No.'&&!isSaveFAR">
-                                                        <input title="ESSENTIAL" ng-model="result.LinkName" id="LinkName" type="text" />
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA" ng-model="result.LinkName" id="LinkName" type="text" />
                                                     </td>
                                                 </tr>
                                                 <tr ng-if="result.Type=='RMA'">
@@ -216,13 +251,13 @@
                                                         <span class="en">DPPM<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input title="ESSENTIAL value:1%或者13000或者NA" ng-model="result.Dppm" type="text" />
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA " ng-model="result.Dppm" type="text" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">{{Customer}}<i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input title="ESSENTIAL Competition Analysis 请填写NA" ng-model="result.Customer" type="text" />
+                                                        <input title="ESSENTIAL" ng-model="result.Customer" type="text" />
                                                     </td>
                                                 </tr>
                                                 <tr id="farTrShow">
@@ -242,22 +277,6 @@
                                                         <input title="ESSENTIAL Ep: 20180425_7763.xml" ng-model="result.LinkName" type="text" />
                                                     </td>
                                                 </tr>
-                                                <!--<tr ng-if="result.Type=='RMA'">
-                                                <td class="form_table_label">
-                                                    <span class="en">Issue From<i class="form_table_required">*</i></span>
-                                                </td>
-                                                <td class="form_table_input">
-                                                    <select title="ESSENTIAL Competition Analysis请选Other" class="form_control border-bottom-Select-Span" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
-                                                <td class="form_table_label">
-                                                    <span class="en">{{LinkName}}<i class="form_table_required">*</i></span>
-                                                </td>
-                                                <td class="form_table_input" id="showFAR" ng-if="LinkName=='FAR No.'&&isSaveFAR">
-                                                    <span title="ESSENTIAL " class="form_control border-bottom-Select-Span" id="linkName"></span>
-                                                </td>
-                                                <td class="form_table_input" ng-if="LinkName=='FAR No.'&&!isSaveFAR">
-                                                    <input title="ESSENTIAL Ep: 20180425_7763.xml" ng-model="result.LinkName" id="LinkName" type="text" />
-                                                </td>-->
-                                                </tr>
                                                 <tr>
                                                     <td class="form_table_label" colspan="4">
                                                         <span class="en">Problem Description<i class="form_table_required">*</i></span>
@@ -272,16 +291,16 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_label" colspan="4" style="border-bottom:none">
+                                                    <td class="form_table_label borderButtomNone" colspan="4">
                                                         <span class="en">Analysis Request<i class="form_table_required">*</i></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:4px 22px 0px" title="ESSENTIAL">
+                                                    <td class="form_table_area borderButtomNone borderTopNone" colspan="4" style="padding:4px 22px 0px" title="ESSENTIAL">
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis=='成本/结构分析'">
-                                                                    <input type="checkbox" ng-click="DestructiveAnalysisClick(Analysis)" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis">
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
                                                             </span>
@@ -289,7 +308,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none" title="ESSENTIAL">
+                                                    <td class="form_table_area borderButtomNone borderTopNone" colspan="4" title="ESSENTIAL">
                                                         <u>Non-destructive Analysis</u>
                                                         <div>
                                                             <span ng-repeat="Analysis in NonDestructiveAnalysis">
@@ -302,12 +321,12 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none;padding:4px 22px 0px" title="ESSENTIAL">
+                                                    <td class="form_table_area borderButtomNone borderTopNone" colspan="4" style="padding:4px 22px 0px" title="ESSENTIAL">
                                                         <u>Destructive Analysis</u>
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis!='成本/结构分析'">
-                                                                    <input type="checkbox" ng-click="DestructiveAnalysisClick(Analysis)" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    <input ng-click="DestructiveAnalysisClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}13" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
                                                             </span>
@@ -333,36 +352,44 @@
                                                         <span class="en">Need Statistic Analysis?</span>
                                                     </td>
                                                     <td class="form_table_input" colspan="3">
-                                                        <input ng-model="result.Stage3ContinueAnalysis" readonly="readonly" id="Stage3ContinueAnalysis" type="text" />
+                                                        <select title="ESSENTIAL" class="form_control border-bottom-Select-Span" ng-model="result.Stage3ContinueAnalysis">
+                                                            <option value="Yes" label="Yes">Yes</option>
+                                                            <option value="NO" label="NO">NO</option>
+                                                        </select>
                                                     </td>
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <table class="form_table form_displayCss" id="stage3Detail" align="center">
+                                        <table class="form_table form_displayCss" align="center" id="showStage3Summary">
                                             <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Received Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input ng-model="result.Stage3ReceiveDate" readonly="readonly" type="text" />
+                                                        <input type="text" AUTOCOMPLETE="off"  id="Stage3ReceiveDate" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Completed Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input ng-model="result.Stage3CompleteDate" readonly="readonly" type="text" />
+                                                        <input type="text" id="Stage3CompleteDate"/>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="form_table_label">
-                                                        <span class="en">Step3 assign to</span>
+                                                        <span class="en">Step3 assiggn to</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input ng-model="result.Stage3AssiggnTo" readonly="readonly" type="text" />
+                                                        <input ng-model="result.Stage3AssiggnTo" id="Stage3AssiggnTo" type="text" />
                                                     </td>
-                                                    <td class="form_table_label" colspan="2">
-                                                        <span>Install attachment</span>
+                                                    <td class="form_table_label">
+                                                        <span>Install attachment
+                                                            <small style="font-weight: 100;">(附件大小不能超过1.5M(1572864 bytes.))</small>
+                                                        </span>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <input class="form_control border-bottom-Select-Span" ng-model="file" id="stage3FileInstall" onchange="angular.element(this).scope().upload(this,'InstallAttachmentStage3','Stage3','Documents')" type="file">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -376,7 +403,7 @@
                                                             item:
                                                             <span class="ng-binding ng-scope" ng-repeat="item in StatisticAnalysis">
                                                                 <label>
-                                                                    <input type="checkbox" disabled='disabled' id="{{item|ValueString}}3" name="item">
+                                                                    <input type="checkbox" ng-click="Stage3ItemClick(item)" id="{{item|ValueString}}3" name="item" value="{{item}}">
                                                                     {{item}}
                                                                 </label>
                                                             </span>
@@ -386,9 +413,14 @@
                                                 <tr>
                                                     <td colspan="4" class="form_table_label">
                                                         <span>Summary</span>
-                                                        <div id="Stage3Summary" style="width: 100%;height: auto;min-height:100px;background: #fff"></div>
+                                                        <script id="Stage3Summary" type="text/plain" style="width:100%;">
+                                                        </script>
                                                     </td>
                                                 </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="form_table form_displayCss" align="center" ng-if="IsShowStage3">
+                                            <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Step3 CRCT</span>
@@ -400,7 +432,10 @@
                                                         <span class="en">Continue Analysis?</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input ng-model="result.Stage4ContinueAnalysis" readonly="readonly" type="text" />
+                                                        <select ng-model="result.Stage4ContinueAnalysis" class="form_control border-bottom-Select-Span">
+                                                            <option value="Yes" label="Yes">Yes</option>
+                                                            <option value="NO" label="NO">NO</option>
+                                                        </select>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -427,22 +462,22 @@
                                                         <span class="en">Received Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input ng-model="result.Stage4ReceiveDate" readonly="readonly" type="text" />
+                                                        <input type="text" class="form_control" id="Stage4ReceiveDate" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Completed Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input ng-model="result.Stage4CompleteDate" readonly="readonly" type="text" />
+                                                        <input type="text" class="form_control" id="Stage4CompleteDate" />
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="form_table_area borderButtomNone borderTopNone" colspan="4" title="ESSENTIAL">
-                                                        <b>item</b>
+                                                        item<br />
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis=='成本/结构分析'">
-                                                                    <input type="checkbox" disabled="disabled" id="{{Analysis|ValueString}}42" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    <input ng-click="itemTwoClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}42" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
                                                             </span>
@@ -453,18 +488,20 @@
                                                     <td class="form_table_area borderButtomNone borderTopNone" colspan="4">
                                                         <div>
                                                             <span ng-repeat="itemOne in NonDestructiveAnalysis">
-                                                                <input type="checkbox" disabled='disabled' id="{{itemOne|ValueString}}41" name="stageItemOne">
-                                                                {{itemOne}}
+                                                                <label>
+                                                                    <input type="checkbox" ng-click="itemOneClick(itemOne)" id="{{itemOne|ValueString}}41" name="stageItemOne" value="{{itemOne}}">
+                                                                    {{itemOne}}
+                                                                </label>
                                                             </span>
                                                         </div>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area borderButtomNone borderTopNone" colspan="4" title="ESSENTIAL">
+                                                    <td class="form_table_area borderButtomNone borderTopNone" colspan="4"title="ESSENTIAL">
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis!='成本/结构分析'">
-                                                                    <input type="checkbox" disabled="disabled" id="{{Analysis|ValueString}}42" name="DestructiveAnalysis" value="{{Analysis}}">
+                                                                    <input ng-click="itemTwoClick(Analysis)" type="checkbox" id="{{Analysis|ValueString}}42" name="DestructiveAnalysis" value="{{Analysis}}">
                                                                     {{Analysis}}
                                                                 </label>
                                                             </span>
@@ -472,12 +509,12 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area form_table_label" colspan="4" title="ESSENTIAL">
-                                                        <b>Lab</b>
+                                                    <td class="form_table_area" colspan="4" title="ESSENTIAL">
+                                                        Lab<br />
                                                         <div>
                                                             <span ng-repeat="Lab in LabList">
                                                                 <label>
-                                                                    <input disabled="disabled" type="checkbox" id="{{Lab|ValueString}}Lab" value="{{Lab}}">
+                                                                    <input ng-click="LabClick(Lab)" type="checkbox" id="{{Lab|ValueString}}Lab" name="Lab" value="{{Lab}}">
                                                                     {{Lab}}
                                                                 </label>
                                                             </span>
@@ -486,7 +523,10 @@
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="form_table_label">
-                                                        <span>Install attachment</span>
+                                                        <span>Install attachment
+                                                            <small style="font-weight: 100;">(附件大小不能超过1.5M(1572864 bytes.))</small>
+                                                        </span>
+                                                        <input ng-model="file" id="stage4FileInstall" onchange="angular.element(this).scope().upload(this,'InstallAttachmentStage4','Stage4','Documents')" type="file">
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -497,9 +537,14 @@
                                                 <tr>
                                                     <td colspan="4" class="form_table_label">
                                                         <span>Summary</span>
-                                                        <div id="Stage4Summary" style="width: 100%;height: auto;min-height:100px;background: #fff"></div>
+                                                        <script id="Stage4Summary" type="text/plain" style="width:100%;">
+                                                        </script>
                                                     </td>
                                                 </tr>
+                                            </tbody>
+                                        </table>
+                                        <table ng-if="IsShowStage4" class="form_table form_displayCss" align="center">
+                                            <tbody>
                                                 <tr>
                                                     <td class="form_table_label">
                                                         <span class="en">Step4 CRCT</span>
@@ -530,24 +575,25 @@
                                                         <span>{{result.Type}}</span>
                                                     </td>
                                                     <td class="form_table_input" colspan="2">
-                                                        <input ng-model="result.RootCauseLv1" readonly="readonly" type="text" />
+                                                        <select ng-model="RootCauseLv1Select" class="form_control border-bottom-Select-Span" ng-options="x.Level1 for x in RootCauseLv1"></select>
                                                     </td>
                                                     <!--<td class="form_table_input">
-                                                        <input ng-model="result.RootCauseLv2" readonly="readonly" type="text" />
+                                                        <select ng-model="result.RootCauseLv2" class="form_control" ng-options="x for x in RootCauseLv2"><option value="">Level2</option></select>
                                                     </td>-->
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="form_table_label">
                                                         <span>CA&PA&Conclusion</span>
-                                                        <div id="Stage5Summary" style="width: 100%;height: auto;min-height:100px;background: #fff"></div>
+                                                        <script id="Stag5Summary" type="text/plain" style="width:100%;">
+                                                        </script>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="form_table_label">
-                                                        <span class="en">Case Status</span>
+                                                        <span class="en">Case Status <i class="form_table_required">*</i></span>
                                                     </td>
                                                     <td class="form_table_input" colspan="3">
-                                                        <span title="ESSENTIAL" class="form_control" style="border:0">{{result.CaseStatus}}</span>
+                                                        <select title="ESSENTIAL" id="CaseStatus" class="form_control border-bottom-Select-Span" ng-model="result.CaseStatus" ng-options="x for x in CaseStatus"></select>
                                                     </td>
                                                 </tr>
                                                 <tr>

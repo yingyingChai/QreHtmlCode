@@ -81,6 +81,7 @@
                                             CreatorEmail: dataList.CreatorEmail ? dataList.CreatorEmail : "",
                                             Type: dataList.Type,
                                             CreatedDate: dataList.CreatedDate,
+                                            Department: dataList.Department,
                                             Priority: dataList.Priority,
                                             CaseStatus: dataList.CaseStatus,
                                             MPN: dataList.MPN,
@@ -227,6 +228,7 @@
                                         $scope.MPN = $scope.result.MPN;
                                         //第一次进入页面如果为FAR,显示链接
                                         if ($scope.isSaveFAR) {
+                                            $("#farTrShow")[0].style.display = "";
                                             $("#linkName").html($scope.result.LinkName)
                                         }
                                         /*
@@ -331,11 +333,14 @@
             if (value != oldValue) {
                 if (value && oldValue != undefined) {
                     $scope.isSaveFAR = false;
-                    $("#showFAR")[0].style.display = "none";
+                    $("#farTrShow")[0].style.display = "none";
+                    //$("#showFAR")[0].style.display = "none";
                     $scope.result.LinkName = "";
                     $scope.result.Customer = "";
                     $scope.result.Type = value.CaseType;
                     if (value.CaseType == "RMA") {
+                        $("#farTrShow")[0].style.display = "";
+                        $("#showFAR")[0].style.display = "none";
                         $scope.Customer = "Customer";
                         $scope.LinkName = "FAR No.";
                     } else {
@@ -344,10 +349,12 @@
                     }
                 } else if (value.CaseType != "RMA") {
                     $scope.isSaveFAR = false;
-                    $("#showFAR")[0].style.display = "none";
+                    $("#farTrShow")[0].style.display = "none";
+                    //$("#showFAR")[0].style.display = "none";
                     $scope.Customer = "Internal Department";
                     $scope.LinkName = "Yield";
                 } else {
+                    $("#farTrShow")[0].style.display = "";
                     $scope.Customer = "Customer";
                     $scope.LinkName = "FAR No.";
                 }
@@ -479,7 +486,7 @@
          *提交申请记录
          * @param {any} event
          */
-        var index = 0;
+        var Saveindex = 0;
         $scope.save = function () {
             //更新不需要发送邮件
             //保存信息
@@ -518,17 +525,17 @@
                 data: JSON.stringify($scope.result),
                 dataType: "json",
                 success: function (data) {
-                    layer.close(index);
+                    layer.close(Saveindex);
                     window.location.href = "../SitePages/Home.aspx";
                 },
                 error: function (a, b, c) {
-                    layer.close(index);
+                    layer.close(Saveindex);
                     alert("保存失败")
                 }
             });
         }
         $scope.SaveDetail = function () {
-            index = layer.load(1, {
+            Saveindex = layer.load(1, {
                 shade: [0.1, '#fff'] //0.1透明度的白色背景
             });
             if (verifyNewCase()) {
@@ -571,13 +578,13 @@
                         }
                         $scope.save();
                     } else {
-                        layer.close(index);
+                        layer.close(Saveindex);
                     }
                 } else {
-                    layer.close(index);
+                    layer.close(Saveindex);
                 }
             } else {
-                layer.close(index);
+                layer.close(Saveindex);
             }
         }
         function GetC3Date() {
@@ -596,7 +603,7 @@
                         alertMessage("请正确填写Step3:Complete Date 和 Receive Date")
                         return false;
                     } else {
-                        $scope.result.Stage3CRCT = time;
+                        $scope.result.Stage3CRCT = time + 1;
                         return true;
                     }
                 } else {
@@ -622,7 +629,7 @@
                         alertMessage("请正确填写Step4:Complete Date 和 Receive Date")
                         return false;
                     } else {
-                        $scope.result.Stage4CRCT = time;
+                        $scope.result.Stage4CRCT = time + 1;
                         return true;
                     }
                 } else {
@@ -640,7 +647,7 @@
                 days = new Date().getTime() - $scope.result.CreatedDate.getTime();
             }
             var time = parseInt(days / (1000 * 60 * 60 * 24));
-            $scope.result.Stage5CRCT = time;
+            $scope.result.Stage5CRCT = time+1;
         }
         function GetC5Date() {
             if ($scope.result.CaseStatus != "Close" || changeClose) {
@@ -747,6 +754,7 @@
                     $scope.result.MPN = data.MPN;
                     $scope.result.ProductLine = data.ProductLine;
                     $scope.result.QREOwner = data.QREOwner;
+                    $scope.result.QREOwnerEmail = data.Email;
                 }
             });
             $scope.hidden = true;
@@ -786,19 +794,25 @@
                 return false;
             }
             if ($scope.result.MPN == null || $scope.result.MPN == '') {
-                alertMessage("请选择MPN");
+                alertMessage("请选择Product");
                 return false;
             }
             if ($scope.result.Dppm == null || $scope.result.Dppm == '') {
                 alertMessage("请输入Dppm");
                 return false;
             }
-            if ($scope.result.Customer == null || $scope.result.Customer == '') {
-                alertMessage("请输入" + $scope.Customer);
-                return false;
+            if ($scope.result.Type == "RMA") {
+                if ($scope.result.Customer == null || $scope.result.Customer == '') {
+                    alertMessage("请输入" + $scope.Customer);
+                    return false;
+                }
             }
+            //if ($scope.result.Customer == null || $scope.result.Customer == '') {
+            //    alertMessage("请输入" + $scope.Customer);
+            //    return false;
+            //}
             if ($scope.result.FailuresFound == null || $scope.result.FailuresFound == '') {
-                alertMessage("请输入FailuresFound");
+                alertMessage("请输入Issue From");
                 return false;
             }
             if ($scope.result.LinkName == null || $scope.result.LinkName == '') {
@@ -824,12 +838,17 @@
         function verifyRMA() {
             if (!$scope.isSaveFAR) {
                 if ($scope.result.Type == 'RMA') {
-                    if ($scope.result.LinkName.indexOf("http:") < 0 && $scope.result.LinkName.indexOf("xml") > 0) {
-                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
-                        return true
-                    } else {
+                    if ($scope.result.LinkName.indexOf("http:") >= 0) {
                         alertMessage("请输入正确的FAR No.");
                         return false;
+                    } else {
+                        if ($scope.result.LinkName.indexOf("xml") > 0) {
+                            $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+                            return true
+                        } else {
+                            $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '.xml">' + $scope.result.LinkName + '</a>';
+                            return true
+                        }
                     }
                 }
                 return true;
@@ -875,63 +894,110 @@
         });
         //Upload File
         var StageType = '', DocumentLibraryName = '', fileName = '';
+        var FileIndex=0;
         $scope.upload = function (el, id, type, DocumentLibrary) {
-            DocumentLibraryName = DocumentLibrary;
+            FileIndex = layer.load(2, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+            var serverRelativeUrlToFolder = 'shared documents';
             StageType = type;
-            /*
-             *判断是否是IE 
-             **/
-            if (IEVersion() <= 9 && IEVersion() != -1 && IEVersion() != 'edge') {
-                //el.select();
-                //el.blur();
-                //var path = document.selection.createRange().text;
-                //var fos = new ActiveXObject("Scripting.FileSystemObject");
-                //file = fos.GetFile(path);
-                alertMessage("您的IE浏览器版本不支持上传功能，请使用IE 10或以上版本或Chrome浏览器");
+            var fileInput = el.files;
+            if (fileInput[0].size > 20971520) {
+                alertMessage("上传的附件大小不可大于20M");
+                layer.close(FileIndex);
             } else {
-                file = el.files[0];
-                fr = new FileReader();
-                fr.onload = receivedBinary;
-                fr.readAsDataURL(file);
+                var fileNameFilter = fileInput[0].name.split('.');
+                var fileType = fileNameFilter[fileNameFilter.length - 1];
+                var newName = $scope.result.CaseNumber + '-' + new Date().getTime() + '.' + fileType;
+                var serverUrl = _spPageContextInfo.webAbsoluteUrl;
+                var getFile = getFileBuffer();
+                getFile.done(function (arrayBuffer) {
+                    var addFile = addFileToFolder(arrayBuffer);
+                    addFile.done(function (file, status, xhr) {
+                        var getItem = getListItem(file.d.ListItemAllFields.__deferred.uri);
+                        getItem.done(function (listItem, status, xhr) {
+                            var changeItem = updateListItem(listItem.d.__metadata);
+                            changeItem.done(function (data, status, xhr) {
+                                layer.close(FileIndex);
+                                if (StageType == "Stage3") {
+                                    Stage3Attachment.push(newName);
+                                    var id = new Date().getTime();
+                                    var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + newName + '<button id="close" type="button" class="close buttonStyle" data-dismiss="alert" ng-click="deleteFile(\'Stage3\',\'' + newName + '\',' + id + ')">×</button></li>')($scope);
+                                    $("#InstallAttachmentStage3").append($htmlButton)
+                                    $scope.result.Stage3Attachment = JSON.stringify(Stage3Attachment);
+                                } else {
+                                    Stage4Attachment.push(newName);
+                                    var id = new Date().getTime();
+                                    var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + newName + '<button id="close" type="button" class="close buttonStyle" data-dismiss="alert" ng-click="deleteFile(\'Stage4\',\'' + newName + '\',' + id + ')">×</button></li>')($scope);
+                                    $("#InstallAttachmentStage4").append($htmlButton);
+                                    $scope.result.Stage4Attachment = JSON.stringify(Stage4Attachment);
+                                }
+                            });
+                            changeItem.fail(onError);
+                        });
+                        getItem.fail(onError);
+                    });
+                    addFile.fail(onError);
+                });
+                getFile.fail(onError);
+                function getFileBuffer() {
+                    var deferred = jQuery.Deferred();
+                    var reader = new FileReader();
+                    reader.onloadend = function (e) {
+                        deferred.resolve(e.target.result);
+                    }
+                    reader.onerror = function (e) {
+                        deferred.reject(e.target.error);
+                    }
+                    reader.readAsArrayBuffer(fileInput[0]);
+                    return deferred.promise();
+                }
+                function addFileToFolder(arrayBuffer) {
+                    var fileName = fileInput[0].name;
+                    var fileCollectionEndpoint = String.format(
+                        "{0}/_api/web/getfolderbyserverrelativeurl('{1}')/files" +
+                        "/add(overwrite=true, url='{2}')",
+                        serverUrl, serverRelativeUrlToFolder, fileName);
+                    return jQuery.ajax({
+                        url: fileCollectionEndpoint,
+                        type: "POST",
+                        data: arrayBuffer,
+                        processData: false,
+                        headers: {
+                            "accept": "application/json;odata=verbose",
+                            "X-RequestDigest": jQuery("#__REQUESTDIGEST").val(),
+                            "content-length": arrayBuffer.byteLength
+                        }
+                    });
+                }
+                function getListItem(fileListItemUri) {
+                    return jQuery.ajax({
+                        url: fileListItemUri,
+                        type: "GET",
+                        headers: { "accept": "application/json;odata=verbose" }
+                    });
+                }
+                function updateListItem(itemMetadata) {
+                    var body = String.format("{{'__metadata':{{'type':'{0}'}},'FileLeafRef':'{1}','Title':'{2}'}}",
+                        itemMetadata.type, newName, newName);
+                    return jQuery.ajax({
+                        url: itemMetadata.uri,
+                        type: "POST",
+                        data: body,
+                        headers: {
+                            "X-RequestDigest": jQuery("#__REQUESTDIGEST").val(),
+                            "content-type": "application/json;odata=verbose",
+                            "content-length": body.length,
+                            "IF-MATCH": itemMetadata.etag,
+                            "X-HTTP-Method": "MERGE"
+                        }
+                    });
+                }
             }
         };
-        function receivedBinary() {
-            clientContext = new SP.ClientContext.get_current();
-            oWebsite = clientContext.get_web();
-            parentList = oWebsite.get_lists().getByTitle(DocumentLibraryName);
-            fileCreateInfo = new SP.FileCreationInformation();
-            var fileType = file.name.split('.')[1];
-            fileName = $scope.result.CaseNumber + '-' + new Date().getTime() + '.' + fileType;
-            fileCreateInfo.set_url(fileName);
-            fileCreateInfo.set_overwrite(true);
-            fileCreateInfo.set_content(new SP.Base64EncodedByteArray());
-            var arr = convertDataURIToBinary(this.result);
-            for (var i = 0; i < arr.length; ++i) {
-                fileCreateInfo.get_content().append(arr[i]);
-            }
-            this.newFile = parentList.get_rootFolder().get_files().add(fileCreateInfo);
-            clientContext.load(this.newFile);
-            clientContext.executeQueryAsync(onSuccess, onFailure);
+        function onError(error) {
+            console.log(error.responseText)
         }
-        function onSuccess() {
-            if (StageType == "Stage3") {
-                Stage3Attachment.push(fileName);
-                var id = new Date().getTime();
-                var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + fileName + '<button id="close" type="button" class="close buttonStyle" data-dismiss="alert" ng-click="deleteFile(\'Stage3\',\'' + fileName + '\',' + id + ')">×</button></li>')($scope);
-                $("#InstallAttachmentStage3").append($htmlButton)
-                $scope.result.Stage3Attachment = JSON.stringify(Stage3Attachment);
-            } else {
-                Stage4Attachment.push(fileName);
-                var id = new Date().getTime();
-                var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + fileName + '<button id="close" type="button" class="close buttonStyle" data-dismiss="alert" ng-click="deleteFile(\'Stage4\',\'' + fileName + '\',' + id + ')">×</button></li>')($scope);
-                $("#InstallAttachmentStage4").append($htmlButton);
-                $scope.result.Stage4Attachment = JSON.stringify(Stage4Attachment);
-            }
-        }
-        function onFailure() {
-            alertMessage("文件上传失败")
-        }
-
         $scope.deleteFile = function (type, name, id) {
             if (type == "Stage3") {
                 if (Stage3Attachment.indexOf(name) >= 0) {

@@ -36,14 +36,21 @@
                 loadKendoUi();
             }
         });
+        var GridList = [];
         function loadKendoUi() {
             /*
             * 根据登录人获取Case
             * */
             $http.get("http://10.0.3.52:8060/QREService.svc/GetQRECaseList?", { params: { caseOwner: caseOwner } })
                 .success(function (data) {
+                    var AllList = JSON.parse(data);
+                    $scope.CaseInOneMonth = AllList.CaseInOneMonth;
+                    $scope.CaseInOneWeek = AllList.CaseInOneWeek;
+                    $scope.OpenCase = AllList.OpenCase;
+                    $scope.TotalCase = AllList.TotalCase;
+                    GridList = AllList.CaseList;
                     var dataSource = new kendo.data.DataSource({
-                        data: JSON.parse(data),
+                        data: GridList,
                         schema: {
                             model: {
                                 fields: {
@@ -74,25 +81,29 @@
                     $("#grid").kendoGrid({
                         dataSource: dataSource,
                         filterable: true,
-                        pageable: true,
-                        sortable: true,
-                        //columnMenu: true,
+                        //pageable: true,                     //columnMenu: true,
+                        pageable: {
+                            refresh: true,
+                        },
                         columns: [{
                             field: "CaseNumber",
                             title: "CaseNumber",
+                            width: 110
                         }, {
                             field: "CaseTitle",
                             title: "Title",
                         }, {
                             field: "MPN",
                             title: "Product",
-                            width: 90
+                            width: 110
                         }, {
-                            field: "ProductLine",
+                             field: "ProductLine",
+                             width: 110
                         }, {
                             field: "CreatedDate",
                             format: "{0: yyyy-MM-dd}",
                             title: "CreatedDate",
+                            width: 110
                         }, {
                             field: "Stage5CRCT",
                             title: "CRCT",
@@ -109,6 +120,7 @@
                         }, {
                             field: "CaseStatus",
                             title: "CaseStatus",
+                            width: 110
                         },
                         {
                             command: [
@@ -140,7 +152,12 @@
                 success: function (data) {
                     alertMessage(data.replace("\"", "").replace("\"", ""));
                     if (data.replace("\"", "").replace("\"", "") == "Success") {
-                        loadKendoUi();
+                        angular.forEach(GridList, function (GGridList, Index) {
+                            if (GGridList.CaseNumber == Id) {
+                                GridList.splice(Index, 1);
+                                $(".k-pager-refresh.k-link").click();
+                            }
+                        })
                     }
                 },
                 error: function (a, b, c) {

@@ -169,8 +169,14 @@
                                                     <td class="form_table_label">
                                                         <span class="en">Priority <i class="form_table_required">*</i></span>
                                                     </td>
-                                                    <td class="form_table_input" colspan="3">
+                                                    <td class="form_table_input">
                                                         <select title="ESSENTIAL" class="form_control border-bottom-Select-Span" ng-model="result.Priority" ng-options="x for x in Prioritys"></select>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Department <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <span title="ESSENTIAL" class="form_control border-bottom-Select-Span">{{result.Department}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -218,7 +224,29 @@
                                                         <input title="ESSENTIAL" class="form_control" ng-model="result.QREOwner" type="text" readonly="readonly" />
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr ng-if="result.Type!='RMA'">
+                                                    <td class="form_table_label">
+                                                        <span class="en">DPPM<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA " ng-model="result.Dppm" type="text" />
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Issue From<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <select title="ESSENTIAL Competition Analysis请选Other" class="form_control border-bottom-Select-Span" ng-model="result.FailuresFound" ng-options="x for x in FailuresFounds"></select>
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="result.Type!='RMA'">
+                                                    <td class="form_table_label">
+                                                        <span class="en">{{LinkName}}<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input title="ESSENTIAL Competition Analysis 请填写NA" ng-model="result.LinkName" id="LinkName" type="text" />
+                                                    </td>
+                                                </tr>
+                                                <tr ng-if="result.Type=='RMA'">
                                                     <td class="form_table_label">
                                                         <span class="en">DPPM<i class="form_table_required">*</i></span>
                                                     </td>
@@ -232,7 +260,7 @@
                                                         <input title="ESSENTIAL" ng-model="result.Customer" type="text" />
                                                     </td>
                                                 </tr>
-                                                <tr>
+                                                <tr id="farTrShow">
                                                     <td class="form_table_label">
                                                         <span class="en">Issue From<i class="form_table_required">*</i></span>
                                                     </td>
@@ -246,10 +274,7 @@
                                                         <span title="ESSENTIAL" class="form_control border-bottom-Select-Span" id="linkName"></span>
                                                     </td>
                                                     <td class="form_table_input" ng-if="LinkName=='FAR No.'&&!isSaveFAR">
-                                                        <input title="ESSENTIAL Ep: 20180425_7763.xml" ng-model="result.LinkName" id="LinkName" type="text" />
-                                                    </td>
-                                                    <td class="form_table_input" ng-if="LinkName!='FAR No.'&&!isSaveFAR">
-                                                        <input title="ESSENTIAL Competition Analysis 请填写NA" ng-model="result.LinkName" id="LinkName" type="text" />
+                                                        <input title="ESSENTIAL Ep: 20180425_7763.xml" ng-model="result.LinkName" type="text" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -359,7 +384,7 @@
                                                         <input ng-model="result.Stage3AssiggnTo" id="Stage3AssiggnTo" type="text" />
                                                     </td>
                                                     <td class="form_table_label">
-                                                        <span>Install attachment</span>
+                                                        <span>Install attachment <small>(上传附件大小不可大于20M)</small></span>
                                                     </td>
                                                     <td class="form_table_label">
                                                         <input class="form_control border-bottom-Select-Span" ng-model="file" id="stage3FileInstall" onchange="angular.element(this).scope().upload(this,'InstallAttachmentStage3','Stage3','Documents')" type="file">
@@ -496,7 +521,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="form_table_label">
-                                                        <span>Install attachment</span>
+                                                        <span>Install attachment <small>(上传附件大小不可大于20M)</small></span>
                                                         <input ng-model="file" id="stage4FileInstall" onchange="angular.element(this).scope().upload(this,'InstallAttachmentStage4','Stage4','Documents')" type="file">
                                                     </td>
                                                 </tr>
@@ -546,7 +571,7 @@
                                                         <span>{{result.Type}}</span>
                                                     </td>
                                                     <td class="form_table_input" colspan="2">
-                                                        <select ng-model="RootCauseLv1Select" class="form_control border-bottom-Select-Span" ng-options="x.Level1 for x in RootCauseLv1"><option value="">Level1</option></select>
+                                                        <select ng-model="RootCauseLv1Select" class="form_control border-bottom-Select-Span" ng-options="x.Level1 for x in RootCauseLv1"></select>
                                                     </td>
                                                     <!--<td class="form_table_input">
                                                         <select ng-model="result.RootCauseLv2" class="form_control" ng-options="x for x in RootCauseLv2"><option value="">Level2</option></select>
@@ -578,7 +603,7 @@
                                                         <span class="en">Complexity</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input ng-model="result.Complexity" id="Complexity" type="text" readonly="readonly" />
+                                                        <input ng-model="result.Complexity" title="Priority(1-3)&Workload(1-4)&Cycle time(1-3)" id="Complexity" type="text" readonly="readonly" />
                                                     </td>
                                                 </tr>
                                                 <tr>

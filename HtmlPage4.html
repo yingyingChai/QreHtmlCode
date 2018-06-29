@@ -1,0 +1,105 @@
+﻿<!-- Reference the jQueryUI theme's stylesheet on the Google CDN. Here we're using the "Start" theme -->
+<link type="text/css" rel="stylesheet" href="//eip.unisoc.com/sites/howto/_catalogs/masterpage/Wicresoft/jquery-ui-1.9.2.css" />
+<!-- Reference jQuery on the Google CDN -->
+<script type="text/javascript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-1.11.1.min.js"></script>
+<!-- Reference jQueryUI on the Google CDN -->
+<script type="text/javascript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-ui-1.11.2.min.js"></script>
+
+<script type="text/javascript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery.cookie.min-1.4.1.js"></script>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+
+
+        //   Put 3 web parts in 3 different tabs
+        //   var webPartTitles = ["Web Part Title 1","Web Part Title 2","Web Part Title 3"];
+        //   HillbillyTabs(webPartTitles);
+
+        //   Create a Tab with Two Web Parts, and a second tab with one Web Part
+        //   var webPartTitles = ["Tab Title;#Web Part Title 1;#Web Part Title 2","Web Part Title 3"];
+        //   HillbillyTabs(webPartTitles);
+
+        //   Put all web parts (that have visible titles) on page that have into tabs
+        HillbillyTabs(["Issue Fixed List", "Worklog", "Meeting Minutes", "Weekly Report", "Documents Library"]);
+
+    });
+
+
+    function HillbillyTabs(webPartTitles) {
+        if (webPartTitles == undefined) {
+            var CEWPID = "";
+            $("#tabsContainer").closest("div [id^='MSOZoneCell_WebPart']").find("span[id^='WebPartCaptionWPQ']").each(function () {
+                CEWPID = $(this).attr("id");
+            });
+
+            var index = 0;
+            $("span[id^='WebPartCaptionWPQ']").each(function () {
+                if ($(this).attr("id") != CEWPID) {
+                    var title = $(this).prev("span").text();
+
+                    $("#HillbillyTabs").append('<li><a href="#Tab' + index + '" id="TabHead' + index + '" onclick="HillbillyTabClick(this.id);">' +
+                        title + '</a></li>').after('<div id="Tab' + index + '"></div>');
+
+                    var webPart = $(this).prev("span").hide().closest("span").closest("[id^='MSOZoneCell_WebPart']");
+
+                    $("#Tab" + index).append((webPart));
+                    index++;
+                }
+            });
+        } else {
+            for (index in webPartTitles) {
+                var title = webPartTitles[index];
+                var tabContent = title.split(";#");
+                if (tabContent.length > 1) {
+                    $("#HillbillyTabs").append('<li><a href="#Tab' + index + '" id="TabHead' + index + '" onclick="HillbillyTabClick(this.id);">' +
+                        tabContent[0] + '</a></li>').after('<div id="Tab' + index + '"></div>');
+
+                    for (i = 1; i < tabContent.length; i++) {
+                        $("span[id^='WebPartCaptionWPQ']").each(function () {
+                            $(this).prev("span:contains('" + tabContent[i] + "')").each(function () {
+                                if ($(this).text() == tabContent[i]) {
+
+                                    var webPart = $(this).closest("span").closest("[id^='MSOZoneCell_WebPart']");
+
+                                    $("#Tab" + index).append((webPart));
+                                }
+
+                            });
+                        });
+                    }
+                }
+                else {
+                    $("span[id^='WebPartCaptionWPQ']").each(function () {
+                        $(this).prev("span:contains('" + title + "')").each(function () {
+                            if ($(this).text() == title) {
+                                $("#HillbillyTabs").append('<li><a href="#Tab' + index + '" id="TabHead' + index + '" onclick="HillbillyTabClick(this.id);">' +
+                                    title + '</a></li>').after('<div id="Tab' + index + '"></div>');
+
+                                var webPart = $(this).hide().closest("span").closest("[id^='MSOZoneCell_WebPart']");
+
+                                $("#Tab" + index).append((webPart));
+                            }
+
+                        });
+                    });
+                }
+            }
+        }
+        $("#tabsContainer").tabs();
+
+        ShowActiveTab();
+
+    }
+
+
+    function HillbillyTabClick(id) {
+        $.cookie("ActiveTab", id, { path: '/' });
+    }
+
+    function ShowActiveTab() {
+        $("#" + $.cookie("ActiveTab")).click();
+    }
+
+</script>
+<div id="tabsContainer"><ul id="HillbillyTabs"></ul></div>

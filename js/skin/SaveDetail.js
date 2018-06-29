@@ -1,5 +1,5 @@
 ﻿angular.module("KendoDemos", ["kendo.directives"])
-    .controller("EditOwnerCaseCtrl", function ($scope, $filter, $compile, $http) {
+    .controller("SaveDetailCtrl", function ($scope, $filter, $compile, $http) {
         //初始化数据
         var loadingIndex = layer.load(2, {
             shade: [0.1, '#fff'] //0.1透明度的白色背景
@@ -11,7 +11,6 @@
         $scope.Prioritys = Prioritys;
         $scope.CaseStatus = CaseStatus;
         var NonDestructiveAnalysisList = [], DestructiveAnalysisList = [], Stage3Attachment = [], Stage4Attachment = [], Stage3ItemList = [], itemOneList = [], itemTwoList = [], LabLists = [];
-        $scope.Stage3ReceiveDate = "";
         $scope.assignments = {}; $scope.RootCauseLv1 = [];
         var changeClose = true;
         /*
@@ -37,8 +36,8 @@
                                 $scope.StatisticAnalysis = data.StatisticAnalysis;
                                 $scope.NonDestructiveAnalysis = data.NonDestructiveAnalysis;
                                 $scope.DestructiveAnalysis = data.DestructiveAnalysis;
-                                $scope.MPNList = data.MPNs;
                                 $scope.LabList = Lab;
+                                $scope.MPNList = data.MPNs;
                                 $scope.tempdatas = $scope.MPNList;
                                 $scope.FailuresFounds = data.FailuresFound;
                                 $scope.Types = data.RootCauses;
@@ -66,9 +65,9 @@
                                                 }
                                                 Department = getUPValue(xmlobject, "Department");
                                                 if (departmentList.indexOf(Department) >= 0 || authorityUserList.indexOf(user.loginName) >= 0) {
-                                                    url = "../SitePages/EditCase.aspx?CaseNumber=" + CaseNumber;
-                                                    window.location.href = url;
                                                 } else if (user.loginName == dataList.CreatedBy) {
+                                                    url = "../SitePages/EditOwnerCase.aspx?CaseNumber=" + CaseNumber;
+                                                    window.location.href = url;
                                                 } else {
                                                     $("#example")[0].style.display = "none";
                                                     alertMessage("您无权修改！")
@@ -112,7 +111,7 @@
                                             Stage4CompleteDate: dataList.Stage4CompleteDate,
                                             Stage4ItemOne: dataList.Stage4ItemOne,
                                             Stage4ItemTwo: dataList.Stage4ItemTwo,
-                                            Lab: dataList.Lab,
+                                            Lab:dataList.Lab,
                                             Stage4Summary: dataList.Stage4Summary,
                                             Stage4CRCT: dataList.Stage4CRCT,
                                             Stage4Attachment: dataList.Stage4Attachment,
@@ -122,18 +121,6 @@
                                             Stage5CRCT: dataList.Stage5CRCT,
                                             Complexity: dataList.Complexity,
                                             CurrentUser: user.loginName
-                                        }
-                                        if ($scope.result.Stage3ReceiveDate == "0001-01-01") {
-                                            $scope.result.Stage3ReceiveDate = null;
-                                        }
-                                        if ($scope.result.Stage3CompleteDate == "0001-01-01") {
-                                            $scope.result.Stage3CompleteDate = null;
-                                        }
-                                        if ($scope.result.Stage4ReceiveDate == "0001-01-01") {
-                                            $scope.result.Stage4ReceiveDate = null;
-                                        }
-                                        if ($scope.result.Stage4CompleteDate == "0001-01-01") {
-                                            $scope.result.Stage4CompleteDate = null;
                                         }
                                         LotList = dataList.LotList;
                                         length = LotList.length;
@@ -189,6 +176,8 @@
                                             dataSource: dataSource,
                                             pageable: {
                                                 refresh: true,
+                                                //pageSizes: true,
+                                                //buttonCount: 5
                                             },
                                             toolbar: ["create"],
                                             columns: [{ field: "Number", title: "No.", width: "120px" },
@@ -198,14 +187,41 @@
                                             { command: [{ name: "edit", text: "修改" }, { name: "Delete", text: "删除", click: Delete }], title: "&nbsp;", width: "120px" }],
                                             editable: "popup"
                                         });
-                                        $("#Stage3Summary").html($scope.result.Stage3Summary);
-                                        $("#Stage4Summary").html($scope.result.Stage4Summary);
-                                        $("#Stage5Summary").html($scope.result.Stage5Summary);
+                                        if (dataList.CaseStatus == "Close") {
+                                            $("#CaseStatus").attr("disabled", true);
+                                            changeClose = false;
+                                        } 
+                                        //格式化时间
+                                        if (dataList.Stage3ReceiveDate == "0001-01-01") {
+                                            $scope.result.Stage3ReceiveDate = null;
+                                            $("#Stage3ReceiveDate").val(null)
+                                        } else {
+                                            $("#Stage3ReceiveDate").val(dataList.Stage3ReceiveDate)
+                                        }
+                                        if (dataList.Stage3CompleteDate == "0001-01-01") {
+                                            $scope.result.Stage3CompleteDate = null;
+                                            $("#Stage3CompleteDate").val(null)
+                                        } else {
+                                            $("#Stage3CompleteDate").val(dataList.Stage3CompleteDate)
+                                        }
+                                        if (dataList.Stage4ReceiveDate == "0001-01-01") {
+                                            $scope.result.Stage4ReceiveDate = null;
+                                            $("#Stage4ReceiveDate").val(null)
+                                        } else {
+                                            $("#Stage4ReceiveDate").val(dataList.Stage4ReceiveDate)
+                                        }
+                                        if (dataList.Stage4CompleteDate == "0001-01-01") {
+                                            $scope.result.Stage4CompleteDate = null;
+                                            $("#Stage4CompleteDate").val(null)
+                                        } else {
+                                            $("#Stage4CompleteDate").val(dataList.Stage4CompleteDate)
+                                        }
                                         //判断选择的Type
                                         if ($scope.result.Type) {
                                             angular.forEach($scope.Types, function (data, index, array) {
                                                 if (data.CaseType == $scope.result.Type) {
                                                     $scope.Type = data;
+                                                    $scope.RootCauseLv1 = data.Levels;
                                                 }
                                             });
                                         }
@@ -246,70 +262,50 @@
                                          * 初始化页面显示附件链接
                                          * **/
 
-                                        if (dataList.Stage3ContinueAnalysis == "Yes") {
-                                            $scope.IsShowStage3 = true;
-                                            if (dataList.Stage3Attachment) {
-                                                Stage3Attachment = JSON.parse(dataList.Stage3Attachment);
-                                                angular.forEach(Stage3Attachment, function (data, index, array) {
-                                                    var id = data.split('.')[0];
-                                                    var NewPath = _spPageContextInfo.webAbsoluteUrl;
-                                                    var PathType = data.substring(data.indexOf('.') + 1, data.length).toUpperCase();
-                                                    if (PathType == "DOCX" || PathType == "DOC" || PathType == "XLSX" || PathType == "XLS") {
-                                                        NewPath += "/_layouts/15/WopiFrame.aspx?sourcedoc=/opsweb/qa/QRE/Shared Documents/";
-                                                        NewPath = encodeURI(NewPath);
-                                                    } else {
-                                                        NewPath += '/Shared%20Documents/';
-                                                    }
-                                                    var fileName = "<a target='_blank' href='" + NewPath + data + "'>" + data + "</a>";
-                                                    var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + fileName + '</li>')($scope);
-                                                    $("#InstallAttachmentStage3").append($htmlButton)
-                                                });
-                                            }
-                                        } else {
-                                            $("#stage3Detail")[0].style.display = "none";
-                                            $scope.IsShowStage3 = false;
+                                        if (dataList.Stage3ContinueAnalysis == "Yes" && dataList.Stage3Attachment) {
+                                            Stage3Attachment = JSON.parse(dataList.Stage3Attachment);
+                                            angular.forEach(Stage3Attachment, function (data, index, array) {
+                                                var id = data.split('.')[0];
+                                                var NewPath = _spPageContextInfo.webAbsoluteUrl;
+                                                var PathType = data.substring(data.indexOf('.') + 1, data.length).toUpperCase();
+                                                if (PathType == "DOCX" || PathType == "DOC" || PathType == "XLSX" || PathType == "XLS") {
+                                                    NewPath += "/_layouts/15/WopiFrame.aspx?sourcedoc=/opsweb/qa/QRE/Shared Documents/";
+                                                    NewPath = encodeURI(NewPath);
+                                                } else {
+                                                    NewPath += '/Shared%20Documents/';
+                                                }
+                                                var fileName = "<a target='_blank' href='" + NewPath + data + "'>" + data + "</a>";
+                                                var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + fileName + '<button id="close" type="button" class="close buttonStyle" data-dismiss="alert" ng-click="deleteFile(\'Stage3\',\'' + data + '\',\'' + id + '\')">×</button></li>')($scope);
+                                                $("#InstallAttachmentStage3").append($htmlButton)
+                                            });
                                         }
-                                        if (dataList.Stage4ContinueAnalysis == "Yes") {
-                                            $scope.IsShowStage4 = true;
-                                            if (dataList.Stage4Attachment) {
-                                                Stage4Attachment = JSON.parse(dataList.Stage4Attachment);
-                                                angular.forEach(Stage4Attachment, function (data, index, array) {
-                                                    var id = data.split('.')[0];
-                                                    var NewPath = _spPageContextInfo.webAbsoluteUrl;
-                                                    var PathType = data.substring(data.indexOf('.') + 1, data.length).toUpperCase();
-                                                    if (PathType == "DOCX" || PathType == "DOC" || PathType == "XLSX" || PathType == "XLS") {
-                                                        NewPath += "/_layouts/15/WopiFrame.aspx?sourcedoc=/opsweb/qa/QRE/Shared Documents/";
-                                                        NewPath = encodeURI(NewPath);
-                                                    } else {
-                                                        NewPath += '/Shared%20Documents/';
-                                                    }
-                                                    var fileName = "<a target='_blank' href='" + NewPath + data + "'>" + data + "</a>";
-                                                    var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + fileName + '</li>')($scope);
-                                                    $("#InstallAttachmentStage4").append($htmlButton)
-                                                });
-                                            }
-                                        } else {
-                                            $scope.IsShowStage4 = false;
-                                            $("#stage4ShowSummary")[0].style.display = "none";
-                                        }
-                                        if (dataList.CaseStatus == "Close") {
-                                            $("#CaseStatus").attr("disabled", true);
-                                            changeClose = false;
-                                        }
-                                        if ($scope.result.RootCauseLv1) {
-                                            $("#Type").attr("disabled", true);
+                                        if (dataList.Stage4ContinueAnalysis == "Yes" && dataList.Stage4Attachment) {
+                                            Stage4Attachment = JSON.parse(dataList.Stage4Attachment);
+                                            angular.forEach(Stage4Attachment, function (data, index, array) {
+                                                var id = data.split('.')[0];
+                                                var NewPath = _spPageContextInfo.webAbsoluteUrl;
+                                                var PathType = data.substring(data.indexOf('.') + 1, data.length).toUpperCase();
+                                                if (PathType == "DOCX" || PathType == "DOC" || PathType == "XLSX" || PathType == "XLS") {
+                                                    NewPath += "/_layouts/15/WopiFrame.aspx?sourcedoc=/opsweb/qa/QRE/Shared Documents/";
+                                                    NewPath = encodeURI(NewPath);
+                                                } else {
+                                                    NewPath += '/Shared%20Documents/';
+                                                }
+                                                var fileName = "<a target='_blank' href='" + NewPath + data + "'>" + data + "</a>";
+                                                var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + fileName + '<button id="close" type="button" class="close buttonStyle" data-dismiss="alert" ng-click="deleteFile(\'Stage4\',\'' + data + '\',\'' + id + '\')">×</button></li>')($scope);
+                                                $("#InstallAttachmentStage4").append($htmlButton)
+                                            });
                                         }
                                         layer.close(loadingIndex);
                                     });
                             });
+
                     });
             });
-        /*
-         * 
-         * 
-         **/
         /**
-         *监控数据变化 针对不同表单
+         * 根须选择的多选Json,和Id,勾选已保存的选项
+         * @param {any} List
+         * @param {any} index
          */
         function SelectMulity(List, index) {
             angular.forEach(List, function (data) {
@@ -317,6 +313,11 @@
                 $("#" + id).attr("checked", true)
             })
         }
+        /**
+         * Continuity 为false,清空已选择的多选
+         * @param {any} List
+         * @param {any} index
+         */
         function NoSelectMulity(List, index) {
             angular.forEach(List, function (data) {
                 var id = getId(data, index);
@@ -357,35 +358,138 @@
                     $scope.Customer = "Customer";
                     $scope.LinkName = "FAR No.";
                 }
+                if ($scope.Types) {
+                    angular.forEach($scope.Types, function (data, index, array) {
+                        if (data.CaseType == $scope.result.Type) {
+                            $scope.RootCauseLv1 = data.Levels;
+                        }
+                    });
+                }
             }
         });
+        $scope.$watch('result.CaseStatus', function (value, oldValue) {
+            if (value != oldValue) {
+                if (value == "Close") {
+                    if ($scope.result.RootCauseLv1) {
+                        if ($scope.IsShowStage3||$scope.result.Stage3ContinueAnalysis=='Yes') {
+                            if ($("#Stage3CompleteDate").val() == '' || $("#Stage3ReceiveDate").val() == '') {
+                                $scope.result.CaseStatus = oldValue;
+                                alertMessage("若要关闭case,请选择Step3CompleteDate，Step3ReceiveDate");
+                                return false;
+                            } else {
+                                $("#Stage3CompleteDate").attr("disabled", true);
+                                $("#Stage3ReceiveDate").attr("disabled", true)
+                            }
+                        }
+                        if ($scope.IsShowStage4 || $scope.result.Stage4ContinueAnalysis =='Yes') {
+                            if ($("#Stage4CompleteDate").val() == '' || $("#Stage4ReceiveDate").val() == '') {
+                                $scope.result.CaseStatus = oldValue;
+                                alertMessage("若要关闭case,请选择Step4CompleteDate，Step4ReceiveDate");
+                                $("#Stage3CompleteDate").attr("disabled", false);
+                                $("#Stage3ReceiveDate").attr("disabled", false)
+                                return false;
+                            } else {
+                                $("#Stage4CompleteDate").attr("disabled", true);
+                                $("#Stage4ReceiveDate").attr("disabled", true);
+                            }
+                        }
+                    } else {
+                        $scope.result.CaseStatus = oldValue;
+                        alertMessage("若要关闭case,请选择level1")
+                    }
+                }
+            }
+        });
+        /*
+         * 动态获取RootCauseLv1 和 RootCaseLv2
+         **/
+        $scope.$watch('RootCauseLv1Select', function (value, oldValue) {
+            if (value != oldValue) {
+                if (value) {
+                    $scope.result.RootCauseLv1 = value.Level1;
+                    //$scope.RootCauseLv2 = value.Level2
+                } else {
+                    $scope.result.RootCauseLv1 = null;
+                    //$scope.result.RootCauseLv2 = null;
+                    //$scope.RootCauseLv2 = null;
+                }
+            }
+        });
+        $scope.$watch('result.RootCauseLv1', function (value, oldValue) {
+            if (value != oldValue) {
+                angular.forEach($scope.RootCauseLv1, function (data) {
+                    if ($scope.result.RootCauseLv1 == data.Level1) {
+                        $scope.RootCauseLv1Select = data;
+                    }
+                })
+            }
+        });
+        $scope.$watch('result.Stage3ContinueAnalysis', function (value, oldValue) {
+            if (value != oldValue) {
+                if (value == "Yes") {
+                    $scope.IsShowStage3 = true;
+                    $("#showStage3Summary")[0].style.display = "";
+                } else {
+                    //清空stage3 中数据
+                    if ($scope.result) {
+                        $scope.result.Stage3CRCT = null;
+                        $scope.result.Stage3AssiggnTo = "";
+                        $("#Stage3ReceiveDate").val(null)
+                        $("#Stage3CompleteDate").val(null)
+                        if (I3 != 0) {
+                            leipiEditorStage3Summary.sync();
+                            leipiEditorStage3Summary.execCommand('cleardoc');
+                        }
+                        NoSelectMulity(Stage3ItemList, 3);
+                        Stage3ItemList = [];
+                        $scope.result.Stage3Item = "";
+                        $scope.result.Stage3CRCT = "";
+                        $scope.result.Stage3Attachment = "";
+                        $scope.result.Stage3Summary = "";
+                        $("#InstallAttachmentStage3").html("");
+                        Stage3Attachment = [];
+                        $scope.result.Stage4ContinueAnalysis = "Yes";
+                    }
+                    $scope.IsShowStage3 = false;
+                    $("#showStage3Summary")[0].style.display = "none";
+                }
+            }
+            
+        });
+        $scope.$watch('result.Stage4ContinueAnalysis', function (value, oldValue) {
+            if (value == "Yes") {
+                $scope.IsShowStage4 = true;
+                $("#stage4ShowSummary")[0].style.display = "";
+            } else {
+                //清空stage4 中数据
+                if ($scope.result) {
+                    $("#Stage4ReceiveDate").val(null)
+                    $("#Stage4CompleteDate").val(null)
+                    $scope.result.Stage4ItemOne = "";
+                    NoSelectMulity(itemOneList, 41);
+                    $scope.result.Stage4ItemTwo = "";
+                    NoSelectMulity(itemTwoList, 42);
+                    leipiEditorStage4Summary.sync();
+                    leipiEditorStage4Summary.execCommand('cleardoc');
+                    $scope.result.Stage4Summary = "";
+                    $scope.result.Stage4CRCT = "";
+                    $scope.result.Stage4Attachment = "";
+                    $("#InstallAttachmentStage4").html("");
+                    Stage4Attachment = [];
+                }
+                $scope.IsShowStage4 = false;
+                $("#stage4ShowSummary")[0].style.display = "none";
+            }
+        });
+
         /**
          *提交申请记录
          * @param {any} event
          */
-        var SaveIndex = 0;
-        $scope.SaveDetail = function () {
-            SaveIndex = layer.load(1, {
-                shade: [0.1, '#fff'] //0.1透明度的白色背景
-            });
-            if (verifyNewCase()) {
-                if (verifyRMA()) {
-                    if ($scope.result.CaseStatus == "Close") {
-                        GetComplexityScore()
-                    } else {
-                        var days = new Date().getTime() - new Date($scope.result.CreatedDate).getTime();
-                        var time = parseInt(days / (1000 * 60 * 60 * 24));
-                        $scope.result.Stage5CRCT = time + 1;
-                    }
-                    $scope.save();
-                } else {
-                    layer.close(SaveIndex);
-                }
-            } else {
-                layer.close(SaveIndex);
-            }
-        }
+        var Saveindex = 0;
         $scope.save = function () {
+            //更新不需要发送邮件
+            //保存信息
             if (II != 0) {
                 leipiEditor.sync(); //同步内容
                 var html = leipiEditor.getContent();
@@ -409,6 +513,10 @@
                 dIndex.AssemblyData = data.AssemblyData;
                 $scope.result.LotList.push(dIndex);
             });
+            $scope.result.Stage3CompleteDate = $("#Stage3CompleteDate").val();
+            $scope.result.Stage3ReceiveDate = $("#Stage3ReceiveDate").val();
+            $scope.result.Stage4CompleteDate = $("#Stage4CompleteDate").val();
+            $scope.result.Stage4ReceiveDate = $("#Stage4ReceiveDate").val();
             var url = "http://10.0.3.52:8060/QREService.svc/SaveData?";
             $.ajax({
                 type: "POST",
@@ -417,15 +525,145 @@
                 data: JSON.stringify($scope.result),
                 dataType: "json",
                 success: function (data) {
-                    layer.close(SaveIndex);
+                    layer.close(Saveindex);
                     window.location.href = "../SitePages/Home.aspx";
-                    //发送邮件
                 },
                 error: function (a, b, c) {
-                    layer.close(SaveIndex);
-                    alertMessage("保存失败")
+                    layer.close(Saveindex);
+                    alert("保存失败")
                 }
             });
+        }
+        $scope.SaveDetail = function () {
+            Saveindex = layer.load(1, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+            if (verifyNewCase()) {
+                if (verifyRMA()) {
+                    if (GetC3Date() && GetC4Date() && GetC5Date()) {
+                        if (I3 != 0) {
+                            leipiEditorStage3Summary.sync(); //同步内容
+                            var htmlStage3 = leipiEditorStage3Summary.getContent();
+                            var str = "<p><br/></p>"
+                            if (htmlStage3.substring(htmlStage3.length - str.length, htmlStage3.length) == str) {
+                                htmlStage3 = htmlStage3.substring(0, htmlStage3.length - str.length);
+                            }
+                            $scope.result.Stage3Summary = htmlStage3;
+                        }
+                        if (I4 != 0) {
+                            leipiEditorStage4Summary.sync(); //同步内容
+                            var htmlStage4 = leipiEditorStage4Summary.getContent();
+                            var str = "<p><br/></p>"
+                            if (htmlStage4.substring(htmlStage4.length - str.length, htmlStage4.length) == str) {
+                                htmlStage4 = htmlStage4.substring(0, htmlStage4.length - str.length);
+                            }
+                            $scope.result.Stage4Summary = htmlStage4;
+                        }
+                        if (I5 != 0) {
+                            leipiEditorStage5Summary.sync();
+                            var htmlStage5 = leipiEditorStage5Summary.getContent();
+                            var str = "<p><br/></p>";
+                            if (htmlStage5.substring(htmlStage5.length - str.length, htmlStage5.length) == str) {
+                                htmlStage5 = htmlStage5.substring(0, htmlStage5.length - str.length);
+                            }
+                            $scope.result.Stage5Summary = htmlStage5;
+                        }
+                        if ($scope.result.CaseStatus != "Close") {
+                            if ($scope.IsShowStage3) {
+                                $scope.result.CaseStatus = 'Statistics Analysis'
+                            }
+                            if (($scope.result.Stage4CompleteDate && $scope.result.Stage4CompleteDate != "") || ($scope.result.Stage4ReceiveDate && $scope.result.Stage4ReceiveDate != "") || $scope.result.Stage4ItemOne != null || $scope.result.Stage4ItemTwo != null || ($scope.result.Stage4Summary != null && $scope.result.Stage4Summary != "") || $scope.result.Stage4Attachment) {
+                                $scope.result.CaseStatus = 'Failure Analysis'
+                            }
+                        }
+                        $scope.save();
+                    } else {
+                        layer.close(Saveindex);
+                    }
+                } else {
+                    layer.close(Saveindex);
+                }
+            } else {
+                layer.close(Saveindex);
+            }
+        }
+        function GetC3Date() {
+            if (($scope.IsShowStage3 && $scope.result.CaseStatus != "Close") || ($scope.IsShowStage3 && changeClose)) {
+                if ($("#Stage3ReceiveDate").val() != '') {
+                    var S3CD = ''; 
+                    if ($("#Stage3CompleteDate").val() == '') {
+                        S3CD = new Date();
+                    } else {
+                        S3CD = new Date($("#Stage3CompleteDate").val());
+                    }
+                    var S3RD = new Date($("#Stage3ReceiveDate").val());
+                    var days = S3CD.getTime() - S3RD.getTime();
+                    var time = parseInt(days / (1000 * 60 * 60 * 24));
+                    if (time < 0) {
+                        alertMessage("请正确填写Step3:Complete Date 和 Receive Date")
+                        return false;
+                    } else {
+                        $scope.result.Stage3CRCT = time;
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        function GetC4Date() {
+            if (($scope.IsShowStage4 && $scope.result.CaseStatus != "Close") || ($scope.IsShowStage4 && changeClose)) {
+                if ($("#Stage4ReceiveDate").val() != '') {
+                    var S4CD = '';
+                    if ($("#Stage4CompleteDate").val() == '') {
+                        S4CD = new Date();
+                    } else {
+                        S4CD = new Date($("#Stage4CompleteDate").val());
+                    }
+                    var S4RD = new Date($("#Stage4ReceiveDate").val());
+                    var days = S4CD.getTime() - S4RD.getTime();
+                    var time = parseInt(days / (1000 * 60 * 60 * 24));
+                    if (time < 0) {
+                        alertMessage("请正确填写Step4:Complete Date 和 Receive Date")
+                        return false;
+                    } else {
+                        $scope.result.Stage4CRCT = time;
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
+        function C5Date() {
+            var days = "";
+            if (typeof $scope.result.CreatedDate == "string") {
+                days = new Date().getTime() - new Date($scope.result.CreatedDate).getTime();
+            } else {
+                days = new Date().getTime() - $scope.result.CreatedDate.getTime();
+            }
+            var time = parseInt(days / (1000 * 60 * 60 * 24));
+            $scope.result.Stage5CRCT = time;
+        }
+        function GetC5Date() {
+            if ($scope.result.CaseStatus != "Close" || changeClose) {
+                if ($scope.result.CaseStatus != "Close") {
+                    $scope.result.Complexity = 0;
+                } else {
+                    GetComplexityScore();
+                }
+                C5Date();
+                return true
+            } else {
+                if ($scope.result.CaseStatus == "Close") {
+                    GetComplexityScore();
+                }
+                return true;
+            }
         }
         /**
          * 表中表
@@ -466,6 +704,38 @@
             $scope.result.DestructiveAnalysis = JSON.stringify(DestructiveAnalysisList);
 
         }
+        $scope.Stage3ItemClick = function (z) {
+            if (Stage3ItemList.indexOf(z) >= 0) {
+                Stage3ItemList.splice(Stage3ItemList.indexOf(z), 1);
+            } else {
+                Stage3ItemList.push(z);
+            }
+            $scope.result.Stage3Item = JSON.stringify(Stage3ItemList);
+        }
+        $scope.itemOneClick = function (z) {
+            if (itemOneList.indexOf(z) >= 0) {
+                itemOneList.splice(itemOneList.indexOf(z), 1);
+            } else {
+                itemOneList.push(z);
+            }
+            $scope.result.Stage4ItemOne = JSON.stringify(itemOneList);
+        }
+        $scope.itemTwoClick = function (z) {
+            if (itemTwoList.indexOf(z) >= 0) {
+                itemTwoList.splice(itemTwoList.indexOf(z), 1);
+            } else {
+                itemTwoList.push(z);
+            }
+            $scope.result.Stage4ItemTwo = JSON.stringify(itemTwoList);
+        }
+        $scope.LabClick = function (z) {
+            if (LabLists.indexOf(z) >= 0) {
+                LabLists.splice(LabLists.indexOf(z), 1);
+            } else {
+                LabLists.push(z);
+            }
+            $scope.result.Lab = JSON.stringify(LabLists);
+        }
         /**
          * 
          * 跳转页面
@@ -484,7 +754,6 @@
                     $scope.result.MPN = data.MPN;
                     $scope.result.ProductLine = data.ProductLine;
                     $scope.result.QREOwner = data.QREOwner;
-                    $scope.result.QREOwnerEmail = data.Email;
                 }
             });
             $scope.hidden = true;
@@ -524,7 +793,7 @@
                 return false;
             }
             if ($scope.result.MPN == null || $scope.result.MPN == '') {
-                alertMessage("请选择Product");
+                alertMessage("请选择MPN");
                 return false;
             }
             if ($scope.result.Dppm == null || $scope.result.Dppm == '') {
@@ -537,8 +806,12 @@
                     return false;
                 }
             }
+            //if ($scope.result.Customer == null || $scope.result.Customer == '') {
+            //    alertMessage("请输入" + $scope.Customer);
+            //    return false;
+            //}
             if ($scope.result.FailuresFound == null || $scope.result.FailuresFound == '') {
-                alertMessage("请输入Issue From");
+                alertMessage("请输入FailuresFound");
                 return false;
             }
             if ($scope.result.LinkName == null || $scope.result.LinkName == '') {
@@ -564,17 +837,12 @@
         function verifyRMA() {
             if (!$scope.isSaveFAR) {
                 if ($scope.result.Type == 'RMA') {
-                    if ($scope.result.LinkName.indexOf("http:") >= 0) {
+                    if ($scope.result.LinkName.indexOf("http:") < 0 && $scope.result.LinkName.indexOf("xml") > 0) {
+                        $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
+                        return true
+                    } else {
                         alertMessage("请输入正确的FAR No.");
                         return false;
-                    } else {
-                        if ($scope.result.LinkName.indexOf("xml") > 0) {
-                            $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '">' + $scope.result.LinkName + '</a>';
-                            return true
-                        } else {
-                            $scope.result.LinkName = '<a class="ms-listlink ms-draggable" target="_blank" href="http://eip.unisoc.com/opsweb/qa/FAR/Failure Analysis Request/' + $scope.result.LinkName + '.xml">' + $scope.result.LinkName + '</a>';
-                            return true
-                        }
                     }
                 }
                 return true;
@@ -591,8 +859,137 @@
             elementPathEnabled: false,
             initialFrameHeight: 80
         });
+        var leipiEditorStage3Summary = UE.getEditor('Stage3Summary', {
+            toolleipi: true,//是否显示，设计器的 toolbars
+            textarea: 'design_content',
+            toolbars: [[
+                'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
+            wordCount: false,
+            elementPathEnabled: false,
+            initialFrameHeight: 80
+        });
+        var leipiEditorStage4Summary = UE.getEditor('Stage4Summary', {
+            toolleipi: true,//是否显示，设计器的 toolbars
+            textarea: 'design_content',
+            toolbars: [[
+                'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
+            wordCount: false,
+            elementPathEnabled: false,
+            initialFrameHeight: 80
+        });
+        var leipiEditorStage5Summary = UE.getEditor('Stag5Summary', {
+            toolleipi: true,//是否显示，设计器的 toolbars
+            textarea: 'design_content',
+            toolbars: [[
+                'source', '|', 'undo', 'redo', '|', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'removeformat', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', '|', 'fontfamily', 'fontsize', '|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'horizontal', '|', 'inserttable', 'deletetable', 'mergecells', 'splittocells', '|',]],
+            wordCount: false,
+            elementPathEnabled: false,
+            initialFrameHeight: 80
+        });
+        //Upload File
+        var StageType = '', DocumentLibraryName = '', fileName = '';
+        var FileIndex=0;
+        $scope.upload = function (el, id, type, DocumentLibrary) {
+            FileIndex = layer.load(2, {
+                shade: [0.1, '#fff'] //0.1透明度的白色背景
+            });
+            DocumentLibraryName = DocumentLibrary;
+            StageType = type;
+            /*
+             *判断是否是IE 
+             **/
+            if (IEVersion() <= 9 && IEVersion() != -1 && IEVersion() != 'edge') {
+                //el.select();
+                //el.blur();
+                //var path = document.selection.createRange().text;
+                //var fos = new ActiveXObject("Scripting.FileSystemObject");
+                //file = fos.GetFile(path);
+                alertMessage("您的IE浏览器版本不支持上传功能，请使用IE 10或以上版本或Chrome浏览器");
+            } else {
+                file = el.files[0];
+                fr = new FileReader();
+                fr.onload = receivedBinary;
+                fr.readAsDataURL(file);
+            }
+        };
+        function receivedBinary() {
+            clientContext = new SP.ClientContext.get_current();
+            oWebsite = clientContext.get_web();
+            parentList = oWebsite.get_lists().getByTitle(DocumentLibraryName);
+            fileCreateInfo = new SP.FileCreationInformation();
+            var fileNameFilter = file.name.split('.');
+            var fileType = fileNameFilter[fileNameFilter.length-1];
+            fileName = $scope.result.CaseNumber + '-' + new Date().getTime() + '.' + fileType;
+            fileCreateInfo.set_url(fileName);
+            fileCreateInfo.set_overwrite(true);
+            fileCreateInfo.set_content(new SP.Base64EncodedByteArray());
+            var arr = convertDataURIToBinary(this.result);
+            for (var i = 0; i < arr.length; ++i) {
+                fileCreateInfo.get_content().append(arr[i]);
+            }
+            this.newFile = parentList.get_rootFolder().get_files().add(fileCreateInfo);
+            clientContext.load(this.newFile);
+            clientContext.executeQueryAsync(onSuccess, onFailure);
+        }
+        function onSuccess() {
+            layer.close(FileIndex);
+            if (StageType == "Stage3") {
+                Stage3Attachment.push(fileName);
+                var id = new Date().getTime();
+                var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + fileName + '<button id="close" type="button" class="close buttonStyle" data-dismiss="alert" ng-click="deleteFile(\'Stage3\',\'' + fileName + '\',' + id + ')">×</button></li>')($scope);
+                $("#InstallAttachmentStage3").append($htmlButton)
+                $scope.result.Stage3Attachment = JSON.stringify(Stage3Attachment);
+            } else {
+                Stage4Attachment.push(fileName);
+                var id = new Date().getTime();
+                var $htmlButton = $compile('<li id=\'' + id + '\' class="liStyle">' + fileName + '<button id="close" type="button" class="close buttonStyle" data-dismiss="alert" ng-click="deleteFile(\'Stage4\',\'' + fileName + '\',' + id + ')">×</button></li>')($scope);
+                $("#InstallAttachmentStage4").append($htmlButton);
+                $scope.result.Stage4Attachment = JSON.stringify(Stage4Attachment);
+            }
+        }
+        function onFailure() {
+            layer.close(FileIndex);
+            if (arguments[1].get_message() == "The request message is too big. The server does not allow messages larger than 2097152 bytes.") {
+                alertMessage("文件上传失败! message:上传附件大小不能超过1.5M(1572864 bytes.)")
+            } else {
+                alertMessage("文件上传失败! message:" + arguments[1].get_message())
+            }
+            
+        }
+
+        $scope.deleteFile = function (type, name, id) {
+            if (type == "Stage3") {
+                if (Stage3Attachment.indexOf(name) >= 0) {
+                    Stage3Attachment.splice(Stage3Attachment.indexOf(name), 1);
+                    $scope.result.Stage3Attachment = JSON.stringify(Stage3Attachment);
+                    if ($('#' + id).length > 0) {
+                        $('#' + id)[0].style.display = 'none';
+                    }
+                }
+            } else {
+                if (Stage4Attachment.indexOf(name) >= 0) {
+                    Stage4Attachment.splice(Stage4Attachment.indexOf(name), 1);
+                    $scope.result.Stage4Attachment = JSON.stringify(Stage4Attachment);
+                    if ($('#' + id).length > 0) {
+                        $('#' + id)[0].style.display = 'none';
+                    }
+                }
+            }
+        }
+        function convertDataURIToBinary(dataURI) {
+            var BASE64_MARKER = ';base64,';
+            var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+            var base64 = dataURI.substring(base64Index);
+            var raw = window.atob(base64);
+            var rawLength = raw.length;
+            var array = new Uint8Array(new ArrayBuffer(rawLength));
+            for (i = 0; i < rawLength; i++) {
+                array[i] = raw.charCodeAt(i);
+            }
+            return array;
+        }
         //初始化更新Ueditor中内容
-        var II = 0;
+        var II = 0, I3 = 0, I4 = 0, I5 = 0;
         $scope.InserLeipiEditor = function () {
             $("#tab1").click();
             $($("#tab-Title-2").parent()).attr("class", "active")
@@ -604,14 +1001,34 @@
         $scope.Inser3LeipiEditor = function () {
             $("#tab2").click();
             $($("#tab-Title-3").parent()).attr("class", "active")
+            if (I3 == 0) {
+                if ($scope.IsShowStage3) {
+                    leipiEditorStage3Summary.execCommand('insertHtml', $scope.result.Stage3Summary);
+                } else {
+                    leipiEditorStage3Summary.execCommand('cleardoc');
+                }
+                I3 = 2;
+            }
         }
         $scope.Inser4LeipiEditor = function () {
             $("#tab3").click();
             $($("#tab-Title-4").parent()).attr("class", "active")
+            if (I4 == 0) {
+                if ($scope.IsShowStage4) {
+                    leipiEditorStage4Summary.execCommand('insertHtml', $scope.result.Stage4Summary);
+                } else {
+                    leipiEditorStage4Summary.execCommand('cleardoc');
+                }
+                I4 = 2;
+            }
         }
         $scope.Inser5LeipiEditor = function () {
             $("#tab4").click();
             $($("#tab-Title-5").parent()).attr("class", "active")
+            if (I5 == 0) {
+                leipiEditorStage5Summary.execCommand('insertHtml', $scope.result.Stage5Summary);
+                I5 = 2;
+            }
         }
         function GetComplexityScore() {
             var Score = 0, stage1Score = 0, stage3Score = 0, stage4Score = 0, stage5Score = 0;
@@ -702,7 +1119,7 @@
             } else if (value.indexOf("成本/结构分析") >= 0) {
                 value = "costStructure";
                 return value;
-            } else if (value.indexOf("/") >= 0) {
+            }else if (value.indexOf("/") >= 0) {
                 value = value.split("/").join("");
                 return value;
             }

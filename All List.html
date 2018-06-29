@@ -26,12 +26,19 @@
     .k-grid .k-button {
         margin: 0 .03em;
     }
+    h4 span{
+        margin-right:100px
+    }
 </style>
 <div ng-app="KendoDemos">
     <div ng-controller="ListAllCtrl">
-        <div style="text-align:right"> 
+        <div style="text-align:right">
+            <h1 style="float: left;color:#984394;margin-top:-8px">
+                FA Workflow
+            </h1>
             <a class="btn btn-primary" style="margin-bottom:20px;color:#fff" href="../SitePages/newCase.aspx">Add New</a>
         </div>
+        <h4><span> Open：{{OpenCase}}</span> <span>Total:{{TotalCase}}</span> <span>Created within 1 week :{{CaseInOneWeek}}</span><span>Created within 1 month:{{CaseInOneMonth}}</span></h4>
         <div id="example">
             <div id="grid"></div>
         </div>
