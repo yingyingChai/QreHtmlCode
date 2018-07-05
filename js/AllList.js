@@ -81,7 +81,8 @@
                     $("#grid").kendoGrid({
                         dataSource: dataSource,
                         filterable: true,
-                        //pageable: true,                     //columnMenu: true,
+                        //pageable: true,                     
+                        //columnMenu: true,
                         pageable: {
                             refresh: true,
                         },
