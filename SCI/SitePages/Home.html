@@ -1,0 +1,209 @@
+﻿<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/font-awesome.css" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<script type="text/JavaScript" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/SpreadTrumCss/spin.min.js"></script>
+<style>
+    .AColor {
+        color: #1ab394 !important
+    }
+
+    .laberRight {
+        margin-right: 10px;
+    }
+</style>
+<script>
+    function getUrlByTopNoId(ListName) {
+        var url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + ListName + "')/Items?$select=ID,FileRef,ContentTypeId,Body,ParentItemID,LinkTitle,Author,Created,Author/Title&$expand=Author/Id&$orderby=Created desc&$top=99999999";
+        return url;
+    }
+    function getUrlTitleNew(ListName) {
+        var url = _spPageContextInfo.webAbsoluteUrl + "/Lists/" + ListName + "/NewForm.aspx?Source=" + _spPageContextInfo.webAbsoluteUrl + "/SitePages/" + ListName + ".aspx";
+        var _url = '<a href="' + url + '" class="AColor">暂无发帖纪录，去发帖<i class="zmdi zmdi-comment-outline" style="margin-left:20px;"></i></a>';
+        return _url;
+    }
+    function getUrlByTopById(ListName, Id) {
+        var url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + ListName + "')/Items?$select=ID,FileRef,ContentTypeId,Body,ParentItemID,LinkTitle,Author,Created,Author/Title&$expand=Author/Id&$filter=ID eq '" + Id + "'";
+        return url;
+    }
+    function getUrlTitleView(ListName, FileRef, ContentTypeId, LinkTitle, AuthorTitle, Created) {
+        var url = _spPageContextInfo.webAbsoluteUrl + "/Lists/" + ListName + "/Flat.aspx?RootFolder=" + encodeURI(FileRef) + "&FolderCTID=" + ContentTypeId;
+        var title = "<h3>" + LinkTitle + "<i class='zmdi zmdi-comment-outline' style='margin-left: 20px;'></i></h3>";
+        var _ur = '<a target="_blank" href="' + url + '" class="AColor">' + title + '</a>';
+        return _ur;
+    }
+    function getUl(List,IdName,Name) {
+        var ULString = "";
+        List.forEach(function (i, index, ListName) {
+            if (index <= 4) {
+                var id = parseInt(index) + 1;
+                var url = _spPageContextInfo.webAbsoluteUrl + "/Lists/" + Name + "/Flat.aspx?RootFolder=" + encodeURI(i.FileRef) + "&FolderCTID=" + i.ContentTypeId;
+                var title = '<span class="label laberRight ' + label[index] + '">' + id + '</span>' + i.LinkTitle + "<i class='zmdi zmdi-comment-outline' style='margin-left: 20px;'></i></h3>";
+                var _ur = '<a target="_blank" href="' + url + '" class="AColor">' + title + '</a>';
+                var li = '<li class="list-group-item fist-item"><span class="pull-right">' + new Date(i.Created).Format("yyyy-MM-dd hh:mm:ss") + '</span>' + _ur + '</li>';
+                ULString += li;
+            }
+        })
+        $("#" + IdName).html(ULString);
+    }
+    var label = ["label-primary", "label-success", "label-default", "label-info", "label-warning"];
+    $(function () {
+        $.ajax({
+            url: getUrlByTopNoId('UnisocClub'),
+            type: "GET",
+            headers: { "accept": "application/json;odata=verbose" },
+            success: function (data) {
+                var resultData = data.d.results;
+                if (resultData) {
+                    if (resultData == 0) {
+                        var _url = getUrlTitleNew("UnisocClub");
+                        $("#UnisocTitle").html(_url)
+                    } else {
+                        var UnisocCLubTodayList = resultData.filter(function (i) {
+                            if (i.ParentItemID == null && new Date(i.Created).Format("yyyy-MM-dd") == new Date().Format("yyyy-MM-dd")) {
+                                return i;
+                            }
+                        })
+                        $("#UnisocCLubTodayList").html(UnisocCLubTodayList.length);
+                        var UnisocCLubList = resultData.filter(function (i) {
+                            return i.ParentItemID == null;
+                        })
+                        var _ur = getUrlTitleView("UnisocClub", UnisocCLubList[0].FileRef, UnisocCLubList[0].ContentTypeId, UnisocCLubList[0].LinkTitle, UnisocCLubList[0].Author.Title, UnisocCLubList[0].Created);
+                        $("#UnisocTitle").html(_ur);
+                        getUl(UnisocCLubList, "UnisocUl","UnisocClub");
+                    }
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            }
+        });
+        $.ajax({
+            url: getUrlByTopNoId('InformationKaleidoscope'),
+            type: "GET",
+            headers: { "accept": "application/json;odata=verbose" },
+            success: function (data) {
+                var resultData = data.d.results;
+                if (resultData) {
+                    if (resultData == 0) {
+                        var _url = getUrlTitleNew("InformationKaleidoscope");
+                        $("#InformationKaleidoscopeTitle").html(_url)
+                    } else {
+                        var InformationList = resultData.filter(function (i) {
+                            return i.ParentItemID == null;
+                        })
+                        var InformationTodayList = InformationList.filter(function (i) {
+                            if (i.ParentItemID == null && new Date(i.Created).Format("yyyy-MM-dd") == new Date().Format("yyyy-MM-dd")) {
+                                return i;
+                            }
+                        })
+                        $("#InformationTodayList").html(InformationTodayList.length);
+                        var _ur = getUrlTitleView("InformationKaleidoscope", InformationList[0].FileRef, InformationList[0].ContentTypeId, InformationList[0].LinkTitle, InformationList[0].Author.Title, InformationList[0].Created);
+                        $("#InformationKaleidoscopeTitle").html(_ur);
+                        getUl(InformationList, "InformationUL","InformationKaleidoscope");
+                    }
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            }
+        });
+    })
+</script>
+<body class="fixed-navigation">
+    <div id="wrapper">
+        <div id="page-wrapper" class="gray-bg sidebar-content">
+            <div class="wrapper wrapper-content">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-success pull-right">New</span>
+                                <h3>展锐社团</h3>
+                            </div>
+                            <div class="ibox-content">
+                                <h3 class="no-margins">最新帖</h3>
+                                <h3 class="text-navy" id="UnisocTitle"></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-primary pull-right">New</span>
+                                <h3>信息万花筒</h3>
+                            </div>
+                            <div class="ibox-content">
+                                <h3 class="no-margins">最新帖</h3>
+                                <h3 class="text-navy" id="InformationKaleidoscopeTitle"></h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <span class="label label-info pull-right">Today</span>
+                                <h3>今日发表</h3>
+                            </div>
+                            <div class="ibox-content">
+                                <h3 class="no-margins">展锐社团：<span id="UnisocCLubTodayList" class="AColor">0</span></h3>
+                                <h3 class="no-margins">信息万花筒：<span id="InformationTodayList" class="AColor">0</span></h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div>
+                                    <a href="http://eip.unisoc.com/sites/app/BBS/SitePages/UnisocClub.aspx">
+                                        <h1 class="m-b-xs">展讯社团<i class="zmdi zmdi-forward AColor" style="margin-left: 20px;"></i></h1>
+                                    </a>
+                                </div>
+                                <h3 class="no-margins"></h3>
+                                <small>英语角|跆拳道|游泳|羽毛球|篮球|足球|网球|瑜伽|台球|摄影</small>
+                                <small class="pull-right">只显示最新5条记录</small>
+                                <div class="ibox-content">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <ul class="list-group clear-list m-t" id="UnisocUl">
+                                                <li class="list-group-item fist-item">
+                                                    <a href="http://eip.unisoc.com/sites/app/BBS/Lists/UnisocClub/NewForm.aspx?Source=http://eip.unisoc.com/sites/app/BBS/SitePages/UnisocClub.aspx" class="AColor">暂无发帖纪录，去发帖<i class="zmdi zmdi-comment-outline" style="margin-left:20px;"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div>
+                                    <a href="http://eip.unisoc.com/sites/app/BBS/SitePages/InformationKaleidoscope.aspx">
+                                        <h1 class="m-b-xs">信息万花筒<i class="zmdi zmdi-forward AColor" style="margin-left: 20px;"></i></h1>
+                                    </a>
+                                    <h3 class="no-margins"></h3>
+                                    <small>信息共享，包罗万象。要买的，要卖的，要说的，里面请</small>
+                                    <small class="pull-right">只显示最新5条记录</small>
+                                </div>
+
+                                <div class="ibox-content">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <ul class="list-group clear-list m-t" id="InformationUL">
+                                                <li class="list-group-item fist-item">
+                                                    <a href="http://eip.unisoc.com/sites/app/BBS/Lists/InformationKaleidoscope/NewForm.aspx?Source=http://eip.unisoc.com/sites/app/BBS/SitePages/InformationKaleidoscope.aspx" class="AColor">暂无发帖纪录，去发帖<i class="zmdi zmdi-comment-outline" style="margin-left:20px;"></i></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

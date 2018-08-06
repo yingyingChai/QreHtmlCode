@@ -996,6 +996,8 @@
             }
         };
         function onError(error) {
+            layer.close(FileIndex);
+            alertMessage("文件上传失败，请检查网络是否正常或附件名称是否包含特殊字符")；
             console.log(error.responseText)
         }
         $scope.deleteFile = function (type, name, id) {

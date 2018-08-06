@@ -1,0 +1,103 @@
+﻿<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<script type="text/JavaScript" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/SpreadTrumCss/spin.min.js"></script>
+<script src="../js/plugins/dataTables/datatables.min.js"></script>
+<style>
+    .AColor {
+        color: #1ab394 !important;
+    }
+</style>
+<div class="ibox-content m-b-sm border-bottom" style="margin-left:25px;margin-right:25px;margin-bottom:0px">
+    <div class="text-center p-lg" style="padding:0">
+        <h2>If you don't find the answer to your question</h2>
+        <span>add your question by selecting </span>
+        <div id="AskNew" title="Create new cluster" class="btn btn-primary btn-sm" onclick=HrefUrl()><i class="zmdi zmdi-plus"></i> <span class="bold">Ask question</span></div> button
+    </div>
+</div>
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>信息万花筒</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTables-example">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Author</th>
+                                            <th>Time</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function HrefUrl() {
+        var urlTitle = _spPageContextInfo.webAbsoluteUrl + "/Lists/InformationKaleidoscope/NewForm.aspx?Source=" + _spPageContextInfo.webAbsoluteUrl + "/SitePages/InformationKaleidoscope.aspx";
+        window.location.href = urlTitle;
+    }
+    var AllData = [], DataList = [];
+    $(function () {
+        $.ajax({
+            url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('InformationKaleidoscope')/Items?$select=ID,FileRef,ContentTypeId,ParentItemID,LinkTitle,Author,Created,Author/Id,Author/Title&$expand=Author/Id&$orderby=Created desc&$top=99999999",
+            type: "GET",
+            headers: { "accept": "application/json;odata=verbose" },
+            success: function (data) {
+                if (data.d.results) {
+                    var result = data.d.results;
+                    var InformationKaleidoscope = data.d.results.forEach(function (i) {
+                        if (i.ParentItemID == null) {
+                            var data = [];
+                            var url = _spPageContextInfo.webAbsoluteUrl + "/Lists/InformationKaleidoscope/Flat.aspx?RootFolder=" + encodeURI(i.FileRef) + "&FolderCTID=" + i.ContentTypeId;
+                            var _url = '<a  class="AColor" target="_blank" href="' + url + '"><i class="zmdi zmdi-comment-outline" style="margin-right: 20px;"></i>' + i.LinkTitle + '</a>'
+                            data.push(_url);
+                            data.push(i.Author.Title);
+                            data.push(new Date(i.Created).Format("yyyy-MM-dd hh:mm:ss"))
+                            DataList.push(data);
+                        }
+                    });
+                    $('.dataTables-example').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        data: DataList,
+                        order: [[2, "desc"]]
+                    });
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            }
+        });
+    })
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1,                 //月份
+            "d+": this.getDate(),                    //日
+            "h+": this.getHours(),                   //小时
+            "m+": this.getMinutes(),                 //分
+            "s+": this.getSeconds(),                 //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds()             //毫秒
+        };
+        if (/(y+)/.test(fmt))
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+</script>

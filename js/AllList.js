@@ -138,31 +138,39 @@
             var tr = $(e.target).closest("tr");
             var data = this.dataItem(tr);
             var Id = data.CaseNumber;
-            var casedata = {
-                "CurrentUser": ListLoginUse,
-                "CaseNumber": Id
-            }
-            //根据Id 删除
-            var url = "http://10.0.3.52:8060/QREService.svc/DeleteCase";
-            $.ajax({
-                type: "POST",
-                url: url,
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(casedata),
-                dataType: "json",
-                success: function (data) {
-                    alertMessage(data.replace("\"", "").replace("\"", ""));
-                    if (data.replace("\"", "").replace("\"", "") == "Success") {
-                        angular.forEach(GridList, function (GGridList, Index) {
-                            if (GGridList.CaseNumber == Id) {
-                                GridList.splice(Index, 1);
-                                $(".k-pager-refresh.k-link").click();
-                            }
-                        })
+            layer.msg('确认删除？', {
+                icon: 7,
+                skin: 'layer-ext-moon',
+                time: 0,
+                btn: ['是', '否'],
+                yes: function (index) {
+                    var casedata = {
+                        "CurrentUser": ListLoginUse,
+                        "CaseNumber": Id
                     }
-                },
-                error: function (a, b, c) {
-                    console.log(a);
+                    //根据Id 删除
+                    var url = "http://10.0.3.52:8060/QREService.svc/DeleteCase";
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(casedata),
+                        dataType: "json",
+                        success: function (data) {
+                            alertMessage(data.replace("\"", "").replace("\"", ""));
+                            if (data.replace("\"", "").replace("\"", "") == "Success") {
+                                angular.forEach(GridList, function (GGridList, Index) {
+                                    if (GGridList.CaseNumber == Id) {
+                                        GridList.splice(Index, 1);
+                                        $(".k-pager-refresh.k-link").click();
+                                    }
+                                })
+                            }
+                        },
+                        error: function (a, b, c) {
+                            console.log(a);
+                        }
+                    });
                 }
             });
         }

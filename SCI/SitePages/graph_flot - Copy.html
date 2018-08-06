@@ -1,0 +1,119 @@
+﻿<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/css/plugins/select2/select2.min.css" rel="stylesheet" />
+<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
+<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/css/animate.css" rel="stylesheet">
+<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/css/style.css" rel="stylesheet">
+<script src="http://eip.unisoc.com/itsite/js/highcharts.js"></script>
+<script src="http://eip.unisoc.com/itsite/js/exporting.js"></script>
+<script src="http://eip.unisoc.com/itsite/js/series-label.js"></script>
+<script src="http://eip.unisoc.com/itsite/js/oldie.js"></script>
+<script src="http://eip.unisoc.com/itsite/js/highcharts-zh_CN.js"></script>
+<script src="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/js/bootstrap.min.js"></script>
+<script src="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/js/plugins/select2/select2.full.min.js"></script>
+<div id="container" style="min-width:900px;height:550px"></div>
+<script>
+    var colorList = ["#afdfe4", "#5e7c85", "#f0dc70", "#c7a252", "#007d65", "#845538",  "#4e72b8", "#005344", "#c77eb5", "#464547", "#6495ED", "#fab27b", "#fdb933", "#94d6da", "#8a8c8e", "#c99979", "8e7437", "#508a88", "#9d9087", "#45b97c"];
+    var ListName = ['RTM7292：Forecast for Apr.（KK set）', 'RTM7292：Forecast for Jul.（KK set）', 'RPM6361-12：Forecast for Apr.（KK set）', 'RPM6361-12：Forecast for Jul.（KK set）', 'RTM7285：Forecast for Apr.（KK set）', 'RTM7285：Forecast for Jul.（KK set）', 'RTM7289：Forecast for Apr.（KK set）', 'RTM7289：Forecast for Jul.（KK set）', 'RPM6743-12：Forecast for Apr.（KK set）', 'RPM6743-12：Forecast for Jul.（KK set）', 'RTM7916-31：Forecast for Apr.（KK set）', 'RTM7916-31：Forecast for Jul.（KK set）'];
+    var dataList = [[10.0, 15.0, 20.0, 20.0], [0.0, 8.0, 15.0, 18.0], [2.5, 4.0, 4.0, 4.0], [0, 0, 0, 0], [0.5, 4.0, 3.0, 3.0], [0, 0, 1.0, 2.0], [0.0, 0.8, 0.6, 0.6], [1.8, 2.0, 3.0, 3.5], [0.0, 1.0, 4.0, 4.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 3.0, 3.0], [0.0, 0.0, 0.0, 0.0]];
+    var chart = Highcharts.chart('container', {
+        credits: { enabled: false },//不显示Highcharts的官网连接
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Forecast--4月VS7月'
+        },
+        xAxis: {
+            categories: [
+                'July',
+                'August',
+                'September',
+                'October'
+            ]
+        },
+        yAxis: [{
+            min: 0,
+            title: {
+                text: ' '
+            },
+        }],
+        legend: {
+            shadow: false
+        },
+        tooltip: {
+            shared: true,
+        },
+        plotOptions: {
+            column: {
+                grouping: false,
+                shadow: false,
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y}'
+                }
+            }
+        },
+        series: [{
+            name: ListName[2],
+            color: colorList[0],
+            data: dataList[2],
+            pointPadding: 0.4,
+            pointPlacement: -0.3,
+        }, {
+            name: ListName[3],
+            color: "#d9d6c3",
+            data: dataList[3],
+            pointPadding: 0.45,
+            pointPlacement: -0.3,
+        }, {
+            name: ListName[4],
+            color: colorList[1],
+            data: dataList[4],
+            pointPadding: 0.4,
+            pointPlacement: -0.13,
+        }, {
+            name: ListName[5],
+            color: "#d9d6c3",
+            data: dataList[5],
+            pointPadding: 0.45,
+            pointPlacement: -0.13,
+        }, {
+            name: ListName[6],
+                color: colorList[2],
+            data: dataList[6],
+            pointPadding: 0.4,
+            pointPlacement: 0.04,
+        }, {
+            name: ListName[7],
+            color: "#d9d6c3",
+            data: dataList[7],
+            pointPadding: 0.45,
+            pointPlacement: 0.04,
+        }, {
+            name: ListName[8],
+            color: colorList[3],
+            data: dataList[8],
+            pointPadding: 0.4,
+            pointPlacement: 0.21,
+        }, {
+            name: ListName[9],
+            color: "#d9d6c3",
+            data: dataList[9],
+            pointPadding: 0.45,
+            pointPlacement: 0.21,
+        }, {
+            name: ListName[10],
+            color: colorList[4],
+            data: dataList[10],
+            pointPadding: 0.4,
+            pointPlacement: 0.38,
+        }, {
+            name: ListName[11],
+            color: "#d9d6c3",
+            data: dataList[5],
+            pointPadding: 0.45,
+            pointPlacement: 0.38,
+        }]
+    });
+</script>

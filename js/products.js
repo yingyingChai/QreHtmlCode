@@ -1,6 +1,6 @@
-//var departmentList = ["Quality & Reliability", "Business Solutions"];
-var departmentList = ["Quality & Reliability"];
-var authorityUserList = ["Jerry Gong (π®Ω‡)", "Zhanwu Yang (—Ó’ΩŒ‰)", "Sherry Li (¿ÓÀß)","Yingying Chai (≤Ò”®”®)"];
+var departmentList = ["Quality & Reliability", "Business Solutions"];
+//var departmentList = ["Quality & Reliability"];, "Sherry Li (¿ÓÀß)","Yingying Chai (≤Ò”®”®)"
+var authorityUserList = ["Jerry Gong (π®Ω‡)", "Zhanwu Yang (—Ó’ΩŒ‰)"];
 var Prioritys = ['High', 'Middle', 'Low'];
 var CaseStatus = ['Receive', 'Statistics Analysis', 'Failure Analysis', 'Close'];
 var Lab = ["IST(SH)", "IST(TW)", "IST(BJ)", "MAT(SH)", "MAT(TW)"];

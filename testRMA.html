@@ -1,0 +1,762 @@
+﻿<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/jquery-1.8.3.min.js"></script>
+<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/Highcharts-4.2.1/js/highcharts.js"></script>
+<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/Highcharts-4.2.1/js/modules/data.js"></script>
+<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/Highcharts-4.2.1/js/modules/exporting.js"></script>
+<script type="text/JavaScript" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/SpreadTrumCss/spin.min.js"></script>
+<style type="text/css">
+    .table {
+        max-width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        background-color: transparent;
+        width: 100%;
+        margin-bottom: 18px;
+    }
+    .table th, .table td {
+        padding: 8px;
+        line-height: 18px;
+        text-align: left;
+        vertical-align: top;
+        border-top: 1px solid #dddddd;
+    }
+    .table th {
+        font-weight: bold;
+    }
+    .table thead th {
+        vertical-align: bottom;
+    }
+    .table colgroup + thead tr:first-child th, .table colgroup + thead tr:first-child td, .table thead:first-child tr:first-child th, .table thead:first-child tr:first-child td {
+        border-top: 0;
+    }
+    .table tbody + tbody {
+        border-top: 2px solid #dddddd;
+    }
+    .table-condensed th, .table-condensed td {
+        padding: 4px 5px;
+    }
+    .table-bordered {
+        border: 1px solid #dddddd;
+        border-left: 0;
+        border-collapse: separate;
+        *border-collapse: collapsed;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
+    .table-bordered th, .table-bordered td {
+        border-left: 1px solid #dddddd;
+    }
+    .table-bordered thead:first-child tr:first-child th, .table-bordered tbody:first-child tr:first-child th, .table-bordered tbody:first-child tr:first-child td {
+        border-top: 0;
+    }
+    .table-bordered thead:first-child tr:first-child th:first-child, .table-bordered tbody:first-child tr:first-child td:first-child {
+        -webkit-border-radius: 4px 0 0 0;
+        -moz-border-radius: 4px 0 0 0;
+        border-radius: 4px 0 0 0;
+    }
+    .table-bordered thead:first-child tr:first-child th:last-child, .table-bordered tbody:first-child tr:first-child td:last-child {
+        -webkit-border-radius: 0 4px 0 0;
+        -moz-border-radius: 0 4px 0 0;
+        border-radius: 0 4px 0 0;
+    }
+    .table-bordered thead:last-child tr:last-child th:first-child, .table-bordered tbody:last-child tr:last-child td:first-child {
+        -webkit-border-radius: 0 0 0 4px;
+        -moz-border-radius: 0 0 0 4px;
+        border-radius: 0 0 0 4px;
+    }
+    .table-bordered thead:last-child tr:last-child th:last-child, .table-bordered tbody:last-child tr:last-child td:last-child {
+        -webkit-border-radius: 0 0 4px 0;
+        -moz-border-radius: 0 0 4px 0;
+        border-radius: 0 0 4px 0;
+    }
+    .table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th {
+        background-color: #f9f9f9;
+    }
+    .table tbody tr:hover td, .table tbody tr:hover th {
+        background-color: #f5f5f5;
+    }
+    #ProjectNameDIV {
+        height: 32px;
+        line-height: 32px;
+        margin-bottom: 10px;
+    }
+    #SeverityNameDIV {
+        float: left;
+        /* vertical-align: middle; */
+        line-height: 32px;
+        height: 32px;
+    }
+    .firstTD {
+        width: 15%;
+        font-weight: bold;
+    }
+    .secondTD {
+        width: 85%;
+    }
+    .sDiv {
+        float: left;
+        width: 20%;
+        height: 20px;
+        line-height: 20px;
+    }
+    .hideMe {
+        display: none;
+    }
+    #search {
+        cursor: pointer;
+    }
+</style>
+<script>
+    var opts = {
+        lines: 12 //花瓣数目
+        , length: 28 // 花瓣长度
+        , width: 14 // 花瓣宽度
+        , radius: 42 // 花瓣距中心半径
+        , scale: 0.5 // Scales overall size of the spinner
+        , corners: 1 // 花瓣圆滑度 (0-1)
+        , color: '#000' // 花瓣颜色
+        , opacity: 0.25 // Opacity of the lines
+        , rotate: 0 // 花瓣旋转角度
+        , direction: 1 // 花瓣旋转方向 1: 顺时针, -1: 逆时针
+        , speed: 1 // 花瓣旋转速度
+        , trail: 60 // 花瓣旋转时的拖影(百分比)
+        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+        , zIndex: 2e9 // spinner的z轴 (默认是2000000000)
+        , className: 'spinner' // spinner css 样式名称
+        , top: '50%' // spinner 相对父容器Top定位 单位 px
+        , left: '50%' // spinner 相对父容器Left定位 单位 px
+        , shadow: true // 花瓣是否显示阴影
+        , hwaccel: false // spinner 是否启用硬件加速及高速旋转
+        , position: 'absolute' // Element positioning
+    }
+    var RMAtarget = document.getElementById("RMA");
+    var RMAspinner = new Spinner(opts).spin(RMAtarget);
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var lengthProject = 0;
+        var Today = new Date();
+        $("#RMACustomerYear").val(parseInt(Today.Format("yyyy")));
+        $("#RMACustomerAll").click(function () {
+            RMAspinner.spin($("#RMA").get(0));
+            $('input[name="RMACustomer"]').attr("checked", this.checked);
+            CustomerByProjectInit(new Array());
+        });
+        $("#RMACheProjectAll").click(function () {
+            RMAspinner.spin($("#RMA").get(0));
+            $('input[name="RMAProjectName"]').attr("checked", this.checked);
+            var Che_Customer = new Array();
+            $('input[name="RMACustomer"]:checked').each(function () {
+                Che_Customer.push($(this).val());
+            });
+            ProjectInit(new Array(), Che_Customer);
+        });
+        GetTable();
+        CustomerByProjectInit(new Array());
+    });
+    function GetTable() {
+        $.ajax({
+            url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('All customer RMA Recall List')/items?$select=Month,Title&$filter=RMA_x0020_Type eq 'RMA'&$orderby=Date%20desc&$top=99999999",
+            method: "GET",
+            async: false,
+            headers: { "Accept": "application/json; odata=verbose" },
+            success: function (data) {
+                var restData = data.d.results;
+                var MonthCount = new Array();
+                if (restData.length) {
+                    var MonthYear = parseInt($("#RMACustomerYear").val());
+                    for (var i = 0; i < restData.length; i++) {
+                        var Year = parseInt(restData[i]["Month"].toString().substr(0, 4));
+                        if (Year == MonthYear) {
+                            MonthCount.push(parseInt(restData[i]["Month"]) + ";" + restData[i]["Title"]);
+                        }
+                    }
+                }
+                MonthCount = MonthCount.unique2();
+                var MonthData = new Array();
+                var Month = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"];
+                for (var i = 0; i < Month.length; i++) {
+                    MonthData[MonthYear + Month[i]] = 0;
+                }
+                for (var i = 0; i < MonthCount.length; i++) {
+                    var IData = MonthCount[i].split(";");
+                    MonthData[IData[0]] = parseInt(MonthData[IData[0]]) + 1;
+                }
+                var ThHtml = "";
+                var TdHtml = "";
+                var MonthTableCount = 0;
+                for (var i = 0; i < Month.length; i++) {
+                    ThHtml += "<th>" + MonthYear + Month[i] + "</td>";
+                    TdHtml += "<td>" + MonthData[MonthYear + Month[i]] + "</th>";
+                    MonthTableCount = parseInt(MonthTableCount) + MonthData[MonthYear + Month[i]];
+                }
+                var CountHtml = '<table class="SearchBox table table-bordered table-striped"><thead><tr><th colspan="12">RMA Receipts Quantity</th></tr><tr>' + ThHtml + '<th>Total</th></tr></thead>' +
+                    '<tbody>' + '<tr id="ProjectTR">' + TdHtml + '<td>' + MonthTableCount + '</td></tr></tbody></table>';
+                $("#RMACountHtml").html(CountHtml);
+            },
+            error: function (data) {
+                RMAspinner.stop();
+            }
+        });
+    }
+    function CustomerYearChange() {
+        RMAspinner.spin($("#RMA").get(0));
+        GetTable();
+        CustomerByProjectInit(new Array());
+        //ProjectInit(new Array(), new Array());
+    }
+    //Customer click事件
+    function OnRMACustomer() {
+        $("#RMACheProjectAll").attr('checked', false);
+        RMAspinner.spin($("#RMA").get(0));
+        var Che_Customer = new Array();
+        $('input[name="RMACustomer"]:checked').each(function () {
+            Che_Customer.push($(this).val());
+        });
+        var a = document.getElementsByName('RMACustomer'),
+            b = 0;
+        for (var i = 0; i < a.length; i++) {
+            if (a[i].checked) {
+                b += 1;
+            }
+        }
+        if (a.length == b) {
+            $('#RMACustomerAll').attr('checked', true);
+        }
+        else if (a.length > b) {
+            $('#RMACustomerAll').attr('checked', false);
+        }
+        CustomerByProjectInit(Che_Customer);
+    }
+    //Project Click事件
+    function RMAProjectClick() {
+        RMAspinner.spin($("#RMA").get(0));
+        var Che_Customer = new Array();
+        $('input[name="RMACustomer"]:checked').each(function () {
+            Che_Customer.push($(this).val());
+        });
+        var Che_Project = new Array();
+        $('input[name="RMAProjectName"]:checked').each(function () {
+            Che_Project.push($(this).val());
+        });
+        var a = document.getElementsByName('RMAProjectName'),
+            b = 0;
+        for (var i = 0; i < a.length; i++) {
+            if (a[i].checked) {
+                b += 1;
+            }
+        }
+        if (a.length == b) {
+            $('#RMACheProjectAll').attr('checked', true);
+        }
+        else if (a.length > b) {
+            $('#RMACheProjectAll').attr('checked', false);
+        }
+        ProjectInit(Che_Project, Che_Customer);
+    }
+    function CustomerByProjectInit(Che_Customer) {
+        RMAspinner.spin($("#RMA").get(0));
+        var RMProject = new Array();
+        var SAPWhereQuery = "";
+        for (var i = 0; i < Che_Customer.length; i++) {
+            if (i == 0) {
+                SAPWhereQuery = "(Customer eq '" + Che_Customer[i] + "')";
+            }
+            else {
+                SAPWhereQuery += "or (Customer eq '" + Che_Customer[i] + "')";
+            }
+        }
+        var SAPUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('VW_SAP_Project_Qty')/items?$select=Month,Project,Customer,Quantity&$orderby=Month%20desc&$top=99999999";
+        if (SAPWhereQuery.length > 0) {
+            SAPUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('VW_SAP_Project_Qty')/items?$select=Month,Project,Customer,Quantity&$filter=" + SAPWhereQuery + "&$orderby=Month%20desc&$top=99999999";
+        }
+        var SPADataAll = new Array();
+        $.ajax({
+            url: SAPUrl,
+            method: "GET",
+            async: true,
+            headers: { "Accept": "application/json; odata=verbose" },
+            success: function (data) {
+                var restData = data.d.results;
+                if (restData.length > 0) {
+                    var SAPAllYear = parseInt($("#RMACustomerYear").val());
+                    for (var i = 0; i < restData.length; i++) {
+                        var Year = parseInt(restData[i]["Month"].toString().substr(0, 4));
+                        var Project = restData[i]["Project"] == "" ? null : restData[i]["Project"];
+                        if (Project != null) {
+                            if (Year <= SAPAllYear) {
+                                RMProject.push(Project);
+                            }
+                        }
+                    }
+                    var WhereQuery = "";
+                    for (var i = 0; i < Che_Customer.length; i++) {
+                        if (i == 0) {
+                            WhereQuery = "(Customer_x0020_Group eq '" + Che_Customer[i] + "')";
+                        }
+                        else {
+                            WhereQuery += "or (Customer_x0020_Group eq '" + Che_Customer[i] + "')";
+                        }
+                    }
+                    var url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('All customer RMA Recall List')/items?$select=Month,Project&$filter=RMA_x0020_Type eq 'RMA'&$orderby=Date%20desc&$top=99999999";
+                    if (WhereQuery.length > 0) {
+                        url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('All customer RMA Recall List')/items?$select=Month,Project&$filter=RMA_x0020_Type eq 'RMA' and" + WhereQuery + "&$orderby=Date%20desc&$top=99999999";
+                    }
+                    $.ajax({
+                        url: url,
+                        method: "GET",
+                        async: true,
+                        headers: { "Accept": "application/json; odata=verbose" },
+                        success: function (data) {
+                            var restData = data.d.results;
+                            if (restData.length > 0) {
+                                var CustomerYear = parseInt($("#RMACustomerYear").val());
+
+                                for (var i = 0; i < restData.length; i++) {
+                                    var Project = restData[i]["Project"] == "" ? null : restData[i]["Project"];
+                                    if (Project != null) {
+                                        var Month = parseInt(restData[i]["Month"].toString().substr(0, 4));
+                                        if (Month <= CustomerYear) {
+                                            RMProject.push(restData[i]["Project"]);
+                                        }
+                                    }
+                                }
+                                RMProject = RMProject.unique2();
+                                var html = "";
+                                for (var i = 0; i < RMProject.length; i++) {
+                                    html += "<input name=\"RMAProjectName\" id=\"" + RMProject[i] + "\" value=\"" + RMProject[i] + "\" onclick=\"RMAProjectClick()\" type=\"checkbox\" />" + RMProject[i];
+                                }
+                                lengthProject = RMProject.length;
+                                $("#RMACheProjectSpan").html("");
+                                $("#RMACheProjectSpan").append(html);
+                                ProjectInit(new Array(), Che_Customer);
+                            } else {
+                                $("#RMACheProjectSpan").html("");
+                                ProjectInit(new Array(), Che_Customer);
+                            }
+                        },
+                        error: function (data) {
+                            RMAspinner.stop();
+                        }
+                    });
+                }
+            },
+            error: function (data) {
+                RMAspinner.stop();
+            }
+        });
+    }
+    function ProjectInit(Che_Project, Che_Customer) {
+        var WhereQuery = "";
+        var CustomerQuery = "";
+        var ProjectQuery = "";
+        for (var i = 0; i < Che_Customer.length; i++) {
+            if (i == 0) {
+                CustomerQuery = "(Customer_x0020_Group eq '" + Che_Customer[i] + "')";
+            }
+            else {
+                CustomerQuery += "or (Customer_x0020_Group eq '" + Che_Customer[i] + "')";
+            }
+        }
+        for (var i = 0; i < Che_Project.length; i++) {
+            if (i == 0) {
+                ProjectQuery = " (Project eq '" + Che_Project[i] + "')";
+            }
+            else {
+                ProjectQuery += "or (Project eq '" + Che_Project[i] + "')";
+            }
+        }
+        if (CustomerQuery.length > 0) {
+            WhereQuery = "((" + CustomerQuery + ")";
+            if (ProjectQuery.length > 0) {
+                WhereQuery += "and (" + ProjectQuery + ")";
+            }
+            WhereQuery = WhereQuery + ")";
+        } else {
+            if (ProjectQuery.length > 0) {
+                WhereQuery = "(" + ProjectQuery + ")";
+            }
+        }
+        var url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('All customer RMA Recall List')/items?$select=Month,Project,Qty&$filter=RMA_x0020_Type eq 'RMA'&$orderby=Date%20desc&$top=99999999";
+        if (WhereQuery.length > 0) {
+            url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('All customer RMA Recall List')/items?$select=Month,Project,Qty&$filter=RMA_x0020_Type eq 'RMA' and " + WhereQuery + "&$orderby=Date%20desc&$top=99999999";
+        }
+        var RMAProjectName = new Array();
+        var RecallProjectData = new Array();
+        $.ajax({
+            url: url,
+            method: "GET",
+            async: false,
+            headers: { "Accept": "application/json; odata=verbose" },
+            success: function (data) {
+                var restData = data.d.results;
+                if (restData.length > 0) {
+                    var ProjectYear = parseInt($("#RMACustomerYear").val());
+                    for (var i = 0; i < restData.length; i++) {
+                        var Year = parseInt(restData[i]["Month"].toString().substr(0, 4));
+                        if (Year == ProjectYear) {
+                            var Project = restData[i]["Project"] == "" ? null : restData[i]["Project"];
+                            if (Project != null) {
+                                RMAProjectName.push(restData[i]["Project"]);
+                                RecallProjectData.push(parseInt(restData[i]["Month"].toString().substr(4, 2)) - 1 + ";" + restData[i]["Project"] + ";" + restData[i]["Qty"]);
+                            }
+                        } else if (Year < ProjectYear) {
+                            var Project = restData[i]["Project"] == "" ? null : restData[i]["Project"];
+                            if (Project != null) {
+                                RMAProjectName.push(restData[i]["Project"]);
+                                RecallProjectData.push(parseInt("1") - 1 + ";" + restData[i]["Project"] + ";" + restData[i]["Qty"]);
+                            }
+                        }
+                    }
+                }
+            },
+            error: function (data) {
+                RMAspinner.stop();
+            }
+        });
+        var SAPWhereQuery = "", SAPProjectQuery = "";
+        var SAPCustomerQuery = "";
+        for (var i = 0; i < Che_Customer.length; i++) {
+            if (i == 0) {
+                SAPCustomerQuery = "(Customer eq '" + Che_Customer[i] + "')";
+            }
+            else {
+                SAPCustomerQuery += "or (Customer eq '" + Che_Customer[i] + "')";
+            }
+        }
+        for (var i = 0; i < Che_Project.length; i++) {
+            if (i == 0) {
+                SAPProjectQuery = " (Project eq '" + Che_Project[i] + "')";
+            }
+            else {
+                SAPProjectQuery += "or (Project eq '" + Che_Project[i] + "')";
+            }
+        }
+        if (SAPCustomerQuery.length > 0) {
+            SAPWhereQuery = "(（" + SAPCustomerQuery + ")";
+            if (SAPProjectQuery.length > 0) {
+                SAPWhereQuery += "and (" + SAPProjectQuery + ")";
+            }
+            SAPWhereQuery = SAPWhereQuery + ")";
+        } else {
+            if (SAPProjectQuery.length > 0) {
+                SAPWhereQuery = "(" + SAPProjectQuery + ")";
+            }
+        }
+        var SAPUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('VW_SAP_Project_Qty')/items?$select=Month,Project,Customer,Quantity&$orderby=Month%20desc&$top=99999999";
+        if (SAPWhereQuery.length > 0) {
+            SAPUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('VW_SAP_Project_Qty')/items?$select=Month,Project,Customer,Quantity&$filter=" + SAPWhereQuery + "&$orderby=Month%20desc&$top=99999999";
+        }
+        var SPADataAll = new Array();
+        $.ajax({
+            url: SAPUrl,
+            method: "GET",
+            async: false,
+            headers: { "Accept": "application/json; odata=verbose" },
+            success: function (data) {
+                var restData = data.d.results;
+                if (restData.length > 0) {
+                    var SAPAllYear = parseInt($("#RMACustomerYear").val());
+                    for (var i = 0; i < restData.length; i++) {
+                        var Year = parseInt(restData[i]["Month"].toString().substr(0, 4));
+                        if (Year == SAPAllYear) {
+                            SPADataAll.push(parseInt(restData[i]["Month"].toString().substr(4, 2)) - 1 + ";" + restData[i]["Quantity"]);
+                        } else if (Year < SAPAllYear) {
+                            SPADataAll.push(parseInt("1") - 1 + ";" + restData[i]["Quantity"]);
+                        }
+                    }
+                }
+            },
+            error: function (data) {
+                RMAspinner.stop();
+            }
+        });
+        var RMAWhereQuery = "";
+        var RMACustomerQuery = "";
+        var RMAProjectQuery = "";
+        for (var i = 0; i < Che_Customer.length; i++) {
+            if (i == 0) {
+                RMACustomerQuery = "(Customer eq '" + Che_Customer[i] + "')";
+            }
+            else {
+                RMACustomerQuery += "or (Customer eq '" + Che_Customer[i] + "')";
+            }
+        }
+        for (var i = 0; i < Che_Project.length; i++) {
+            if (i == 0) {
+                RMAProjectQuery = " (Project eq '" + Che_Project[i] + "')";
+            }
+            else {
+                RMAProjectQuery += "or (Project eq '" + Che_Project[i] + "')";
+            }
+        }
+        if (RMACustomerQuery.length > 0) {
+            RMAWhereQuery = "(" + RMACustomerQuery + ")";
+            if (ProjectQuery.length > 0) {
+                RMAWhereQuery += "and (" + RMAProjectQuery + ")";
+            }
+        } else {
+            if (ProjectQuery.length > 0) {
+                RMAWhereQuery = RMAProjectQuery;
+            }
+        }
+        var url1 = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('VW_SAP_Project_Qty')/items?$select=Month,Project,Quantity&$orderby=Month%20desc&$top=99999999";
+        if (RMAWhereQuery.length > 0) {
+            url1 = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('VW_SAP_Project_Qty')/items?$select=Month,Project,Quantity&$filter=" + RMAWhereQuery + "&$orderby=Month%20desc&$top=99999999";
+        }
+        var RMAProjectData = new Array();
+        $.ajax({
+            url: url1,
+            method: "GET",
+            async: false,
+            headers: { "Accept": "application/json; odata=verbose" },
+            success: function (data) {
+                var restData = data.d.results;
+                if (restData.length > 0) {
+                    var ProjectYear = parseInt($("#RMACustomerYear").val());
+                    for (var i = 0; i < restData.length; i++) {
+                        var Year = parseInt(restData[i]["Month"].toString().substr(0, 4));
+                        if (Year == ProjectYear) {
+                            RMAProjectName.push(restData[i]["Project"]);
+                            RMAProjectData.push(parseInt(restData[i]["Month"].toString().substr(4, 2)) - 1 + ";" + restData[i]["Project"] + ";" + restData[i]["Quantity"]);
+                        } else if (Year < ProjectYear) {
+                            RMAProjectName.push(restData[i]["Project"]);
+                            RMAProjectData.push(parseInt("1") - 1 + ";" + restData[i]["Project"] + ";" + restData[i]["Quantity"]);
+                        }
+                    }
+                }
+                RMAProjectName = RMAProjectName.unique2();
+                ProjectByData(RMAProjectName, RecallProjectData, RMAProjectData, SPADataAll);
+                RMAspinner.stop();
+            },
+            error: function (data) {
+                //failure(data);
+                RMAspinner.stop();
+            }
+        });
+    }
+    function ProjectByData(ProjectName, RecallProjectData, RMAProjectData, SPADataAll) {
+        var RMAProject = new Array();
+        var RecallProject = new Array();
+        var seriecData = new Array();
+        /**总数据**/
+        var AllSAPData = new Array();
+        var ALLRMAData = new Array();
+        for (var i = 0; i < 12; i++) {
+            AllSAPData[i] = 0;
+            ALLRMAData[i] = 0;
+        }
+        for (var i = 0; i < ProjectName.length; i++) {
+            RMAProject[ProjectName[i]] = new Array();
+            RecallProject[ProjectName[i]] = new Array();
+            seriecData[ProjectName[i]] = new Array();
+            for (var j = 0; j < 12; j++) {
+                RMAProject[ProjectName[i]][j] = 0;
+                RecallProject[ProjectName[i]][j] = 0;
+                seriecData[ProjectName[i]][j] = 0;
+            }
+        }
+        for (var i = 0; i < RecallProjectData.length; i++) {
+            var IData = RecallProjectData[i].split(';');
+            RecallProject[IData[1]][IData[0]] = parseInt(RecallProject[IData[1]][IData[0]]) + parseInt(IData[2]);
+            ALLRMAData[IData[0]] = parseInt(ALLRMAData[IData[0]]) + parseInt(IData[2]);
+        }
+        for (var i = 0; i < RMAProjectData.length; i++) {
+            var IData = RMAProjectData[i].split(';');
+            RMAProject[IData[1]][IData[0]] = parseInt(RMAProject[IData[1]][IData[0]]) + parseInt(IData[2]);
+        }
+        for (var i = 0; i < SPADataAll.length; i++) {
+            var IData = SPADataAll[i].split(";");
+            AllSAPData[IData[0]] = parseInt(AllSAPData[IData[0]]) + parseInt(IData[1]);
+        }
+        for (var i = 0; i < 12; i++) {
+            if (i == 0) {
+                AllSAPData[i] = parseInt(AllSAPData[i]);
+                ALLRMAData[i] = parseInt(ALLRMAData[i]);
+            } else {
+                AllSAPData[i] = parseInt(AllSAPData[i]) + parseInt(AllSAPData[i - 1]);
+                ALLRMAData[i] = parseInt(ALLRMAData[i]) + parseInt(ALLRMAData[i - 1]);
+            }
+        }
+        for (var i = 0; i < ProjectName.length; i++) {
+            for (var j = 0; j < 12; j++) {
+                if (j > 0) {
+                    RMAProject[ProjectName[i]][j] = parseInt(RMAProject[ProjectName[i]][j]) + parseInt(RMAProject[ProjectName[i]][j - 1]);
+                    RecallProject[ProjectName[i]][j] = parseInt(RecallProject[ProjectName[i]][j]) + parseInt(RecallProject[ProjectName[i]][j - 1]);
+                }
+            }
+        }
+        for (var i = 0; i < ProjectName.length; i++) {
+            if (RMAProject[ProjectName[i]][0] != 0) {
+                seriecData[ProjectName[i]][0] = parseInt((RecallProject[ProjectName[i]][0] / RMAProject[ProjectName[i]][0]) * 1000000);
+            } else {
+                seriecData[ProjectName[i]][0] = 0;
+            }
+            for (var j = 0; j < 12; j++) {
+                if (RMAProject[ProjectName[i]][j] != 0) {
+                    seriecData[ProjectName[i]][j] = parseInt((RecallProject[ProjectName[i]][j] / RMAProject[ProjectName[i]][j]) * 1000000);
+                } else {
+                    seriecData[ProjectName[i]][j] = 0;
+                }
+            }
+        }
+        var series = new Array();
+        if (SPADataAll.length > 0 && RMAProjectData.length > 0) {
+            var Average = new Array();
+            for (var i = 0; i < 12; i++) {
+                if (parseInt(ALLRMAData[i]) != 0 && parseInt(AllSAPData[i]) != 0) {
+                    Average.push(parseInt(parseFloat(ALLRMAData[i] / AllSAPData[i]) * 1000000));
+                } else {
+                    Average.push(0);
+                }
+            }
+            var AverageData = {
+                name: 'AVERAGE',
+                data: Average
+            }
+            series.push(AverageData);
+        } else {
+            var AverageData = {
+                name: 'AVERAGE',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }
+            series.push(AverageData);
+        }
+        for (var i = 0; i < ProjectName.length; i++) {
+            var dataseries = {
+                name: ProjectName[i],
+                data: seriecData[ProjectName[i]]
+            }
+            series.push(dataseries);
+        }
+        RMAHighcharts(series);
+    }
+    //随机生成十六进制颜色
+    function randomHexColor(length) {
+        var colors = [];
+        for (var i = 0; i < length; i++) {
+            var hex = Math.floor(Math.random() * 16777216).toString(16); //生成ffffff以内16进制数
+            while (hex.length < 6) { //while循环判断hex位数，少于6位前面加0凑够6位
+                hex = '0' + hex;
+            }
+            colors.push('#' + hex);
+        }
+        return colors
+    }
+    function RMAHighcharts(series) {
+        $('#RMA').highcharts({
+            credits: { enabled: false },//不显示Highcharts的官网连接
+            chart: {
+                type: 'spline'
+            },
+            colors: randomHexColor(lengthProject),
+            title: {
+                text: 'RMA Rate'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            },
+            yAxis: {
+                title: {
+                    text: 'RMA Rate'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value + "";
+                    }
+                },
+                min: 0
+            },
+            tooltip: {
+                crosshairs: true,
+                shared: true,
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        radius: 4,
+                        lineColor: '#666666',
+                        lineWidth: 1
+                    },
+                    dataLabels: {
+                        enabled: true,   //是否显示值
+                        formatter: function () {
+                            return this.y + "";
+                        }
+                    }
+                }
+            },
+            series: series
+        });
+    }
+    //日期格式转换
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1,                 //月份
+            "d+": this.getDate(),                    //日
+            "h+": this.getHours(),                   //小时
+            "m+": this.getMinutes(),                 //分
+            "s+": this.getSeconds(),                 //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds()             //毫秒
+        };
+        if (/(y+)/.test(fmt))
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+    Date.prototype.addMonths = function (m) {
+        var d = this.getDate();
+        this.setMonth(this.getMonth() + m);
+        if (this.getDate() < d)
+            this.setDate(0);
+    };
+    //正则去重复
+    Array.prototype.unique2 = function () {
+        return this.sort().join(",,").replace(/(,|^)([^,]+)(,,\2)+(,|$)/g, "$1$2$4").replace(/,,+/g, ",").replace(/,$/, "").split(",");
+    }
+</script>
+<div>
+    <div>
+        <div>
+            <select id="RMACustomerYear" onchange="CustomerYearChange()">
+                <option value="2015">2015</option>
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+            </select>
+        </div>
+        <div id="RMACheCustomer">
+            <input id="RMACustomerAll" type="checkbox" />Select All Customer&nbsp;&nbsp;&nbsp;&nbsp;
+            <span id="RMACheCustomerSpan">
+                <input id="Huawei" name="RMACustomer" value="Huawei" onclick="OnRMACustomer()" type="checkbox" />Huawei
+                <input id="ZTE" name="RMACustomer" value="ZTE" onclick="OnRMACustomer()" type="checkbox" />ZTE
+                <input id="Lenovo" name="RMACustomer" value="Lenovo" onclick="OnRMACustomer()" type="checkbox" />Lenovo
+                <input id="Samsung" name="RMACustomer" value="Samsung" onclick="OnRMACustomer()" type="checkbox" />Samsung
+                <input id="Others" name="RMACustomer" value="Others" onclick="OnRMACustomer()" type="checkbox" />Others
+            </span>
+        </div>
+        <div id="RMACheProject">
+            <input id="RMACheProjectAll" type="checkbox" />Select All Project<br />
+            <span id="RMACheProjectSpan"></span>
+        </div>
+        <div id="RMACountHtml">
+
+        </div>
+        <div id="RMA" style="width: 100%;height:450px; position: relative;">
+
+        </div>
+    </div>
+
+</div>

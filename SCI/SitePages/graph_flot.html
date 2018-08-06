@@ -1,0 +1,238 @@
+﻿<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/css/bootstrap.min.css" rel="stylesheet">
+<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/css/plugins/select2/select2.min.css" rel="stylesheet" />
+<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/font-awesome/css/font-awesome.css" rel="stylesheet">
+<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/css/animate.css" rel="stylesheet">
+<link href="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/css/style.css" rel="stylesheet">
+<script src="../js/highcharts.js"></script>
+<script src="../js/exporting.js"></script>
+<script src="../js/series-label.js"></script>
+<script src="../js/oldie.js"></script>
+<script src="../js/highcharts-zh_CN.js"></script>
+<script src="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/js/bootstrap.min.js"></script>
+<script src="http://eip.unisoc.com/sites/howto/WB0R5L90S/Static_Full_Version/js/plugins/select2/select2.full.min.js"></script>
+<div id="wrapper">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="ibox float-e-margins" style="margin-bottom:0">
+                    <div class="ibox-content" style="height:330px">
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="DailyRanking" style="height:300px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="ibox float-e-margins"  style="margin-bottom:0">
+                    <div class="ibox-content" style="height:330px">
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="MonthRanking" style="height:300px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12" style="padding-left:0;padding-right:0">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <select class="form-control m-b" data-style="btn-info" id="Year" onchange="YearChange()">
+                                    <option value="2017">2017</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <select class="form-control m-b" data-style="btn-info" id="Month" onchange="MonthChange()">
+                                    <option value="January">January</option>
+                                    <option value="February">February</option>
+                                    <option value="March">March</option>
+                                    <option value="April">April</option>
+                                    <option value="May">May</option>
+                                    <option value="June">June</option>
+                                    <option value="July">July</option>
+                                    <option value="August">August</option>
+                                    <option value="September">September</option>
+                                    <option value="October">October</option>
+                                    <option value="November">November</option>
+                                    <option value="December">December</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="height:630px">
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="TopSearch" style="height:600px"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var monthE = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    function DailyRanking(DayList, DayListCount, title, id) {
+        var chart = Highcharts.chart(id, {
+            credits: { enabled: false },//不显示Highcharts的官网连接
+            title: {
+                text: title,
+            },
+            xAxis: {
+                categories: DayList
+            },
+            yAxis: {
+                title: {
+                    text: '点击次数'
+                },
+            },
+            tooltip: {
+                valueSuffix: ' 次'
+            },
+            series: [{
+                name: ' ',
+                data: DayListCount
+            }],
+        });
+    }
+    function TopSearch(DayList, DayListCount, title, id) {
+        var chart = Highcharts.chart(id, {
+            credits: { enabled: false },//不显示Highcharts的官网连接
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: title
+            },
+            xAxis: {
+                categories: DayList,
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '查询次数',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' 次'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true,
+                        allowOverlap: true // 允许数据标签重叠
+                    }
+                }
+            },
+            series: [{
+                name: ' ',
+                data: DayListCount
+            }]
+        });
+    }
+    $(function () {
+        var year = parseInt(new Date().Format("yyyy"));
+        $("#Year").val(year);
+        var monthIndex = new Date().Format("MM");
+        var month = monthE[parseInt(monthIndex) - 2];
+        $("#Month").val(month);
+        $.ajax({
+            url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('DailyRanking')/Items?$select=Date,Title&$orderby=Date desc&$top=15",
+            type: "GET",
+            headers: { "accept": "application/json;odata=verbose" },
+            success: function (data) {
+                if (data.d.results.length > 0) {
+                    var DayList = [], DayListCount = [];
+                    var datResult = data.d.results.forEach(function (i) {
+                        DayList.push(parseInt(new Date(i.Date).Format("yyyyMMdd")));
+                        DayListCount.push(parseInt(i.Title));
+                    });
+                    DailyRanking(DayList, DayListCount, "每天点击数", "DailyRanking");
+                } else {
+                    $("#DailyRanking").html("无搜索数据");
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            }
+        });
+        $.ajax({
+            url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('MonthRanking')/Items?$select=Month,Title&$orderby=Month desc&$top=12",
+            type: "GET",
+            headers: { "accept": "application/json;odata=verbose" },
+            success: function (data) {
+                if (data.d.results.length > 0) {
+                    var DayList = [], DayListCount = [];
+                    var datResult = data.d.results.forEach(function (i) {
+                        DayList.push(parseInt(new Date(i.Month).Format("yyyyMM")))
+                        DayListCount.push(parseInt(i.Title));
+                    });
+                    DailyRanking(DayList, DayListCount, "每月点击数", "MonthRanking");
+                } else {
+                    $("#MonthRanking").html("无搜索数据");
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            }
+        });
+        getTopSearch(month, year);
+    });
+    function YearChange() {
+        var year = $("#Year").val();
+        var month = $("#Month").val();
+        getTopSearch(month, year);
+    }
+    function MonthChange() {
+        var year = $("#Year").val();
+        var month = $("#Month").val();
+        getTopSearch(month, year);
+    }
+    function getTopSearch(month, year) {
+        var fiter = month + ' ' + year;
+        $.ajax({
+            url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('TopSearch')/Items?$select=Month,count,Title&$orderby=count desc&$top=25&$filter=Month eq '" + fiter + "'",
+            type: "GET",
+            headers: { "accept": "application/json;odata=verbose" },
+            success: function (data) {
+                if (data.d.results.length > 0) {
+                    var DayList = [], DayListCount = [];
+                    var datResult = data.d.results.forEach(function (i) {
+                        DayList.push(i.Title)
+                        DayListCount.push(parseInt(i.count));
+                    });
+                    TopSearch(DayList, DayListCount, "每月热门搜索", "TopSearch")
+                } else {
+                    $("#TopSearch").html(fiter + "无搜索数据");
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            }
+        });
+    }
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1,                 //月份
+            "d+": this.getDate(),                    //日
+            "h+": this.getHours(),                   //小时
+            "m+": this.getMinutes(),                 //分
+            "s+": this.getSeconds(),                 //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds()             //毫秒
+        };
+        if (/(y+)/.test(fmt))
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    }
+</script>

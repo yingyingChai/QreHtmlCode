@@ -1,0 +1,121 @@
+﻿<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/Highcharts-4.2.1/js/jquery-3.1.1.min.js"></script>
+<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/Highcharts-4.2.1/js/highcharts.js"></script>
+<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/Highcharts-4.2.1/js/modules/data.js"></script>
+<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/Highcharts-4.2.1/js/modules/exporting.js"></script>
+<script type="text/JavaScript" src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/HighCharts/Highcharts-4.2.1/js/export-data.js"></script>
+<script type="text/JavaScript" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/SpreadTrumCss/spin.min.js"></script>
+<style type="text/css">
+    body {
+        font-family: 'Microsoft YaHei' !important;
+    }
+
+    #Raw_Materials_Column text {
+        font-family: 'Microsoft YaHei' !important;
+    }
+</style>
+<div>
+    <span id="RMACheSPAN">
+        <input name="RMAALLProject" id="RTM7292" value="RTM7292" type="checkbox">RTM7292
+        <input name="RMAALLProject" id="RTM7276" value="RTM7276" type="checkbox">RTM7276
+        <input name="RMAALLProject" id="Marlin" value="RPM6361-12" type="checkbox">RPM6361-12
+        <input name="RMAALLProject" id="NemoW" value="RPM6368-12" type="checkbox">RPM6368-12
+        <input name="RMAALLProject" id="Omaha" value="RTM7285" type="checkbox">RTM7285
+        <input name="RMAALLProject" id="SC2723" value="RTM7289" type="checkbox">RTM7289
+        <input name="RMAALLProject" id="SC2723T" value="RPM6743-12" type="checkbox">RPM6743-12
+        <input name="RMAALLProject" id="SC6500" value="RTM7916-31" type="checkbox">RTM7916-31
+        <input name="RMAALLProject" id="SC2723T" value="RPM6743-31" type="checkbox">RPM6743-31
+        <input name="RMAALLProject" id="SC6500" value="RTM7916-51" type="checkbox">RTM7916-51
+    </span>
+</div>
+<div id="container" style="min-width:400px;height:400px"></div>
+<script>
+    var colorList = []
+    for (var i = 0; i < 6; i++) {
+        var hex = Math.floor(Math.random() * 16777216).toString(16); //生成ffffff以内16进制数
+        while (hex.length < 6) { //while循环判断hex位数，少于6位前面加0凑够6位
+            hex = '0' + hex;
+        }
+        colorList.push('#' + hex);
+    }
+    console.log(colorList);
+    var chart = Highcharts.chart('container', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Forecast'
+        },
+        xAxis: {
+            categories: [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December'
+            ]
+        },
+        yAxis: [{
+            min: 0,
+            title: {
+                text: ' '
+            }
+        }],
+        legend: {
+            shadow: false
+        },
+        tooltip: {
+            shared: true
+        },
+        plotOptions: {
+            column: {
+                grouping: false,
+                shadow: false,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'RTM7292：Forecast for Apr.（KK set）',
+            color: 'rgba(165,170,217,1)',
+            data: [0, 0, 0, 0, 0, 0, 10, 15, 20, 20, 0, 0],
+            pointPadding: 0.3, // 通过 pointPadding 和 pointPlacement 控制柱子位置
+            pointPlacement: -0.3
+        }, {
+            name: 'RTM7292：Forecast for Jul.（KK set）',
+            color: 'rgba(126,86,134,.9)',
+            data: [0, 0, 0, 0, 0, 0, 0.03, 8, 15, 18, 20, 20],
+            pointPadding: 0.4,
+            pointPlacement: -0.3
+        }, {
+            name: 'RTM7276：Forecast for Apr.（KK set）',
+            color: 'rgba(248,161,63,1)',
+            data: [0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 0, 0],
+            pointPadding: 0.3,
+            pointPlacement: 0,
+        }, {
+            name: 'RTM7276：Forecast for Jul.（KK set）',
+            color: 'rgba(186,60,61,.9)',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            pointPadding: 0.4,
+            pointPlacement: 0,
+        }, {
+            name: 'RPM6361-12：Forecast for Apr.（KK set）',
+            color: '#83f694',
+            data: [0, 0, 0, 0, 0, 0, 2.5, 4, 4, 4, 0, 0],
+            pointPadding: 0.3,
+            pointPlacement: 0.3,
+        }, {
+            name: 'RPM6361-12：Forecast for Jul.（KK set）',
+            color: '#9bc2d4',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            pointPadding: 0.4,
+            pointPlacement: 0.3,
+        }]
+    });
+</script>

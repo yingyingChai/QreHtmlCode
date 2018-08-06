@@ -34,6 +34,7 @@
     label {
         font-weight: 100;
     }
+
     .over {
         display: none;
         position: absolute;
@@ -45,6 +46,7 @@
         opacity: 0.5;
         z-index: 1000;
     }
+
     .layout {
         display: none;
         position: absolute;
@@ -55,15 +57,18 @@
         z-index: 1001;
         text-align: center;
     }
+
     .k-alt, .k-header, .k-pager-wrap {
         background-color: #ffffff !important;
     }
+
     .k-grid td {
         border-bottom: 1px solid #d5d5d5
     }
+
     .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
         background-color: #ffffff !important;
-        font-size:14px
+        font-size: 14px
     }
 </style>
 <script>
@@ -367,13 +372,13 @@
                                                         <span class="en">Received Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="text" AUTOCOMPLETE="off"  id="Stage3ReceiveDate" />
+                                                        <input type="text" AUTOCOMPLETE="off" id="Stage3ReceiveDate" />
                                                     </td>
                                                     <td class="form_table_label">
                                                         <span class="en">Completed Date</span>
                                                     </td>
                                                     <td class="form_table_input">
-                                                        <input type="text" id="Stage3CompleteDate"/>
+                                                        <input type="text" id="Stage3CompleteDate" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -384,7 +389,7 @@
                                                         <input ng-model="result.Stage3AssiggnTo" id="Stage3AssiggnTo" type="text" />
                                                     </td>
                                                     <td class="form_table_label">
-                                                        <span>Install attachment <small>(上传附件大小不可大于20M)</small></span>
+                                                        <span>Install attachment <small>(上传附件大小不可大于20M,附件名称不可包含特殊字符：ep:* # / \)</small></span>
                                                     </td>
                                                     <td class="form_table_label">
                                                         <input class="form_control border-bottom-Select-Span" ng-model="file" id="stage3FileInstall" onchange="angular.element(this).scope().upload(this,'InstallAttachmentStage3','Stage3','Documents')" type="file">
@@ -495,7 +500,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="form_table_area borderButtomNone borderTopNone" colspan="4"title="ESSENTIAL">
+                                                    <td class="form_table_area borderButtomNone borderTopNone" colspan="4" title="ESSENTIAL">
                                                         <div>
                                                             <span ng-repeat="Analysis in DestructiveAnalysis">
                                                                 <label ng-if="Analysis!='成本/结构分析'">
@@ -521,7 +526,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td colspan="4" class="form_table_label">
-                                                        <span>Install attachment <small>(上传附件大小不可大于20M)</small></span>
+                                                        <span>Install attachment <small>(上传附件大小不可大于20M,附件名称不可包含特殊字符：ep:* # / \) </small></span>
                                                         <input ng-model="file" id="stage4FileInstall" onchange="angular.element(this).scope().upload(this,'InstallAttachmentStage4','Stage4','Documents')" type="file">
                                                     </td>
                                                 </tr>
