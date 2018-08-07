@@ -1,0 +1,74 @@
+﻿<script src="//eip.unisoc.com/sites/howto/_catalogs/masterpage/Wicresoft/jquery.js" type="text/JavaScript"></script>
+<script>
+    $(function () {
+        var oPagesCollection = [];//object having url for all pages under root site and sub site
+        var rootSites = [
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com", Title: "EIP Home" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/itsite", Title: "IT" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/opsweb", Title: "OPS" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/Admin", Title: "Admin" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/ASIC", Title: "ASIC" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/PFC", Title: "PFC" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/SSSupport", Title: "SSSupport" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/marketing", Title: "marketing" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/HW", Title: "HW" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/NBD", Title: "NBD" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/PLD", Title: "PLD" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/CSD", Title: "CSD" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/CommSys", Title: "CommSys" },
+            { "ServerRelativeUrl": "http://oasharepoint.rdamicro.com/", Title: "RDAHOME" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/hrweb", Title: "hrweb" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/Club", Title: "Club" },
+            //{ "ServerRelativeUrl": "http://eip.unisoc.com/sites/Test", Title: "Test" }
+
+        ]
+
+        //getPage("") //to get pages from root site
+        //call for first level subsite
+        $.each(rootSites, function (i, e) {
+            //$("#logs").append('<div><h2><a href="' + this.ServerRelativeUrl + '">' + this.Title + "</a></h2></div>");
+            getSubSites(this.ServerRelativeUrl, "", this.Title, this.Title);
+            //getPage(this.ServerRelativeUrl);
+        });
+
+        //function to get n level of subsites
+        function getSubSites(rooturl, SubSiteUrl, SubSiteTitle, rootTitle) {
+            $("#logs").append('<table><tr><td>' + rootTitle + '</td><td>' + SubSiteTitle + '</td><td><a href="' + rooturl + SubSiteUrl + '">' + rooturl + SubSiteUrl + "</a></td></tr></table>");
+            $.ajax({
+                url: rooturl + SubSiteUrl + "/_api/web/webinfos?$select=ServerRelativeUrl,Title",
+                method: "GET",
+                headers: {
+                    "Accept": "application/json; odata=verbose"
+                },
+                success: function (subsites) {
+
+                    $.each(subsites.d.results, function (index) {
+                        getSubSites("//oasharepoint.rdamicro.com/", this.ServerRelativeUrl, this.Title, rootTitle);
+                        //getPage(this.ServerRelativeUrl);
+                    });
+                },
+                error: function (subsites) { },
+                async: false
+            });
+        }
+
+        function getPage(siteUrl) {
+            $.ajax({
+                url: "http://oasharepoint.rdamicro.com" + siteUrl + "/_api/web/lists/GetByTitle('Pages')/items?$select=FileRef",
+                method: "GET",
+                headers: {
+                    "Accept": "application/json; odata=verbose"
+                },
+                success: function (data) {
+                    $.each(data.d.results, function (index, val) {
+                        oPagesCollection.push(val["FileRef"]);
+                    });
+                },
+                error: function (rootsite) { },
+                async: false
+            });
+        }
+    })
+
+</script>
+<div id="logs"></div>

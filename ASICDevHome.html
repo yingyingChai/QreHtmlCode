@@ -1,0 +1,333 @@
+﻿<style>
+    .col-sm-4 {
+        width: 30%;
+    }
+
+    input[type=button], input[type=reset], input[type=submit], button {
+        min-width: 50px;
+    }
+
+    #layoutsTable {
+        background-color: transparent;
+    }
+
+    .card .card-header h2 {
+        color: #fff !important;
+        font-weight: 200 !important;
+        font-size: 18px !important;
+        font-family: 微软雅黑 !important;
+    }
+
+    .card .card-body.card-padding.card-line1 {
+        height: 70px;
+    }
+
+    .card .card-body.card-padding.card-line2 {
+        height: 80px;
+    }
+
+    .card .card-body.card-padding.card-line3 {
+        height: 120px;
+    }
+
+    .ms-rtestate-field p, p.ms-rteElement-P {
+        margin: 5px 0px 5px 0px;
+        line-height: 1;
+        text-indent: 13px;
+    }
+    /*.card .card-header{
+        min-height:63px;*/
+    }
+</style>
+
+
+<div class="row" style="  margin-top: 30px;">
+    <!-- ATE -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-purple m-b-20">
+                <h2>ATE<small>芯片自动测试</small></h2>
+                <!--<button class="btn bgm-blue btn-float waves-effect" ><i class="zmdi zmdi-mail-send"></i></button>-->
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/ATE/'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    Generate Pattern plan; Release ATE test pattern; Release ATE test program.
+                </p>
+                <li>	Owner: 		TE Team & Design Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- 芯片生产申请-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-amber m-b-20">
+                <h2>Chip Tape Out<small>芯片生产申请</small></h2>
+                <button type="button" onclick="location.href = 'http://bpm.unisoc.com/Fromework/UBI2/index.aspx#/ProjectWeb/Page/TapeOutList/TapeOutList.aspx'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    Chip new and reversion TO flow; Chip TO history.
+                </p>
+                <li>	Owner: 		QA Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- DeviceSpecRelease -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-green m-b-20">
+                <h2>Device Spec Release<small>芯片用户手册发布</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/marketing/DeviceSpecRelease/'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+
+                <li>	Purpose: 	</li><p>
+                    Chip device spec formal release.
+                </p>
+                <li>	Owner: 		QA Team.</li>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 知识产权管理-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-indigo m-b-20">
+                <h2>IP Management Workspaces<small>芯片IP管理平台</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/IPManagement/'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    IP development information management; Maintain IP/Proj matrix.
+                </p>
+                <li>	Owner: 		IP Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- 会议纪要跟踪-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-cyan m-b-20">
+                <h2>Meeting Tracking Workspaces<small>会议纪要管理平台</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/MeetingTracking/'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    Meeting minutes release platform.
+                </p>
+                <li>	Owner: QA Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- 思维导图 -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-teal m-b-20">
+                <h2>Mind Map<small>思维导图</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/SitePages/MindMap.aspx'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    Tool for Mind Map.
+                </p>
+                <li>	Owner: 		All Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- ASIC Projects -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-deeporange m-b-20">
+                <h2>ASIC Project<small>ASIC 项目</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/SitePages/ASIC%20Proj.aspx'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    ASIC project list.
+                </p>
+                <li>	Owner: 		QA Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- ASIC Dept. -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-orange m-b-20">
+                <h2>ASIC Departments<small>ASIC 各个子部门</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/SitePages/ASIC%20Dept.aspx'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    ASIC departments list.
+                </p>
+                <li>	Owner: 		QA Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- Glossary -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-brown m-b-20">
+                <h2>Glossary<small>IC术语字典</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/Glossary/Forms/default.aspx'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    Specialized English introduction for IC design.
+                </p>
+                <li>	Owner: 		Jia Yu (于佳)</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- DFTWG -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-blue m-b-20">
+                <h2>DFTWG<small>DFT 工作组</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/DFTWG/'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    Maintain DFT work group outputs.
+                </p>
+                <li>	Owner: 		DFT Team .</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signoff WG -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-bluegray m-b-20">
+                <h2>Signoff WG<small>Sign off 工作组</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/SignoffWG/'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    Maintain Sign off work group outputs.
+                </p>
+                <li>	Owner: 		Sign off Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tool List By Project -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-cyan m-b-20">
+                <h2>ASIC In-house Tool & Template Mgmt.<small>ASIC内部脚本模板管理系统</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/Tools/SitePages/Tool%20List%20by%20Project.aspx'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    ASIC in-house tool/script/template release and maintain.
+                </p>
+                <li>	Owner: 		QA Team.</li>
+            </div>
+        </div>
+    </div>
+
+    <!-- DVQ -->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-teal m-b-20">
+                <h2>Design Verification<small>ASIC Design Verification</small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/SitePages/DV.aspx'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    News, Requirements, Information Page on SPRD DV.
+                </p>
+                <li>	Owner:       SPRD DV Team.</li>
+            </div>
+        </div>
+    </div>
+    <!--Tool release platform-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-purple m-b-20">
+                <h2>Tool release platform<small>Tool release platform </small></h2>
+                <button type="button" onclick="location.href = 'http://eip.unisoc.com/sites/ASIC/Tools/SitePages/Home.aspx'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    ASIC in-house tool management
+                </p>
+                <li>	Owner:       QA team.</li>
+            </div>
+        </div>
+    </div>
+    <!--RTL/NET/ROM/EMU release platform-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-amber m-b-20">
+                <h2>RTL/NET/ROM/EMU release platform<small>RTL/NET/ROM/EMU release platform </small></h2>
+                <button type="button" onclick="location.href = 'http://10.0.3.38:8000/CT/release_version_html/'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    ASIC SOC/ME/ROM/EM release managment
+                </p>
+                <li>	Owner:       QA team.</li>
+            </div>
+        </div>
+    </div>
+    <!--ECO platform-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-green m-b-20">
+                <h2>RTL/NET/ROM/EMU release platform<small>RTL/NET/ROM/EMU release platform </small></h2>
+                <button type="button" onclick="location.href = 'http://10.0.3.38:8000/CT/eco_version_html/'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    ASIC ECO management
+                </p>
+                <li>	Owner:       QA team.</li>
+            </div>
+        </div>
+    </div>
+    <!--ASIC requirements management platform-->
+    <div class="col-sm-4">
+        <div class="card">
+            <div class="card-header bgm-indigo m-b-20">
+                <h2>ASIC requirements management platform<small>ASIC requirements management platform </small></h2>
+                <button type="button" onclick="location.href = 'http://imanage.unisoc.com/globalscree/ASIC_TABLE'" class="btn bgm-blue btn-float waves-effect"><i class="zmdi zmdi-mail-send"></i></button>
+            </div>
+
+            <div class="card-body card-padding card-line1">
+                <li>	Purpose: 	</li><p>
+                    ASIC design requests management
+                </p>
+                <li>	Owner:       QA team.</li>
+            </div>
+        </div>
+    </div>
+</div>
