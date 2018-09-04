@@ -1,0 +1,322 @@
+﻿<style>
+    /*覆盖默认样式*/
+    /*外边最大Table*/
+    table {
+        width: 100%;
+    }
+
+    #onetIDListForm {
+        background: #fff;
+        padding: 0 13px 0 16px;
+        width: 80%;
+        margin-left: 10%
+    }
+    /*包裹table的div*/
+    #DeltaPlaceHolderMain .ms-webpart-zone {
+        display: block;
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+    /*% Complete添加%号的*/
+    input[title="% Complete"] {
+        width: 96% !important;
+    }
+    /*定义Option*/
+    option {
+        color: #00BCD4;
+    }
+    /*下划线*/
+    .ms-formtable .ms-formlabel, .ms-formtable .ms-formbody {
+        border-bottom: none;
+    }
+    /*hover变色*/
+    .ms-formtable tr:hover {
+        background-color: #fff;
+    }
+    /*label 蓝色显示*/
+    .ms-formlabel h3.ms-standardheader {
+        color: #23c6c8;
+        font-weight: 700;
+    }
+    /*组选择器,文本域*/
+    .sp-peoplepicker-topLevel, .ms-rtefield, .sp-peoplepicker-editorInput {
+        width: 100%;
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        border-bottom-color: #d8d8d8;
+    }
+    /*Assigned To*/
+    #onetIDListForm .sp-peoplepicker-topLevel {
+        border: none;
+        padding-left: 0;
+        width: 100%;
+    }
+
+    input[type=password]:hover, input[type=text]:hover, input[type=file]:hover, textarea:hover, .sp-peoplepicker-topLevel:hover, .ms-inputBox:hover {
+        border-color: #2196f3 !important;
+    }
+    /*输入框变长*/
+    .ms-formtable input[size="11"] {
+        width: 98%;
+    }
+
+    .ms-formtable input[size="1"] {
+        max-width: 100% !important;
+    }
+    /*td添加内边距*/
+    .ms-formtable td:not(.ms-dtinput) {
+        padding: 4px 5px 4px 22px;
+    }
+
+    .ms-dtinput, .ms-dttimeinput {
+        width: 100%;
+    }
+    /*table的表框线*/
+    .ms-formtable {
+        border: 1px solid #d8d8d8;
+    }
+    /*按钮下移*/
+    #part1 > table[cellspacing="0"] {
+        margin-top: 15px;
+    }
+    /*标题样式*/
+    #tableHeader td {
+        background-color: #23c6c8;
+        vertical-align: middle;
+        text-align: center;
+        height: 55px;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+    }
+    /*按钮样式*/
+    #onetIDListForm input[type=button] {
+        background-color: #23c6c8 !important;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    #onetIDListForm input[type=password], #onetIDListForm input[type=text], #onetIDListForm input[type=file], #onetIDListForm select {
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        outline: none;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        border-bottom-color: #d8d8d8;
+        width: 100%;
+        -webkit-transition: all;
+        -o-transition: all;
+        transition: all;
+        -webkit-transition-duration: 300ms;
+        transition-duration: 300ms;
+    }
+
+    .fg-toggled {
+        border-bottom-color: #2196f3 !important;
+    }
+
+    .form-group {
+        margin-bottom: 0 !important
+    }
+
+    table td[class*="col-"] {
+        border: 1px solid #d8d8d8;
+    }
+
+    td img {
+        width: 300px;
+        height: 300px
+    }
+    .ms-asset-icon {
+        width: 16px !important;
+        height: 16px !important;
+    }
+</style>
+<script src="../../js/layer.js"></script>
+<script src="../../js/Product.js"></script>
+<script>
+    var user = getUser();
+    var userId = user.Id;
+    if (userId != 3927 && userId != 3257) {
+        layer.alert("您无权反馈此建议！", {
+            icon: 7,
+            skin: 'layer-ext-moon', closeBtn: 0
+        }, function () {
+            window.location.href = "http://eip.unisoc.com/sites/app/SuggestionProduct/SitePages/Home.aspx";
+        });
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        lineChange();
+        addTableHeader();
+    })
+    function lineChange() {
+        $('body').on('focus', 'input', function () {
+            $(this).addClass('fg-toggled');
+        });
+
+        $('body').on('blur', 'input', function () {
+            $(this).removeClass('fg-toggled');
+        });
+    }
+    function addTableHeader() {
+        var tr = $("<tr id='tableHeader'><td colspan='4'>Edit Suggestion</td></tr></div>");
+        $('div[id^="WebPartWPQ"] .ms-formtable>tbody').prepend(tr);
+    }
+</script>
+<script>
+    (function () {
+        // Create object that have the context information about the field that we want to change it's output render
+        var percentCompleteFiledContext = {};
+        percentCompleteFiledContext.Templates = {};
+        percentCompleteFiledContext.Templates.OnPostRender = hiddenFiledOnPreRender;
+        percentCompleteFiledContext.Templates.Fields = {
+            // Apply the new rendering for Age field on Edit forms
+            "Department": {
+                "EditForm": readonlyFieldTemplate
+            },
+            "SelectType": {
+                "EditForm": readonlyFieldTemplate
+            },
+            "content": {
+                "EditForm": readonlyFieldTemplate
+            },
+            "public": {
+                "EditForm": readonlyFieldTemplate
+            },
+            "SubmitDate": {
+                "EditForm": readonlyFieldTemplate
+            },
+            "category": {
+                "EditForm": readonlyFieldTemplate
+            }
+        };
+
+        SPClientTemplates.TemplateManager.RegisterTemplateOverrides(percentCompleteFiledContext);
+
+    })();
+
+    // This function provides the rendering logic
+    function readonlyFieldTemplate(ctx) {
+
+        //Reuse ready sharepoint javascript libraries
+        switch (ctx.CurrentFieldSchema.FieldType) {
+            case "Text":
+            case "Number":
+            case "Integer":
+            case "Currency":
+            case "Choice":
+            case "Computed":
+                return SPField_FormDisplay_Default(ctx);
+
+            case "MultiChoice":
+                prepareMultiChoiceFieldValue(ctx);
+                return SPField_FormDisplay_Default(ctx);
+
+            case "Boolean":
+                return SPField_FormDisplay_DefaultNoEncode(ctx);
+
+            case "Note":
+                prepareNoteFieldValue(ctx);
+                return SPFieldNote_Display(ctx);
+
+            case "File":
+                return SPFieldFile_Display(ctx);
+
+            case "Lookup":
+            case "LookupMulti":
+                return SPFieldLookup_Display(ctx);
+
+            case "URL":
+                return RenderFieldValueDefault(ctx);
+
+            case "User":
+                prepareUserFieldValue(ctx);
+                return SPFieldUser_Display(ctx);
+
+            case "UserMulti":
+                prepareUserFieldValue(ctx);
+                return SPFieldUserMulti_Display(ctx);
+
+            case "DateTime":
+                dateNoteFieldValue(ctx);
+                return SPFieldDateTime_Display(ctx);
+
+            case "Attachments":
+                return SPFieldAttachments_Default(ctx);
+
+            case "TaxonomyFieldType":
+                //Re-use ready sharepoint inside sp.ui.taxonomy.js javascript libraries
+                return SP.UI.Taxonomy.TaxonomyFieldTemplate.renderDisplayControl(ctx);
+        }
+    }
+
+    // This function provides the rendering logic
+    function hiddenFiledTemplate() {
+        return "<span class='csrHiddenField'></span>";
+    }
+
+    // This function provides the rendering logic
+    function hiddenFiledOnPreRender(ctx) {
+        $(".csrHiddenField").closest("tr").hide();
+    }
+    //Note control need specific formatted value to render content correctly
+    function dateNoteFieldValue(ctx) {
+
+        var item = ctx["CurrentFieldValue"];
+        var fieldValue = new Date(item).format("yyyy/MM/dd");
+
+        ctx["CurrentFieldValue"] = fieldValue;
+    }
+    //User control need specific formatted value to render content correctly
+    function prepareUserFieldValue(ctx) {
+        var item = ctx['CurrentItem'];
+        var userField = item[ctx.CurrentFieldSchema.Name];
+        var fieldValue = "";
+
+        for (var i = 0; i < userField.length; i++) {
+            fieldValue += userField[i].EntityData.SPUserID + SPClientTemplates.Utility.UserLookupDelimitString + userField[i].DisplayText;
+
+            if ((i + 1) != userField.length) {
+                fieldValue += SPClientTemplates.Utility.UserLookupDelimitString
+            }
+        }
+
+        ctx["CurrentFieldValue"] = fieldValue;
+    }
+
+    //Choice control need specific formatted value to render content correctly
+    function prepareMultiChoiceFieldValue(ctx) {
+
+        if (ctx["CurrentFieldValue"]) {
+            var fieldValue = ctx["CurrentFieldValue"];
+
+            var find = ';#';
+            var regExpObj = new RegExp(find, 'g');
+
+            fieldValue = fieldValue.replace(regExpObj, '; ');
+            fieldValue = fieldValue.replace(/^; /g, '');
+            fieldValue = fieldValue.replace(/; $/g, '');
+
+            ctx["CurrentFieldValue"] = fieldValue;
+        }
+    }
+
+    //Note control need specific formatted value to render content correctly
+    function prepareNoteFieldValue(ctx) {
+
+        if (ctx["CurrentFieldValue"]) {
+            var fieldValue = ctx["CurrentFieldValue"];
+            fieldValue = "<div>" + fieldValue.replace(/\n/g, ''); + "</div>";
+
+            ctx["CurrentFieldValue"] = fieldValue;
+        }
+    }
+</script>

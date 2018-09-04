@@ -1,0 +1,180 @@
+﻿<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/style.css" rel="stylesheet">
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/Product.js"></script>
+<script src="../js/plugins/dataTables/datatables.min.js"></script>
+<style>
+    .AColor {
+        color: #1ab394 !important;
+    }
+
+    .classButtom {
+        float: right;
+        margin-bottom: 0px;
+    }
+
+    .float-e-margins .btn {
+        margin-bottom: 0px !important;
+    }
+
+    #noResult th {
+        width: 400px !important
+    }
+
+    #result th {
+        width: 400px !important
+    }
+
+    #result tbody tr td {
+        width: 600px !important
+    }
+
+    #noResult tbody tr td {
+        width: 600px !important
+    }
+
+        #noResult tbody tr td img {
+            width: 150px;
+            height: 150px;
+        }
+
+    #result tbody tr td img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .ms-asset-icon {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    .table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+        text-transform: capitalize;
+    }
+</style>
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeInRight">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5 id="CBTITLE">To Do (待反馈)</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTables-example" id="noResult" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Department (部门)</th>
+                                            <th>Category (类别)</th>
+                                            <th>Created By (提交人)</th>
+                                            <th>Created (创建时间)</th>
+                                            <th style="width:400px">Content (内容)</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="isNO">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>Have Feedback (已反馈)</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover dataTables-example" id="result" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Department (部门)</th>
+                                            <th>Category (类别)</th>
+                                            <th>Created By (提交人)</th>
+                                            <th style="width:400px">Content (内容)</th>
+                                            <th style="width:400px">Feedback (反馈内容)</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var user = getUser();
+    var result = [], noResult = [];
+    $(function () {
+        $.ajax({
+            url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('SuggestionProducts')/Items?$select=ID,Department,category,coupleBack,Created,content,public,Author,Author/Id,Author/Title,FeedbackPeople,FeedbackPeople/Id,FeedbackPeople/Title&$expand=Author/Id,FeedbackPeople/Id&$orderby=Created desc&$top=99999999",
+            type: "GET",
+            headers: { "accept": "application/json;odata=verbose" },
+            success: function (data) {
+                if (data.d.results) {
+                    data.d.results.forEach(function (i) {
+                        if (user.Id == 3927 || user.Id == 3257) {
+                            var url = "http://eip.unisoc.com/sites/app/SuggestionProduct/Lists/SuggestionProducts/EditForm.aspx?ID=" + i.Id + "&Source=http://eip.unisoc.com/sites/app/SuggestionProduct/SitePages/Home.aspx";
+                            var _url = '<a class="AColor" href="' + url + '"><i class="zmdi zmdi-comment-outline" style="margin-right: 20px;"></i>' + i.Department + '</a>';
+                            if (i.FeedbackPeople.Id !=null) {
+                                var data = [];
+                                data.push(_url);
+                                data.push(i.category);
+                                data.push(i.Author.Title);
+                                data.push(new Date(i.Created).Format("yyyy-MM-dd hh:mm:ss"));
+                                data.push(i.content);
+                                result.push(data);
+                            } else {
+                                var data = [];
+                                data.push(_url);
+                                data.push(i.category);
+                                data.push(i.Author.Title);
+                                data.push(new Date(i.Created).Format("yyyy-MM-dd hh:mm:ss"));
+                                data.push(i.content);
+                                data.push(i.coupleBack);
+                                noResult.push(data);
+                            }
+
+                        } else {
+                            var url = "http://eip.unisoc.com/sites/app/SuggestionProduct/Lists/SuggestionProducts/DispForm.aspx?ID=" + i.Id + "&Source=http://eip.unisoc.com/sites/app/SuggestionProduct/SitePages/Home.aspx";
+                            var _url = '<a class="AColor" href="' + url + '"><i class="zmdi zmdi-comment-outline" style="margin-right: 20px;"></i>' + i.Department + '</a>';
+                            if (i.public == "公开") {
+                                var data = [];
+                                data.push(_url);
+                                data.push(i.category);
+                                data.push(i.Author.Title);
+                                data.push(new Date(i.Created).Format("yyyy-MM-dd hh:mm:ss"));
+                                data.push(i.content);
+                                noResult.push(data);
+                            }
+                            $("#CBTITLE").text("Suggestions List （建议列表）")
+                            $("#isNO").css("display", "none");
+                        }
+                    })
+                    $('#noResult').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        data: noResult,
+                        order: [[1, "desc"]]
+                    });
+                    $('#result').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        data: result,
+                        order: [[1, "desc"]]
+                    });
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            }
+        });
+
+    })
+</script>
