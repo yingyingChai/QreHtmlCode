@@ -1,0 +1,164 @@
+﻿<style>
+    #suiteLinksBox, #suiteBarButtons {
+        display: contents !important
+    }
+    table {
+        width: 100%;
+    }
+    #onetIDListForm {
+        background: #fff;
+        padding: 0 13px 0 16px;
+        width: 80%;
+        margin-left: 10%
+    }
+    #DeltaPlaceHolderMain .ms-webpart-zone {
+        display: block;
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+    input[title="% Complete"] {
+        width: 96% !important;
+    }
+    option {
+        color: #00BCD4;
+    }
+    .ms-formtable .ms-formlabel, .ms-formtable .ms-formbody {
+        border-bottom: none;
+    }
+    .ms-formtable tr:hover {
+        background-color: #fff;
+    }
+    .ms-formlabel h3.ms-standardheader {
+        color: #337ab7;
+        font-weight: 700;
+    }
+    .sp-peoplepicker-topLevel, .ms-rtefield, .sp-peoplepicker-editorInput {
+        width: 100%;
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        border-bottom-color: #d8d8d8;
+    }
+    #onetIDListForm .sp-peoplepicker-topLevel {
+        border: none;
+        padding-left: 0;
+        width: 100%;
+    }
+    input[type=password]:hover, input[type=text]:hover, input[type=file]:hover, textarea:hover, .sp-peoplepicker-topLevel:hover, .ms-inputBox:hover {
+        border-color: #2196f3 !important;
+    }
+    .ms-formtable input[size="11"] {
+        width: 98%;
+    }
+    .ms-formtable input[size="1"] {
+        max-width: 100% !important;
+    }
+    .ms-formtable td:not(.ms-dtinput) {
+        padding: 4px 5px 4px 22px;
+    }
+
+    .ms-dtinput, .ms-dttimeinput {
+        width: 100%;
+    }
+    .ms-formtable {
+        border: 1px solid #d8d8d8;
+    }
+    #part1 > table[cellspacing="0"] {
+        margin-top: 15px;
+    }
+    #tableHeader td {
+        background-color: #337ab7;
+        vertical-align: middle;
+        text-align: center;
+        height: 55px;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 700;
+    }
+    #onetIDListForm input[type=button] {
+        background-color: #337ab7 !important;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    #onetIDListForm input[type=password], #onetIDListForm input[type=text], #onetIDListForm input[type=file], #onetIDListForm select {
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        border-top: none;
+        border-right: none;
+        border-left: none;
+        outline: none;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        border-radius: 0;
+        border-bottom-color: #d8d8d8;
+        width: 100%;
+        -webkit-transition: all;
+        -o-transition: all;
+        transition: all;
+        -webkit-transition-duration: 300ms;
+        transition-duration: 300ms;
+    }
+    .fg-toggled {
+        border-bottom-color: #2196f3 !important;
+    }
+    .form-group {
+        margin-bottom: 0 !important
+    }
+    textarea {
+        width: 100% !important;
+        height: 100px
+    }
+    a[title="页面"], li[title="页面"] {
+        display: contents !important;
+    }
+</style>
+<script src="../../B2BRMAJS/jquery.SPServices-2014.02.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../B2BRMAJS/Product.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    function alertMessage(message) {
+        layer.alert(message, {
+            icon: 7,
+            skin: 'layer-ext-moon'
+        })
+    }
+    var user = getUser();
+    var Department = getDepartment(user.LoginName);
+    var id = getQueryString("ID");
+    var data = getItem(id);
+    var HandlerTitle = data.Handler.Title;
+    $(function () {
+        $("a[name='SPBookmark_Attachments0']").parent().parent().parent().css("display", "none")
+        $("a[name='SPBookmark_gUid0']").parent().parent().parent().css("display", "none")
+        $("a[name='SPBookmark_CaseStatus']").parent().parent().parent().css("display", "none")
+        if (HandlerTitle == user.Title || DepartmentList.indexOf(Department) >= 0) {
+            // 拥有处理权限
+        } else {
+            if (data.Author.Title == user.Title || ViewList.indexOf(user.Title) > 0 || NotificationName.indexOf(user.Title) >= 0) {
+                $("a[name='SPBookmark_Amount']").parent().parent().parent().css("display", "none")
+            } else {
+                layer.msg('您无权查看此Case', {
+                    time: 0,
+                    btn: ['确认'],
+                    yes: function (index) {
+                        window.location.href = HomeHTML;
+                    }
+                });
+            }
+        }
+        lineChange(); 
+        addTableHeader();
+    })
+    function lineChange() {
+        $('body').on('focus', 'input', function () {
+            $(this).addClass('fg-toggled');
+        });
+        $('body').on('blur', 'input', function () {
+            $(this).removeClass('fg-toggled');
+        });
+    }
+    function addTableHeader() {
+        var tr = $("<tr id='tableHeader'><td colspan='4'>Complaint & Claim Reques</td></tr></div>");
+        $('div[id^="WebPartWPQ"] .ms-formtable>tbody').prepend(tr);
+    }
+</script>

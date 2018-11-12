@@ -1,0 +1,197 @@
+﻿<link rel="stylesheet" href="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-ui-1.12.1/Select2/css/select2.min.css">
+<style>
+    div.ms-inputuserfield {
+        border-radius: 5px;
+    }
+
+    #part1 .select2.select2-container {
+        width: 100% !important;
+    }
+
+    #onetIDListForm {
+        background: #fff;
+        width: 550px;
+        padding: 0 13px 0 16px;
+    }
+    /*包裹table的div*/
+    #DeltaPlaceHolderMain .ms-webpart-zone {
+        display: block;
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    [id^='WebPartWPQ'] > table {
+        width: 100%;
+    }
+    /*版本信息变紫色*/
+    .ms-descriptiontext {
+        color: #9C27B0;
+    }
+
+    table {
+        width: 100%
+    }
+
+    body.sw-toggled #content {
+        padding-left: 0px;
+    }
+</style>
+<script type="text/javascript" src="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-ui-1.12.1/Select2/js/select2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        loadTrHtml();
+        loadSelect();
+        CustomerName();
+        loadCustomerName();
+        CompanyName();
+        loadCompanyName();
+        for (var i = 0; i < $(".ms-dtinput").length; i++) {
+            if (i % 2 == 1) {
+                $($(".ms-dtinput")[i]).css("width", "10px");
+                $($(".ms-dtinput")[i]).css("padding", "0px");
+            }
+        }
+        $("#ctl00_ctl40_g_837932ba_976b_4417_a65d_d0129f6e7be8_ctl00_CustomFieldIterator1_ctl01_ctl00_ctl00_ctl04_ctl00_85816172_bfa8_4454_b888_be48f112fb0f_Picker_containerCell").css("width", "100%")
+        $("#ctl00_ctl40_g_837932ba_976b_4417_a65d_d0129f6e7be8_ctl00_CustomFieldIterator1_ctl11_ctl00_ctl00_ctl04_ctl00_bd82959d_3bae_473c_9224_c097dba8fdac_Picker_containerCell").css("width", "100%")
+        selectSale();
+    });
+    /*加载三行标签*/
+    function loadTrHtml() {
+        var CustomerTr = '<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2"><h3 class="ms-standardheader control-label"><nobr>客户内部编号</nobr></h3></td>';
+        CustomerTr += '<td width="350px" class="ms-formbody col-sm-10"><span dir="none"><div class="fg-line"><input type="text" maxlength="6" title="客户内部编号"  id="CustomerInCode" class="ms-long ms-spellcheck-true form-control" disabled></div></span></td></tr>';
+        CustomerTr += '<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2"><h3 class="ms-standardheader control-label"><nobr>客户简称</nobr></h3></td>';
+        CustomerTr += '<td width="350px" class="ms-formbody col-sm-10"><span dir="none"><div class="fg-line"><input type="text" maxlength="6" title="客户简称"  id="CustomerShortName" class="ms-long ms-spellcheck-true form-control" disabled></div></span></td></tr>';
+        CustomerTr += '<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2"><h3 class="ms-standardheader control-label"><nobr>客户全称</nobr></h3></td>';
+        CustomerTr += '<td width="350px" class="ms-formbody col-sm-10"><span dir="none"><div class="fg-line"><input type="text" maxlength="6" title="客户全称"  id="CustomerName" class="ms-long ms-spellcheck-true form-control" disabled></div></span></td></tr>';
+        $('#part1 .form-group').eq(0).after(CustomerTr);
+
+        var CompanyTr = '<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2"><h3 class="ms-standardheader control-label"><nobr>关联公司内部编号</nobr></h3></td>';
+        CompanyTr += '<td width="350px" class="ms-formbody col-sm-10"><span dir="none"><div class="fg-line"><input type="text" maxlength="6" title="关联公司内部编号"  id="CompanyInCode" class="ms-long ms-spellcheck-true form-control" disabled></div></span></td></tr>';
+        CompanyTr += '<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2"><h3 class="ms-standardheader control-label"><nobr>关联公司简称</nobr></h3></td>';
+        CompanyTr += '<td width="350px" class="ms-formbody col-sm-10"><span dir="none"><div class="fg-line"><input type="text" maxlength="6" title="关联公司简称"  id="CompanyShortName" class="ms-long ms-spellcheck-true form-control" disabled></div></span></td></tr>';
+        CompanyTr += '<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2"><h3 class="ms-standardheader control-label"><nobr>关联公司全称</nobr></h3></td>';
+        CompanyTr += '<td width="350px" class="ms-formbody col-sm-10"><span dir="none"><div class="fg-line"><input type="text" maxlength="6" title="关联公司全称"  id="CompanyName" class="ms-long ms-spellcheck-true form-control" disabled></div></span></td></tr>';
+        $('#part1 .form-group').eq(18).after(CompanyTr);
+    }
+    /*添加下拉框控件*/
+    function loadSelect() {
+        $('select[title="客户外部编号"]')[0].id = "Customer"
+        $('select[title="关联公司外部编号"]')[0].id = "Department"
+        $("select[title='客户外部编号']").addClass("js-example-basic-single CustomerSelect2");
+        $("select[title='关联公司外部编号']").addClass("js-example-basic-single AffiliatedCompanySelect2");
+        $("select[title='客户外部编号']").select2();
+        $("select[title='关联公司外部编号']").select2();
+    }
+    /*加载客户名*/
+    function loadCustomerName() {
+        $(".CustomerSelect2").on("change", function () {
+            CustomerName();
+        });
+    }
+    function CustomerName() {
+        var selectValue = $('[title="客户外部编号"] .select2-selection__rendered').text();
+        if (selectValue && selectValue != "(None)") {
+            $.ajax({
+                url: "http://eip.unisoc.com/sites/sales/_api/web/lists/getByTitle('客户列表')/Items?$select=Title,CustomerInCode,CustomerShortName,CustomerName&$filter=Title eq " + selectValue + "&$Top=99999999",
+                type: "GET",
+                headers: { "accept": "application/json;odata=verbose" },
+                success: function (data) {
+                    var response = data.d.results;
+                    if (response) {
+                        $('#CustomerInCode').val(response[0].CustomerInCode);
+                        $('#CustomerShortName').val(response[0].CustomerShortName);
+                        $('#CustomerName').val(response[0].CustomerName);
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr.status + ': ' + xhr.statusText);
+                }
+            });
+        }
+    }
+    /*加载代理商名*/
+    function loadCompanyName() {
+        $(".AffiliatedCompanySelect2").on("change", function () {
+            CompanyName();
+        });
+    }
+    function CompanyName() {
+        var selectValue = $('[title="关联公司编号"] .select2-selection__rendered').text();
+        if (selectValue && selectValue != "(None)") {
+            $.ajax({
+                url: "http://eip.unisoc.com/sites/sales/_api/web/lists/getByTitle('客户列表')/Items?$select=Title,CustomerInCode,CustomerShortName,CustomerName&$filter=Title eq " + selectValue + "&$Top=99999999",
+                type: "GET",
+                headers: { "accept": "application/json;odata=verbose" },
+                success: function (data) {
+                    var response = data.d.results;
+                    if (response) {
+                        $('#CompanyInCode').val(response[0].CustomerInCode);
+                        $('#CompanyShortName').val(response[0].CustomerShortName);
+                        $('#CompanyName').val(response[0].CustomerName);
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr.status + ': ' + xhr.statusText);
+                }
+            });
+        }
+    }
+    function selectSale() {
+        $($($(".ms-formtable.form-horizontal tbody")[0]).find("tr")[12]).css("display", "none")
+        $($($(".ms-formtable.form-horizontal tbody")[0]).find("tr")[13]).css("display", "none")
+        $($($(".ms-formtable.form-horizontal tbody")[0]).find("tr")[14]).css("display", "none")
+        $($($(".ms-formtable.form-horizontal tbody")[0]).find("tr")[15]).css("display", "none")
+        $("input[title='实际价格']").parent().parent().parent().parent().before('<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2">' +
+            '<h3 class="ms-standardheader control-label">下限操作符<span class="ms-accentText" title="This is a required field."> *</span></h3></td>' +
+            '<td width="350px" class="ms-formbody col-sm-10"><select id="DesignLow" style="width:35%" title="下限操作符"><option value=">=">&gt;=</option>' +
+            '<option value=">" selected="selected">&gt;</option></select><span style="margin-left: 10px;">销量下限 (KK)<span class="ms-accentText" title="This is a d field."> *</span></span>' +
+            '<input type="text" value="0.00" id="DesignLowValue" title="销量下限 (KK)" size="11" class="ms-input" style="ime-mode : inactive;width:39%"></td></tr>' +
+            '<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2"><h3 class="ms-standardheader control-label">上限操作符' +
+            '<span class="ms-accentText" title="This is a required field."> *</span></h3></td><td width="350px" class="ms-formbody col-sm-10">' +
+            '<select id="DesignUp" style="width:35%" title="上限操作符"><option value="<" selected="selected">&lt;</option><option value="<=">&lt;=</option></select>' +
+            '<span style="margin-left: 10px;">销量上限 (KK)<span class="ms-accentText" title="This is a required field."> *</span></span><input type="text" value="0.00" id="DesignUpValue" ' +
+            'title="销量上限 (KK)" size="11" class="ms-input" style="ime-mode : inactive;width:39%"></td></tr>')
+        document.getElementById("DesignUpValue").value = document.getElementById("VolMax_c8226d7d-0fb2-4031-b237-179096b0bc26_$NumberField").value
+        document.getElementById("DesignLowValue").value = document.getElementById("VolMin_35419cb7-3fb6-4318-b49d-edd899d274cf_$NumberField").value
+        var minValue = document.getElementById("MinOP_538513c4-27f5-4da6-9880-d57009e0b9d1_$DropDownChoice").value;
+        var listMin = document.getElementById("DesignLow")
+        for (var i = 0; i < listMin.options.length; i++) {
+            if (listMin.options[i].value == minValue) {
+                document.getElementById("DesignLow").options[i].selected = true
+            }
+        }
+        var maxValue = document.getElementById("MaxOP_af6a0fb8-008a-42ad-b3df-22cf5a451ee3_$DropDownChoice").value;
+        var listMax = document.getElementById("DesignUp")
+        for (var i = 0; i < listMax.options.length; i++) {
+            if (listMax.options[i].value == maxValue) {
+                document.getElementById("DesignUp").options[i].selected = true
+            }
+        }
+        $("#DesignLow").on("change", function () {
+            var selectValue = $('#DesignLow option:selected').text();
+            var list = document.getElementById("MinOP_538513c4-27f5-4da6-9880-d57009e0b9d1_$DropDownChoice")
+            for (var i = 0; i < list.options.length; i++) {
+                if (list.options[i].value == selectValue) {
+                    document.getElementById("MinOP_538513c4-27f5-4da6-9880-d57009e0b9d1_$DropDownChoice").options[i].selected = true
+                }
+            }
+        });
+        $("#DesignLowValue").on("change", function () {
+            var selectValue = document.getElementById("DesignLowValue").value;
+            document.getElementById("VolMin_35419cb7-3fb6-4318-b49d-edd899d274cf_$NumberField").value = selectValue
+        });
+        $("#DesignUp").on("change", function () {
+            var selectValue = $('#DesignUp option:selected').text();
+            var list = document.getElementById("MaxOP_af6a0fb8-008a-42ad-b3df-22cf5a451ee3_$DropDownChoice")
+            for (var i = 0; i < list.options.length; i++) {
+                if (list.options[i].value == selectValue) {
+                    document.getElementById("MaxOP_af6a0fb8-008a-42ad-b3df-22cf5a451ee3_$DropDownChoice").options[i].selected = true
+                }
+            }
+        });
+        $("#DesignUpValue").on("change", function () {
+            var selectValue = document.getElementById("DesignUpValue").value;
+            document.getElementById("VolMax_c8226d7d-0fb2-4031-b237-179096b0bc26_$NumberField").value = selectValue
+        });
+    }
+</script>

@@ -1,0 +1,56 @@
+﻿<style>
+    #sideNavBox {
+        z-index: 99 !important;
+    }
+
+    #scriptWPQ2 .ms-cellstyle.ms-vb2 img {
+        display: none !important;
+    }
+
+    .ms-cellstyle.ms-vb2 table {
+        background-color: transparent
+    }
+</style>
+<script>
+    (function () {
+
+        // Create object that have the context information about the field that we want to change it's output render
+        var percentCompleteFiledContext = {};
+        percentCompleteFiledContext.Templates = {};
+        percentCompleteFiledContext.Templates.OnPostRender = hiddenFiledOnPreRender;
+        percentCompleteFiledContext.Templates.Fields = {
+            // Apply the new rendering for PercentComplete field on List View, Display, New and Edit forms
+            "Product": {
+                "View": ProductTemplate,
+                "DisplayForm": ProductTemplate
+            },
+            "AffiliatedProduct": {
+                "View": AffiliatedProductTemplate,
+                "DisplayForm": AffiliatedProductTemplate
+            },
+        };
+        SPClientTemplates.TemplateManager.RegisterTemplateOverrides(percentCompleteFiledContext);
+    })();
+
+
+    // This function provides the rendering logic
+    function ProductTemplate(ctx) {
+        var ProductValue = ctx.CurrentItem["Product"];
+        if (ProductValue != "") {
+            return ProductValue;
+        }
+        return '';
+    }
+    function AffiliatedProductTemplate(ctx) {
+        var AffiliatedProductValue = ctx.CurrentItem["AffiliatedProduct"];
+        if (AffiliatedProductValue != "") {
+            return AffiliatedProductValue;
+        }
+        return '';
+    }
+
+    // This function provides the rendering logic
+    function hiddenFiledOnPreRender(ctx) {
+        $(".csrHiddenField").closest("tr").hide();
+    }
+</script>

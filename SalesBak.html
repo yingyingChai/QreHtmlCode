@@ -1,0 +1,59 @@
+﻿<link rel="stylesheet" href="http://eip.unisoc.com/sites/howto/_catalogs/masterpage/jquery-ui-1.12.1/Select2/css/select2.min.css">
+<style>
+    #part1 .select2.select2-container {
+        width: 100% !important;
+    }
+
+    #onetIDListForm {
+        background: #fff;
+        width: 550px;
+        padding: 0 13px 0 16px;
+    }
+    /*包裹table的div*/
+    #DeltaPlaceHolderMain .ms-webpart-zone {
+        display: block;
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+
+    [id^='WebPartWPQ'] > table {
+        width: 100%;
+    }
+    /*版本信息变紫色*/
+    .ms-descriptiontext {
+        color: #9C27B0;
+    }
+
+    table {
+        width: 100%
+    }
+
+    body.sw-toggled #content {
+        padding-left: 0px;
+    }
+    .ms-cellstyle.ms-vb2 table{
+        background-color:transparent
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        Format("SPBookmark_MinOP");
+        Format("SPBookmark_MaxOP")
+    });
+    function Format(name) {
+        var st = RevertString($($("a[name='" + name + "']").parent().parent().parent()[0].children[1]).text());
+        $($("a[name='" + name + "']").parent().parent().parent()[0].children[1]).text(st);
+    }
+    function RevertString(value) {
+        if (value.indexOf("&gt;")>-1) {
+            return ">"
+        } else if (value.indexOf("&lt;")>-1) {
+            return "<"
+        } else if (value.indexOf("&gt;=")>-1) {
+            return ">="
+        } else if (value.indexOf("&lt;=")>-1) {
+            return "<="
+        }
+        return ""
+    }
+</script>

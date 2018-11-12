@@ -1,7 +1,7 @@
-function getItem(id) {
-    var dataItem = [];
+Ôªøfunction getItem(id) {
+    var dataItem = {};
     $.ajax({
-        url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('RMA')/items?$select=Handler,Handler/Id,Handler/Title,Notification_x0020_List,Notification_x0020_List/Id,Notification_x0020_List/Title,Author,Author/Id,Author/Title,CaseStatus&$expand=Author/Id,Notification_x0020_List/Id,Handler/Id&$filter=ID eq '" + id + "'",
+        url: _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('RMA')/items?$select=Handler,Handler/Id,Handler/Title,Notification_x0020_List,Notification_x0020_List/Id,Notification_x0020_List/Title,CreatedAuthor,CreatedAuthor/Id,CreatedAuthor/Title,CaseStatus&$expand=CreatedAuthor/Id,Notification_x0020_List/Id,Handler/Id&$filter=ID eq '" + id + "'",
         contentType: "application/json;odata=verbose",
         headers: { "accept": "application/json;odata=verbose" },
         async: false,
@@ -55,13 +55,13 @@ function getDepartment(loginName) {
 }
 Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
-        "M+": this.getMonth() + 1,                 //‘¬∑›
-        "d+": this.getDate(),                    //»’
-        "h+": this.getHours(),                   //–° ±
-        "m+": this.getMinutes(),                 //∑÷
-        "s+": this.getSeconds(),                 //√Î
-        "q+": Math.floor((this.getMonth() + 3) / 3), //ºæ∂»
-        "S": this.getMilliseconds()             //∫¡√Î
+        "M+": this.getMonth() + 1,                 //Êúà‰ªΩ
+        "d+": this.getDate(),                    //Êó•
+        "h+": this.getHours(),                   //Â∞èÊó∂
+        "m+": this.getMinutes(),                 //ÂàÜ
+        "s+": this.getSeconds(),                 //Áßí
+        "q+": Math.floor((this.getMonth() + 3) / 3), //Â≠£Â∫¶
+        "S": this.getMilliseconds()             //ÊØ´Áßí
     };
     if (/(y+)/.test(fmt))
         fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
@@ -84,7 +84,7 @@ function getQueryString(name) {
 }
 var userList = [];
 var DepartmentList = ["System Support"];
-var ViewList = ["Bo Qi (∆Ó≤®)", "Jerry Gong (π®Ω‡)"];
+var ViewList = ["Bo Qi (Á•ÅÊ≥¢)", "Jerry Gong (ÈæöÊ¥Å)", "Chunzhou Zhao (ËµµÊò•Âë®)"];
 var HomeHTML = "https://sdx.unisoc.com/SitePages/RMA%20Add.aspx";
 var EditUrl = "https://sdx.unisoc.com/Lists/RMA/EditForm.aspx?ID=";
 var ViewUrl = "https://sdx.unisoc.com/Lists/RMA/DispForm.aspx?ID=";

@@ -1,0 +1,44 @@
+﻿<script>
+    $(document).ready(function () {
+        $($($(".ms-formtable.form-horizontal tbody")[0]).find("tr")[12]).css("display", "none")
+        $($($(".ms-formtable.form-horizontal tbody")[0]).find("tr")[13]).css("display", "none")
+        $($($(".ms-formtable.form-horizontal tbody")[0]).find("tr")[14]).css("display", "none")
+        $($($(".ms-formtable.form-horizontal tbody")[0]).find("tr")[15]).css("display", "none")
+        $("input[title='备注']").parent().parent().parent().parent().after('<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2">' +
+            '<h3 class="ms-standardheader control-label">下限操作符<span class="ms-accentText" title="This is a required field."> *</span></h3></td>' +
+            '<td width="350px" class="ms-formbody col-sm-10"><select id="DesignLow" style="width:35%" title="下限操作符"><option value=">=">&gt;=</option>' +
+            '<option value=">" selected="selected">&gt;</option></select><span>销量下限 (KK)<span class="ms-accentText" title="This is a d field."> *</span></span>' +
+            '<input type="text" value="0.00" id="DesignLowValue" title="销量下限 (KK)" size="11" class="ms-input" style="ime-mode : inactive;width:40%"></td></tr>' +
+            '<tr class="form-group"><td nowrap="true" width="113px" class="ms-formlabel col-sm-2"><h3 class="ms-standardheader control-label">上限操作符' +
+            '<span class="ms-accentText" title="This is a required field."> *</span></h3></td><td width="350px" class="ms-formbody col-sm-10">' +
+            '<select id="DesignUp" style="width:35%" title="上限操作符"><option value="<" selected="selected">&lt;</option><option value="=">&lt;=</option></select>' +
+            '<span>销量上限 (KK)<span class="ms-accentText" title="This is a required field."> *</span></span><input type="text" value="" id="DesignUpValue" ' +
+            'title="销量上限 (KK)" size="11" class="ms-input" style="ime-mode : inactive;width:40%"></td></tr>')
+        $("#DesignLow").on("change", function () {
+            var selectValue = $('#DesignLow option:selected').text();
+            var list = document.getElementById("MinOP_538513c4-27f5-4da6-9880-d57009e0b9d1_$DropDownChoice")
+            for (var i = 0; i < list.options.length; i++) {
+                if (list.options[i].value == selectValue) {
+                    document.getElementById("MinOP_538513c4-27f5-4da6-9880-d57009e0b9d1_$DropDownChoice").options[i].selected = true
+                }
+            }
+        });
+        $("#DesignLowValue").on("change", function () {
+            var selectValue = document.getElementById("DesignLowValue").value;
+            document.getElementById("VolMin_35419cb7-3fb6-4318-b49d-edd899d274cf_$NumberField").value = selectValue
+        });
+        $("#DesignUp").on("change", function () {
+            var selectValue = $('#DesignUp option:selected').text();
+            var list = document.getElementById("MaxOP_af6a0fb8-008a-42ad-b3df-22cf5a451ee3_$DropDownChoice")
+            for (var i = 0; i < list.options.length; i++) {
+                if (list.options[i].value == selectValue) {
+                    document.getElementById("MaxOP_af6a0fb8-008a-42ad-b3df-22cf5a451ee3_$DropDownChoice").options[i].selected = true
+                }
+            }
+        });
+        $("#DesignUpValue").on("change", function () {
+            var selectValue = document.getElementById("DesignUpValue").value;
+            document.getElementById("VolMax_c8226d7d-0fb2-4031-b237-179096b0bc26_$NumberField").value = selectValue
+        });
+    })
+</script>

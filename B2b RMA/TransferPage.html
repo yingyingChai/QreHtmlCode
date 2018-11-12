@@ -1,0 +1,28 @@
+﻿<script src="../B2BRMAJS/jquery.SPServices-2014.02.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../B2BRMAJS/Product.js"></script>
+<script src="../B2BRMAJS/layer.js"></script>
+<style>
+    .ms-rte-layoutszone-inner {
+        margin: 0;
+        background-color: #edecec
+    }
+</style>
+<script>
+    var uuid = getQueryString("uuid");
+    if (uuid) {
+        layer.msg('提交中...', {
+            icon: 16, shade: 0.01, time: false
+        });
+        var data = { GUID: uuid };
+        $.getJSON("https://sdx.unisoc.com/_vti_bin/sdx/sdxCore.svc/RMASubmit/" + uuid,
+            function (data) {
+                window.location.href = HomeHTML;
+            });
+    }
+    function alertMessage(message) {
+        layer.alert(message, {
+            icon: 7,
+            skin: 'layer-ext-moon'
+        })
+    }
+</script>

@@ -1,0 +1,193 @@
+﻿<title>Complaint & Claim Request</title>
+<link href="../css/sdx_common.css" rel="stylesheet" type="text/css">
+<link href="../css/bootstrap.css" rel="stylesheet" type="text/css">
+<script src="../B2BRMAJS/jquery.SPServices-2014.02.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../B2BRMAJS/angular.min.js"></script>
+<script src="../B2BRMAJS/Add.js"></script>
+<style>
+    .edui-editor div {
+        line-height: 20px;
+    }
+
+    .radio, .checkbox {
+        margin-top: -25px;
+    }
+
+    label {
+        font-weight: 100;
+    }
+
+    .k-alt, .k-header, .k-pager-wrap {
+        background-color: #ffffff !important;
+    }
+
+    .k-grid td {
+        border-bottom: 1px solid #d5d5d5
+    }
+
+    .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+        background-color: #ffffff !important;
+        font-size: 14px
+    }
+    #suiteLinksBox, #suiteBarButtons {
+        display: contents !important
+    }
+</style>
+<div id="example" ng-app="RMADemos">
+    <div ng-controller="RMACtrl">
+        <div id="wrapper">
+            <div id="page-wrapper" class="gray-bg">
+                <div class="wrapper wrapper-content animated fadeIn">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="tabs-container">
+                                <div class="tab-content">
+                                    <div id="tab-1" class="tab-pane active divForm">
+                                        <table class="form_table form_displayCss" align="center">
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="4">
+                                                        <button class="btn btn-primary" type="button">Exit</button>
+                                                        <button class="btn btn-primary" type="button">Save</button>
+                                                        <button class="btn btn-primary" type="button">Submit</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Document Number. <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <span title="ESSENTIAL" class="form_control border-bottom-Select-Span" style="color:#ababab">保存case自动生成</span>
+                                                    </td>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Date<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input type="text" ng-model="DrafData.Date" readonly="readonly" class="form-control ng-pristine ng-valid ng-touched">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Applicant<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input">
+                                                        <input type="text" ng-model="DrafData.Applican" readonly="readonly" class="form-control ng-pristine ng-valid ng-touched">
+                                                    </td>
+                                                    <td class="form_table_label"> <span class="en">Count<input style="width:80%;float:right" ng-model="DrafData.Count" stype="text" class="form-control ng-pristine ng-valid ng-touched"></span> </td>
+                                                    <td class="form_table_label"> <span class="en">Unit<input style="width:80%;float:right" ng-model="DrafData.Unit" stype="text" class="form-control ng-pristine ng-valid ng-touched"></span> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Device <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input" colspan="3">
+                                                        <input ng-model="DrafData.Device" type="text" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label" colspan="4" style="border-bottom:none">
+                                                        <span class="en">Supplier<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_area" colspan="4" style="border-top:none;border-bottom:none" title="ESSENTIAL">
+                                                        <div>
+                                                            <label class="ng-binding">
+                                                                <input type="checkbox" name="" value="SPILSZ">
+                                                                <i class="input-helper"></i>SPILSZ
+                                                            </label>
+                                                            <label class="ng-binding">
+                                                                <input type="checkbox" name="" value="SPILTW">
+                                                                <i class="input-helper"></i>SPILTW
+                                                            </label>
+                                                            <label class="ng-binding">
+                                                                <input type="checkbox" name="" value="UTACSH">
+                                                                <i class="input-helper"></i>UTACSH
+                                                            </label>
+                                                            <label class="ng-binding">
+                                                                <input type="checkbox" name="" value="ARDENTEC">
+                                                                <i class="input-helper"></i>ARDENTEC
+                                                            </label>
+                                                            <label class="ng-binding">
+                                                                <input type="checkbox" name="" value="SPILTW">
+                                                                <i class="input-helper"></i>SPILTW
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Subject <i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input" colspan="3">
+                                                        <input type="text" ng-model="DrafData.Subject" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Issue Description<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input" colspan="3">
+                                                        <textarea ng-model="DrafData.IssueDescription" style="width:100%;height:100px" rows="3" cols="20">
+                                                            
+                                                        </textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">Impact Summary<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input" colspan="3">
+                                                        <textarea ng-model="DrafData.ImpactSummary" style="width:100%;height:100px" rows="3" cols="20">
+                                                            
+                                                        </textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span class="en">SPRD Request<i class="form_table_required">*</i></span>
+                                                    </td>
+                                                    <td class="form_table_input" colspan="3">
+                                                        <textarea ng-model="DrafData.SPRDRequest" style="width:100%;height:100px" rows="3" cols="20">
+                                                            
+                                                        </textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span>Attachments <small>(上传附件大小不可大于20M,附件名称不可包含特殊字符：ep:* # / \) </small></span>
+                                                    </td>
+                                                    <td class="form_table_input" colspan="3">
+                                                        <input ng-model="file" id="stage4FileInstall" onchange="angular.element(this).scope().upload(this,'InstallAttachmentStage4','Stage4','Documents')" type="file">
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="form_table_label">
+                                                        <span>Notification List</span>
+                                                    </td>
+                                                    <td class="form_table_input" colspan="3">
+                                                        <textarea ng-model="DrafData.NotificationList" style="width:100%;height:100px" rows="3" cols="20">
+                                                            
+                                                        </textarea>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="form_table_submit">
+                                                        <button class="btn btn-primary" type="button">Exit</button>
+                                                        <button class="btn btn-primary" ng type="button">Save</button>
+                                                        <button class="btn btn-primary" type="button">Submit</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

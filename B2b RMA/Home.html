@@ -1,0 +1,254 @@
+﻿<title>Complaint & Claim Request</title>
+<link href="../css/style.css" rel="stylesheet">
+<link href="../css/sdx_common.css" rel="stylesheet" type="text/css">
+<link href="../css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="../css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<script src="../B2BRMAJS/jquery.SPServices-2014.02.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../B2BRMAJS/bootstrap.min.js"></script>
+<script src="../B2BRMAJS/plugins/dataTables/datatables.min.js"></script>
+<script src="../B2BRMAJS/Product.js"></script>
+<script src="../B2BRMAJS/layer.js"></script>
+<style>
+    .tab-content {
+        padding: 0 !important
+    }
+
+    .edui-editor div {
+        line-height: 20px;
+    }
+
+    .radio, .checkbox {
+        margin-top: -25px;
+    }
+
+    label {
+        font-weight: 100;
+    }
+
+    .k-alt, .k-header, .k-pager-wrap {
+        background-color: #ffffff !important;
+    }
+
+    .k-grid td {
+        border-bottom: 1px solid #d5d5d5
+    }
+
+    .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+        background-color: #ffffff !important;
+        font-size: 14px
+    }
+
+    #suiteLinksBox, #suiteBarButtons {
+        display: contents !important
+    }
+
+    .table {
+        width: 100% !important;
+    }
+
+    #contentRow {
+        background: #f3f3f3;
+    }
+</style>
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg">
+        <div class="wrapper wrapper-content animated fadeIn">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#tab-1" id="Draft">Draft</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-2" id="ManagerReview">OnGoing</a></li>
+                            <li class=""><a data-toggle="tab" href="#tab-3" id="End">End</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane active divForm">
+                                <div class="ibox-title">
+                                    <h5>Draft</h5>
+                                    <div title="Create new cluster" class="btn btn-primary btn-sm" style="float:right" onclick="HrefUrl()">新建Case</div>
+                                </div>
+                                <div class="ibox-content">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example-1">
+                                        <thead>
+                                            <tr>
+                                                <th>Number</th>
+                                                <th>Date</th>
+                                                <th>Applicant</th>
+                                                <th>Supplier code</th>
+                                                <th>Subject</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane divForm">
+                                <div class="ibox-title">
+                                    <h5>OnGoing</h5>
+                                    <div title="Create new cluster" class="btn btn-primary btn-sm" style="float:right" onclick="HrefUrl()">新建Case</div>
+                                </div>
+                                <div class="ibox-content">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example-2">
+                                        <thead>
+                                            <tr>
+                                                <th>Number</th>
+                                                <th>Date</th>
+                                                <th>Applicant</th>
+                                                <th>Supplier code</th>
+                                                <th>Subject</th>
+                                                <th>Handler</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="tab-3" class="tab-pane divForm">
+                                <div class="ibox-title">
+                                    <h5>End</h5>
+                                    <div title="Create new cluster" class="btn btn-primary btn-sm" style="float:right" onclick="HrefUrl()">新建Case</div>
+                                </div>
+                                <div class="ibox-content">
+                                    <table class="table table-striped table-bordered table-hover dataTables-example-3">
+                                        <thead>
+                                            <tr>
+                                                <th>Number</th>
+                                                <th>Date</th>
+                                                <th>Applicant</th>
+                                                <th>Supplier code</th>
+                                                <th>Subject</th>
+                                                <th>Handler</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../B2BRMAJS/jquery.SPServices-2014.02.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../B2BRMAJS/Product.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    function HrefUrl() {
+        var s = [];
+        var hexDigits = "0123456789abcdef";
+        for (var i = 0; i < 36; i++) {
+            s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+        }
+        s[14] = "4";
+        s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
+        s[8] = s[13] = s[18] = s[23] = "-";
+        var uuid = s.join("");
+        var urlTitle = "https://sdx.unisoc.com/Lists/RMA/NewForm.aspx?Source=https://sdx.unisoc.com/SitePages/TransferPage.aspx?uuid=" + uuid + "&Uuid=" + uuid;
+        window.location.href = urlTitle;
+    }
+    var user = getUser();
+    var Department = getDepartment(user.LoginName);
+    $(function () {
+        var End = [], OnGoing = [], Draft = [];
+        var getJsonUrl = "";
+        if (ViewList.indexOf(user.Title) >= 0) {
+            getJsonUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('RMA')/items?$select=gUid0,ID,Title,WDate,Supplier,CreatedAuthor,CreatedAuthor/Id,CreatedAuthor/Title,Handler,Handler/Id,Handler/Title,Subject,Status,CaseStatus&$expand=CreatedAuthor/Id,Handler/Id&$orderby=Created desc&$top=99999999"
+        } else {
+            getJsonUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getByTitle('RMA')/items?$select=gUid0,ID,Title,WDate,Supplier,CreatedAuthor,CreatedAuthor/Id,CreatedAuthor/Title,Handler,Handler/Id,Handler/Title,Subject,Status,CaseStatus&$expand=CreatedAuthor/Id,Handler/Id&$filter=CreatedAuthor/Id eq '" + user.Id + "'or Handler/Id eq '" + user.Id + "'&$orderby=WDate desc&$top=99999999"
+        }
+        $.ajax({
+            url: getJsonUrl,
+            type: "GET",
+            headers: { "accept": "application/json;odata=verbose" },
+            success: function (data) {
+                if (data.d.results) {
+                    data.d.results.forEach(function (i) {
+                        if (i.Status == "End") {
+                            var url = ViewUrl + i.Id + "&Source=" + HomeHTML;
+                            var _url = '<a href="' + url + '" target="_self" dragid="1" draggable="true" class=" ms-draggable">' + i.Title + '</a>';
+                            var data = [];
+                            data.push(_url);
+                            data.push(new Date(i.WDate).Format("yyyy-MM-dd"));
+                            data.push(i.CreatedAuthor.Title);
+                            var Supplier = "";
+                            i.Supplier.results.forEach(function (j) {
+                                Supplier += j;
+                            })
+                            data.push(Supplier);
+                            data.push(i.Subject ? i.Subject : '-');
+                            if (HanderList.indexOf(user.Title) >= 0) {
+                                data.push(HandlerString)
+                            } else {
+                                data.push(i.Handler.Title)
+                            }
+                            End.push(data);
+                        } else if (i.CaseStatus == "Submit") {
+                            var url = "", _url = "";
+                            if (i.Handler.Title == user.Title || HanderList .indexOf(user.Title) >= 0) {
+                                url = EditUrl + i.Id + "&Source=" + HomeHTML;
+                                _url = '<a href="' + url + '" target="_self" dragid="1" draggable="true" class=" ms-draggable">' + i.Title + '</a>';
+                            } else {
+                                url = ViewUrl + i.Id + "&Source=" + HomeHTML;
+                                _url = '<a href="' + url + '" target="_self" dragid="1" draggable="true" class=" ms-draggable">' + i.Title + '</a>';
+                            }
+                            var data = [];
+                            data.push(_url);
+                            data.push(new Date(i.WDate).Format("yyyy-MM-dd"));
+                            data.push(i.CreatedAuthor.Title);
+                            var Supplier = "";
+                            i.Supplier.results.forEach(function (j) {
+                                Supplier += j;
+                            })
+                            data.push(Supplier);
+                            data.push(i.Subject ? i.Subject : '-');
+                            //if (i.Handler.Title.indexOf("张红琴") >= 0 || i.Handler.Title.indexOf("陈慧丽") >= 0) {
+                            if (HanderList.indexOf(user.Title) >= 0) {
+                                data.push(HandlerString)
+                            } else {
+                                data.push(i.Handler.Title)
+                            }
+                            OnGoing.push(data);
+                        } else {
+                            if (user.Title == i.CreatedAuthor.Title) {
+                                var url = EditUrl + i.Id + "&Source=https://sdx.unisoc.com/SitePages/TransferPage.aspx?uuid=" + i.gUid0;
+                                var _url = '<a href="' + url + '" target="_self" dragid="1" draggable="true" class=" ms-draggable">' + i.Title + '</a>';
+                                var data = [];
+                                data.push(_url);
+                                data.push(new Date(i.WDate).Format("yyyy-MM-dd"));
+                                data.push(i.CreatedAuthor.Title);
+                                var Supplier = "";
+                                i.Supplier.results.forEach(function (j) {
+                                    Supplier += j;
+                                })
+                                data.push(Supplier);
+                                data.push(i.Subject ? i.Subject : '-');
+                                Draft.push(data);
+                            }
+                        }
+
+                    })
+                    $('.dataTables-example-1').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        data: Draft,
+                        order: [[1, "desc"]]
+                    });
+                    $('.dataTables-example-2').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        data: OnGoing,
+                        order: [[1, "desc"]]
+                    });
+                    $('.dataTables-example-3').DataTable({
+                        pageLength: 25,
+                        responsive: true,
+                        data: End,
+                        order: [[1, "desc"]]
+                    });
+                }
+            },
+            error: function (xhr) {
+                alert(xhr.status + ': ' + xhr.statusText);
+            }
+        });
+    })
+</script>

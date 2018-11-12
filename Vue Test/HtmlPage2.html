@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <div id="blog-post-demo">
+        <blog-post v-for="post in posts"
+                   v-bind:key="post.id"
+                   v-bind:post="post"></blog-post>
+    </div>
+    <script>
+        Vue.component('blog-post', {
+            props: ['post'],
+            template: '<div class="blog-post"><h3>{{ post.title }}</h3><div v-html="post.content"></div></div>'
+        })
+        var a1=new Vue({
+            el: '#blog-post-demo',
+            data: {
+                posts: [
+                    { id: 1, title: 'My journey with Vue', content: '1', publishedAt: 'publishedAt1', comments:'comments1'},
+                    { id: 2, title: 'Blogging with Vue', content: '2', publishedAt: 'publishedAt2', comments: 'comments2' },
+                    { id: 3, title: 'Why Vue is so fun', content: '3', publishedAt: 'publishedAt3', comments: 'comments3' }
+                ]
+            }
+        })
+    </script>
+    <div id="blog-posts-events-demo">
+        <div :style="{ fontSize: postFontSize + 'em' }">
+            <blog-post v-for="post in posts"
+                       v-bind:key="post.id"
+                       v-on:enlarge-text="postFontSize += 0.1"
+                       v-on:little-text="postFontSize -= 0.1"
+                       v-bind:post="post"></blog-post>
+        </div>
+        <custom-input v-model="searchText"></custom-input>
+        <alert-box>
+            Something bad happened.
+        </alert-box>
+    </div>
+    <script>
+        Vue.component('alert-box', {
+            template: '<div class="demo-alert-box"><strong>Error!</strong><slot></slot></div>'
+        })
+        Vue.component('blog-post', {
+            props: ['post'],
+            template: '<div class="blog-post"><h3>{{ post.title }}</h3><button  v-on:click="$emit(\'enlarge-text\')">Enlarge text</button><button  v-on:click="$emit(\'little-text\')">Little</button><div v-html="post.content"></div></div>'
+        })
+        Vue.component('custom-input', {
+            props: ['value'],
+            template: '<input v-bind:value="value"  v-on:input="$emit(\'input\', $event.target.value)">'
+        })
+        var a2=new Vue({
+            el: '#blog-posts-events-demo',
+            data: {
+                posts: [
+                    { id: 1, title: 'My journey with Vue', content: '1', publishedAt: 'publishedAt1', comments: 'comments1' },
+                    { id: 2, title: 'Blogging with Vue', content: '2', publishedAt: 'publishedAt2', comments: 'comments2' },
+                    { id: 3, title: 'Why Vue is so fun', content: '3', publishedAt: 'publishedAt3', comments: 'comments3' }
+                ],
+                postFontSize: 1,
+                searchText:'111'
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Vue.js 学习</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        {{message}}
+    </div>
+    <div id="app1">
+        123 {{message}}
+    </div>
+    <div id="app2">
+        <span v-bind:title="message">
+            鼠标悬停几秒钟查看此处动态绑定的提示信息！
+            <button v-bind:disabled="isButtonDisabled">Button</button>
+            {{ ok ? 'YES' : 'NO' }}
+            {{ message.split('').reverse().join('') }}
+        </span>
+    </div>
+    <div id="app3">
+        <div v-if="seen">是否显示</div>
+    </div>
+    <div id="app-4">
+        <ol>
+            <li v-for="todo in todos">
+                {{ todo.text }}
+            </li>
+        </ol>
+    </div>
+    <div id="app-7">
+        <ol>
+            <!--
+              现在我们为每个 todo-item 提供 todo 对象
+              todo 对象是变量，即其内容可以是动态的。
+              我们也需要为每个组件提供一个“key”，稍后再
+              作详细解释。
+            -->
+            <todo-item v-for="item in groceryList"
+                       v-bind:todo="item"
+                       v-bind:key="item.id">
+            </todo-item>
+        </ol>
+    </div>
+    <script>
+        var appData = new Vue({
+            el: "#app",
+            data: {
+                message: 'Hello Vue!'
+            }
+        })
+        var app2 = new Vue({
+            el: "#app2",
+            data: {
+                message: '页面加载于 ' + new Date().toLocaleString(),
+                isButtonDisabled: true
+            }
+        })
+        var app3 = new Vue({
+            el: "#app3",
+            data: {
+                seen: true
+            }
+        })
+        var app4 = new Vue({
+            el: '#app-4',
+            data: {
+                todos: [
+                    { text: '学习 JavaScript' },
+                    { text: '学习 Vue' },
+                    { text: '整个牛项目' }
+                ]
+            }
+        })
+        Vue.component('todo-item', {
+            props: ['todo'],
+            template: '<li>{{ todo.text }}</li>'
+        })
+
+        var app7 = new Vue({
+            el: '#app-7',
+            data: {
+                groceryList: [
+                    { id: 0, text: '蔬菜' },
+                    { id: 1, text: '奶酪' },
+                    { id: 2, text: '随便其它什么人吃的东西' }
+                ]
+            }
+        })
+    </script>
+</body>
+</html>
